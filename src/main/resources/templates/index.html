@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+
+</head>
+<body>
+<div id="my_view">
+    <a href="#"
+       class="btn btn-success"
+       @click.stop="getCoins">Load Coins</a>
+
+    <div id="wrapper-div">
+        <div class="card" v-for="todo in currenciesList" v-bind:style="getStyles(todo.priceStatus)">
+            <div class="card__header">
+                <div class="card__icon">
+                    <img width="30" height="30" :src="todo.coinImage" alt="">
+                </div>
+                <span class="card__title">{{todo.name}}</span>
+            </div>
+            <div class="card__row card__row--mb12">
+                <div class="card__row-title txt-green">Текущий баланс:</div>
+                <span class="card__row-value">{{todo.currentAmount}}</span>
+            </div>
+            <div class="card__row card__row--mb12">
+                <div class="card__row-title txt-blue">Минимальный лимит:</div>
+                <span class="card__row-value">{{todo.minAmount}}</span>
+            </div>
+            <div class="card__row card__row--mb16">
+                <div class="card__row-title txt-red">Максимальный лимит:</div>
+                <span class="card__row-value">{{todo.maxAmount}}</span>
+            </div>
+            <div class="card__button-wrap">
+                <input class="input" type="number" name="" v-model="todo.minAmount">
+                <button v-on:click="updateLimit(todo.name,todo.minAmount,'MIN')" class="btn">Изменить мин. лимит
+                </button>
+            </div>
+            <div class="card__button-wrap">
+                <input class="input" type="number" name="" v-model="todo.maxAmount">
+                <button v-on:click="updateLimit(todo.name,todo.maxAmount,'MAX')" class="btn">Изменить макс. лимит
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.0/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.2.1/vue-resource.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#my_view',
+        data: {
+            origin: '',
+            currenciesList: ''
+        },
+        methods: {
+            getCoins: function () {
+                this.$http.get('http://172.31.3.72:8080/currencies').then(function ({data}) {
+                    console.log(data);
+                    this.currenciesList = data;
+                })
+            },
+            updateLimit: function (currencyName, limit, balanceType) {
+                this.$http.put('http://172.31.3.72:8080/currencies/' + currencyName, {
+                    limit: limit,
+                    balanceType: balanceType
+                }, function (data, status, request) {
+                    this.postResults = data;
+                    console.log("Data is " + data);
+                });
+            },
+            getStyles: function (priceStatus) {
+                if(priceStatus === 'LOW'){
+                    return 'border: blue solid 3px';
+                }else if(priceStatus ==='ABOVE'){
+                    return 'border: red solid 3px';
+                }
+            }
+        }
+    });
+</script>
+
+<style media="screen">
+    * {
+        box-sizing: border-box;
+    }
+
+    .card {
+        font-family: Roboto;
+        background-color: #fff;
+        width: 22%;
+        max-width: 224px;
+        padding: 12px;
+        border-radius: 4px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    }
+
+    .card__header {
+        margin-bottom: 16px;
+    }
+
+    .card__icon {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+
+    .card__title {
+        text-transform: uppercase;
+        font-size: 18px;
+        line-height: 21px;
+        color: #191A39;
+        vertical-align: middle;
+        font-weight: 600;
+    }
+
+    .card__row {
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .card__row--mb12 {
+        margin-bottom: 12px;
+    }
+
+    .card__row--mb16 {
+        margin-bottom: 16px;
+    }
+
+    .card__title {
+        margin-bottom: 4px;
+    }
+
+    .card__row-value {
+        font-weight: 600;
+    }
+
+    .card__button-wrap {
+        margin-bottom: 8px;
+    }
+    .btn {
+        width: 100%;
+        padding: 4px 12px;
+        border: 1px solid #237BEF;
+        border-radius: 4px;
+        background-color: #fff;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .input {
+        width: 100%;
+        display: block;
+        padding: 4px 12px;
+        border: 1px solid #A0A0A0;
+        border-right: 4px;
+        outline: none;
+    }
+
+    .input:focus {
+        border-color: #237BEF
+
+    }
+
+    .txt-blue {
+        color: #237BEF;
+    }
+
+    .txt-green {
+        color: #00B43D;
+    }
+
+    .txt-red {
+        color: #EB5757;
+    }
+
+    #wrapper-div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    @media screen and (max-width: 600px) {
+        .card {
+            width: 60%;
+        }
+    }
+
+</style>
+</html>

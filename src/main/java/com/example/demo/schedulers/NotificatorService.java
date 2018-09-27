@@ -1,0 +1,37 @@
+package com.example.demo.schedulers;
+
+
+
+import com.example.demo.domain.Coin;
+
+import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public interface NotificatorService {
+
+    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+    String ABOVE_MAX_LIMIT =
+            "\uD83C\uDF4E Кошелёк: %s  Превышен максимальный лимит!  Время: %s\n\n " +
+            "Баланс: %s\n\n" +
+            "Мин.лимит: %s   Max.Лимит: %s\n";
+
+    String LOW_THAN_MIN_AMOUNT  =
+            "\uD83C\uDF4B Кошелёк: %s  Ниже нижнего лимита! :lemon:   Время: %s\n\n " +
+            "Баланс: %s\n\n" +
+            "Мин.лимит: %s   Max.Лимит: %s\n";
+
+    String PERMISSIBLE_RANGE =
+            "\uD83C\uDF4F Кошелёк: %s  Количество в допустимом диапазоне! :green:   Время: %s\n\n " +
+            "Баланс: %s\n\n" +
+            "Мин.лимит: %s   Max.Лимит: %s\n";
+
+
+    void notificate(String template, Coin coin) throws UnsupportedEncodingException;
+
+    default String getCurrentDate() {
+        return dateFormat.format(new Date());
+    }
+}
