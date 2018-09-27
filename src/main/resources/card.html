@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+</head>
+<body>
+  <div class="card">
+    <div class="card__header">
+      <div class="card__icon">
+        <img src="fluzcoin.png" alt="">
+      </div>
+      <span class="card__title">fluzcoin</span>
+    </div>
+    <div class="card__row card__row--mb12">
+      <div class="card__row-title txt-blue">Текущий баланс:</div>
+      <span class="card__row-value">$ 10 000 000</span>
+    </div>
+    <div class="card__row card__row--mb12">
+      <div class="card__row-title txt-green">Минимальный лимит:</div>
+      <span class="card__row-value">$ 10 000 000</span>
+    </div>
+    <div class="card__row card__row--mb16">
+      <div class="card__row-title txt-red">Максимальный лимит:</div>
+      <span class="card__row-value">$ 10 000 000</span>
+    </div>
+    <div class="card__button-wrap">
+      <button class="btn">Изменить мин. лимит</button>
+      <input class="input" type="text" name="" value="">
+    </div>
+    <div class="card__button-wrap">
+      <button class="btn">Изменить мин. лимит</button>
+      <input class="input" type="text" name="" value="">
+    </div>
+  </div>
+  <style media="screen">
+    *{
+      box-sizing: border-box;
+    }
+    .card{
+      font-family: Roboto;
+      background-color: #fff;
+      width: 22%;
+      max-width: 224px;
+      padding: 12px;
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    }
+    .card__header{
+      margin-bottom: 16px;
+    }
+    .card__icon{
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .card__title{
+      text-transform: uppercase;
+      font-size: 18px;
+      line-height: 21px;
+      color: #191A39;
+      vertical-align: middle;
+      font-weight: 600;
+    }
+    .card__row{
+      font-size: 12px;
+      line-height: 14px;
+    }
+    .card__row--mb12{
+      margin-bottom: 12px;
+    }
+    .card__row--mb16{
+      margin-bottom: 16px;
+    }
+    .card__title{
+      margin-bottom: 4px;
+    }
+    .card__row-value{
+      font-weight: 600;
+    }
+    .card__button-wrap{
+      margin-bottom: 8px;
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+    .btn{
+      width: 100%;
+      padding: 4px 12px;
+      border: 1px solid #237BEF;
+      border-radius: 4px;
+      background-color: #fff;
+      outline: none;
+      cursor: pointer;
+    }
+    .input{
+      width: 100%;
+      display: block;
+      padding: 4px 12px;
+      border: 1px solid #A0A0A0;
+      border-right: 4px;
+      outline: none;
+    }
+    .input:focus{
+      border-color: #237BEF
+
+    }
+    .txt-blue{
+      color:#237BEF;
+    }
+    .txt-green{
+      color:#00B43D;
+    }
+    .txt-red{
+      color: #EB5757;
+    }
+
+  </style>
+
+</body>
+</html>
