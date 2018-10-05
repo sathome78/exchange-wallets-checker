@@ -9,10 +9,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface CoinRepository extends JpaRepository<Coin, Long> {
 
     Coin findByName(String name);
+
+    List<Coin> findAllByOrderByNameAsc();
 
     @Modifying
     @Transactional

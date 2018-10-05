@@ -20,7 +20,7 @@ import static com.example.demo.schedulers.NotificatorService.LOW_THAN_MIN_AMOUNT
 import static com.example.demo.schedulers.NotificatorService.PERMISSIBLE_RANGE;
 
 @Service
-public class ShcedulerService {
+public class SchedulerService {
 
     @Autowired
     Client client;
@@ -41,10 +41,10 @@ public class ShcedulerService {
     @Scheduled(fixedDelay = 30000, initialDelay = 0)
     public void allCoins() {
         List<Coin> all = coinRepository.findAll();
-        all.forEach(this::accept);
+        all.forEach(this::process);
     }
 
-    private void accept(Coin coin) {
+    public void process(Coin coin) {
         try {
             Response response = client.
                     target(String.format("https://exrates.me/getWalletBalanceByCurrencyName?currency=%s&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET", coin.getName())).

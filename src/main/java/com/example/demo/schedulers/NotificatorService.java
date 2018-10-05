@@ -19,12 +19,12 @@ public interface NotificatorService {
             "Мин.лимит: %s   Max.Лимит: %s\n";
 
     String LOW_THAN_MIN_AMOUNT  =
-            "\uD83C\uDF4B Кошелёк: %s  Ниже нижнего лимита! :lemon:   Время: %s\n\n " +
+            "\uD83C\uDF4B Кошелёк: %s  Ниже нижнего лимита!    Время: %s\n\n " +
             "Баланс: %s\n\n" +
             "Мин.лимит: %s   Max.Лимит: %s\n";
 
     String PERMISSIBLE_RANGE =
-            "\uD83C\uDF4F Кошелёк: %s  Количество в допустимом диапазоне! :green:   Время: %s\n\n " +
+            "\uD83C\uDF4F Кошелёк: %s  Количество в допустимом диапазоне!    Время: %s\n\n " +
             "Баланс: %s\n\n" +
             "Мин.лимит: %s   Max.Лимит: %s\n";
 

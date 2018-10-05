@@ -4,15 +4,17 @@ import com.example.demo.domain.Coin;
 import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.requestbody.CoinBalance;
 import com.example.demo.repository.CoinRepository;
+import com.example.demo.schedulers.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
 import static com.example.demo.domain.requestbody.BalanceType.MIN;
@@ -22,14 +24,21 @@ import static com.example.demo.domain.requestbody.BalanceType.MIN;
 @CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/", "http://localhost:63342"})
 public class CoinController {
 
+    private final CoinRepository coinRepository;
+
+    private final SchedulerService schedulerService;
+
     @Autowired
-    CoinRepository coinRepository;
+    public CoinController(CoinRepository coinRepository, SchedulerService schedulerService) {
+        this.coinRepository = coinRepository;
+        this.schedulerService = schedulerService;
+    }
 
     @GetMapping(value = "/currencies", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/", "http://localhost:63342"})
-    public ResponseEntity<Map<Long, Coin>> getCurrencies() {
-        Map<Long, Coin> collect = coinRepository.findAll().stream().collect(Collectors.toMap(Coin::getId, item -> item));
-        return new ResponseEntity<>(collect, HttpStatus.OK);
+    public ResponseEntity<List<Coin>> getCurrencies() {
+        List<Coin> all = coinRepository.findAll(Sort.by(Sort.Direction.ASC,"name"));
+        return new ResponseEntity<>(all, HttpStatus.OK);
     }
 
     @PutMapping("/currencies/{currencyName}")
@@ -55,6 +64,7 @@ public class CoinController {
             coin.setPriceStatus(PriceStatus.NORMAL);
         }
         coinRepository.save(coin);
+        schedulerService.process(coin);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
