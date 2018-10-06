@@ -27,7 +27,7 @@ public class EmailNotificator implements NotificatorService {
 
     public void notificate(String template, Coin coin) {
         try {
-            String messageFormat = format(template, coin.getName(), getCurrentDate(), valueOf(coin.getCurrentAmount()), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
+            String messageFormat = format(template, coin.getName(), getCurrentDate(), valueOf(decimalFormat.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
             String[] recepients = recepeints.split(",");
 
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();

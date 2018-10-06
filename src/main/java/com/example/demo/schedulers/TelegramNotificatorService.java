@@ -28,7 +28,7 @@ public class TelegramNotificatorService implements NotificatorService {
 
     @Override
     public void notificate(String template, Coin coin) throws UnsupportedEncodingException {
-        String text = format(template, coin.getName(), getCurrentDate(), valueOf(coin.getCurrentAmount()), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
+        String text = format(template, coin.getName(), getCurrentDate(), valueOf(decimalFormat.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
         text = URLEncoder.encode(text,"UTF-8");
         Response response = client.target(format(botUrl, text)).request(MediaType.APPLICATION_JSON_TYPE).get();
 

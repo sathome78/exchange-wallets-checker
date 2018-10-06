@@ -6,12 +6,17 @@ import com.example.demo.domain.Coin;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public interface NotificatorService {
 
     DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+    DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
     String ABOVE_MAX_LIMIT =
             "\uD83C\uDF4E Кошелёк: %s  Превышен максимальный лимит!  Время: %s\n\n " +
