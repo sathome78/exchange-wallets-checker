@@ -26,7 +26,7 @@ import static java.util.stream.Collectors.*;
 //@SpringBootTest
 public class ApplicationTests {
 
-//	@Autowired
+	@Autowired
 	public JavaMailSender emailSender;
 
 	@Test
@@ -36,8 +36,8 @@ public class ApplicationTests {
 //		simpleMailMessage.setFrom("sender@upholding.biz");
 //		simpleMailMessage.setText("hello");
 //		emailSender.send(simpleMailMessage);
-		BigDecimal bigDecimal = new BigDecimal(1000000);
-		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		BigDecimal bigDecimal = new BigDecimal(0.05410826);
+		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000000000", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		System.out.println(decimalFormat.format(bigDecimal));
 	}
 

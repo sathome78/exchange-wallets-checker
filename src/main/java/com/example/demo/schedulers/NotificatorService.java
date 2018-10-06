@@ -16,7 +16,7 @@ public interface NotificatorService {
 
     DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-    DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+    DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000000000", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
     String ABOVE_MAX_LIMIT =
             "\uD83C\uDF4E Кошелёк: %s  Превышен максимальный лимит!  Время: %s\n\n " +
@@ -34,7 +34,7 @@ public interface NotificatorService {
             "Мин.лимит: %s   Max.Лимит: %s\n";
 
 
-    void notificate(String template, Coin coin) throws UnsupportedEncodingException;
+    void notificate(String template, Coin coin);
 
     default String getCurrentDate() {
         return dateFormat.format(new Date());

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
 import static com.example.demo.schedulers.NotificatorService.LOW_THAN_MIN_AMOUNT;
@@ -29,13 +30,7 @@ public class SchedulerService {
     CoinRepository coinRepository;
 
     @Autowired
-    NotificatorService emailNotificator;
-
-    @Autowired
-    NotificatorService slackNotificatorService;
-
-    @Autowired
-    NotificatorService telegramNotificatorService;
+    Map<String, NotificatorService> notificatorServiceMap;
 
 
     @Scheduled(fixedDelay = 30000, initialDelay = 0)
@@ -71,24 +66,18 @@ public class SchedulerService {
     private void check(Coin btcCoin, BigDecimal newAmount) throws UnsupportedEncodingException {
 
         if (newAmount.compareTo(btcCoin.getMaxAmount()) > 0) {
-            emailNotificator.notificate(ABOVE_MAX_LIMIT, btcCoin);
-            slackNotificatorService.notificate(ABOVE_MAX_LIMIT, btcCoin);
-            telegramNotificatorService.notificate(ABOVE_MAX_LIMIT, btcCoin);
+            notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(ABOVE_MAX_LIMIT, btcCoin));
             btcCoin.setPriceStatus(PriceStatus.ABOVE);
         }
 
         if (newAmount.compareTo(btcCoin.getMinAmount()) < 0 && !btcCoin.isLowThanMinAmountNotified()) {
-            emailNotificator.notificate(LOW_THAN_MIN_AMOUNT, btcCoin);
-            slackNotificatorService.notificate(LOW_THAN_MIN_AMOUNT, btcCoin);
-            telegramNotificatorService.notificate(LOW_THAN_MIN_AMOUNT, btcCoin);
+            notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(LOW_THAN_MIN_AMOUNT, btcCoin));
             btcCoin.setLowThanMinAmountNotified(true);
             btcCoin.setPriceStatus(PriceStatus.LOW);
         }
 
         if (newAmount.compareTo(btcCoin.getMinAmount()) > 0 && newAmount.compareTo(btcCoin.getMaxAmount()) < 0 && (btcCoin.isLowThanMinAmountNotified() || btcCoin.getPriceStatus() == PriceStatus.ABOVE)) {
-            emailNotificator.notificate(PERMISSIBLE_RANGE, btcCoin);
-            slackNotificatorService.notificate(PERMISSIBLE_RANGE, btcCoin);
-            telegramNotificatorService.notificate(PERMISSIBLE_RANGE, btcCoin);
+            notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(PERMISSIBLE_RANGE, btcCoin));
             btcCoin.setLowThanMinAmountNotified(false);
             btcCoin.setPriceStatus(PriceStatus.NORMAL);
         }
@@ -96,5 +85,6 @@ public class SchedulerService {
 
         coinRepository.save(btcCoin);
     }
+
 
 }
