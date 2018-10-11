@@ -63,7 +63,7 @@ public class SchedulerService {
         }
     }
 
-    private void check(Coin btcCoin, BigDecimal newAmount) throws UnsupportedEncodingException {
+    public void check(Coin btcCoin, BigDecimal newAmount) throws UnsupportedEncodingException {
 
         if (newAmount.compareTo(btcCoin.getMaxAmount()) > 0) {
             notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(ABOVE_MAX_LIMIT, btcCoin));

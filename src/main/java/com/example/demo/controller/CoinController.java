@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class CoinController {
     @PutMapping("/currencies/{currencyName}")
     @CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/", "http://localhost:63342"})
     public ResponseEntity<Map<String, Object>> updateMinBalance(@PathVariable String currencyName,
-                                                                @RequestBody CoinBalance coinBalance) {
+                                                                @RequestBody CoinBalance coinBalance) throws UnsupportedEncodingException {
 
         if (coinBalance.getBalanceType() == MIN)
             coinRepository.updateMinLimit(coinBalance.getLimit(), currencyName);
@@ -64,7 +65,7 @@ public class CoinController {
             coin.setPriceStatus(PriceStatus.NORMAL);
         }
         coinRepository.save(coin);
-        schedulerService.process(coin);
+        schedulerService.check(coin,coin.getCurrentAmount());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
