@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 @Configuration
 public class HttpClientConfiguration {

@@ -13,10 +13,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
@@ -36,8 +33,12 @@ public class ApplicationTests {
 //		simpleMailMessage.setFrom("sender@upholding.biz");
 //		simpleMailMessage.setText("hello");
 //		emailSender.send(simpleMailMessage);
-		BigDecimal bigDecimal = new BigDecimal(0.05410826);
-		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000000000", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		BigDecimal bigDecimal = new BigDecimal(300000000);
+		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000000000");
+        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+        decimalFormatSymbols.setGroupingSeparator(' ');
+
+        decimalFormat.setDecimalFormatSymbols(decimalFormatSymbols);
 		System.out.println(decimalFormat.format(bigDecimal));
 	}
 

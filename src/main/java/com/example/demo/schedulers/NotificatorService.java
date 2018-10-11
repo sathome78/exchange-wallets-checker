@@ -12,11 +12,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.example.demo.util.NumberFormatter.DECIMAL_FORMAT;
+
 public interface NotificatorService {
 
     DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-    DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000000000", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+    DecimalFormat decimalFormat = DECIMAL_FORMAT;
+
 
     String ABOVE_MAX_LIMIT =
             "\uD83C\uDF4E Кошелёк: %s  Превышен максимальный лимит!  Время: %s\n\n " +
