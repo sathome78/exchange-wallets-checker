@@ -1,6 +1,7 @@
 package com.example.demo.schedulers;
 
 import com.example.demo.domain.Coin;
+import com.example.demo.util.NumberFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
@@ -28,7 +30,7 @@ public class TelegramNotificatorService implements NotificatorService {
 
     @Override
     public void notificate(String template, Coin coin)  {
-        String text = format(template, coin.getName(), getCurrentDate(), valueOf(decimalFormat.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
+        String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
         try {
             text = URLEncoder.encode(text,"UTF-8");
         } catch (UnsupportedEncodingException e) {

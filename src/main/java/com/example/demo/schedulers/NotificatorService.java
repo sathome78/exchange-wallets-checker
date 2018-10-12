@@ -18,9 +18,6 @@ public interface NotificatorService {
 
     DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-    DecimalFormat decimalFormat = DECIMAL_FORMAT;
-
-
     String ABOVE_MAX_LIMIT =
             "\uD83C\uDF4E Кошелёк: %s  Превышен максимальный лимит!  Время: %s\n\n " +
             "Баланс: %s\n\n" +

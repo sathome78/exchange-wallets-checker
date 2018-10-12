@@ -1,6 +1,7 @@
 package com.example.demo.schedulers;
 
 import com.example.demo.domain.Coin;
+import com.example.demo.util.NumberFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class SlackNotificatorService implements NotificatorService {
     @Override
     public void notificate(String template, Coin coin) {
         try {
-            String text = format(template, coin.getName(), getCurrentDate(), valueOf(decimalFormat.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
+            String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())), valueOf(NumberFormatter.format(coin.getMinAmount())), valueOf(coin.getMaxAmount()));
                 JSONObject jsonObject = new JSONObject();
             jsonObject.put("channel", "alarm");
             jsonObject.put("text", text);

@@ -1,6 +1,7 @@
 package com.example.demo.schedulers;
 
 import com.example.demo.domain.Coin;
+import com.example.demo.util.NumberFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,7 @@ public class EmailNotificator implements NotificatorService {
 
     public void notificate(String template, Coin coin) {
         try {
-            String messageFormat = format(template, coin.getName(), getCurrentDate(), valueOf(decimalFormat.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
+            String messageFormat = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
             String[] recepients = recepeints.split(",");
 
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.PriceStatus;
+import com.example.demo.domain.dto.CoinDto;
 import com.example.demo.domain.requestbody.CoinBalance;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.SchedulerService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
 import static com.example.demo.domain.requestbody.BalanceType.MIN;
@@ -37,9 +39,9 @@ public class CoinController {
 
     @GetMapping(value = "/currencies", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/", "http://localhost:63342"})
-    public ResponseEntity<List<Coin>> getCurrencies() {
-        List<Coin> all = coinRepository.findAll(Sort.by(Sort.Direction.ASC,"name"));
-        return new ResponseEntity<>(all, HttpStatus.OK);
+    public ResponseEntity<List<CoinDto>> getCurrencies() {
+        List<CoinDto> name = coinRepository.findAll(Sort.by(Sort.Direction.ASC, "name")).stream().map(CoinDto::new).collect(Collectors.toList());
+        return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
     @PutMapping("/currencies/{currencyName}")

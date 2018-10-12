@@ -34,7 +34,7 @@ public class ApplicationTests {
 //		simpleMailMessage.setText("hello");
 //		emailSender.send(simpleMailMessage);
 		BigDecimal bigDecimal = new BigDecimal(300000000);
-		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000000000");
+		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000");
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
         decimalFormatSymbols.setGroupingSeparator(' ');
 
