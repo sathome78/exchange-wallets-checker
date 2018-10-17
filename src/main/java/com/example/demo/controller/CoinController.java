@@ -24,7 +24,7 @@ import static com.example.demo.domain.requestbody.BalanceType.MIN;
 
 
 @Controller
-@CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/", "http://localhost:63342"})
+@CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/"})
 public class CoinController {
 
     private final CoinRepository coinRepository;
@@ -38,16 +38,14 @@ public class CoinController {
     }
 
     @GetMapping(value = "/currencies", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/", "http://localhost:63342"})
     public ResponseEntity<List<CoinDto>> getCurrencies() {
         List<CoinDto> name = coinRepository.findAll(Sort.by(Sort.Direction.ASC, "name")).stream().map(CoinDto::new).collect(Collectors.toList());
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
     @PutMapping("/currencies/{currencyName}")
-    @CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/", "http://localhost:63342"})
     public ResponseEntity<Map<String, Object>> updateMinBalance(@PathVariable String currencyName,
-                                                                @RequestBody CoinBalance coinBalance) throws UnsupportedEncodingException {
+                                                                @RequestBody CoinBalance coinBalance) {
 
         if (coinBalance.getBalanceType() == MIN)
             coinRepository.updateMinLimit(coinBalance.getLimit(), currencyName);
@@ -67,7 +65,7 @@ public class CoinController {
             coin.setPriceStatus(PriceStatus.NORMAL);
         }
         coinRepository.save(coin);
-        schedulerService.check(coin,coin.getCurrentAmount());
+        schedulerService.check(coin, coin.getCurrentAmount());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

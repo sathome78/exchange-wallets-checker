@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
 
     <meta charset="UTF-8">
@@ -62,18 +62,18 @@
         },
         methods: {
             getCoins: function () {
-                this.$http.get('http://172.31.3.72:8080/currencies').then(function ({data}) {
-                    console.log(data);
+                var host = document.location.host;
+                this.$http.get('http://' + host + '/currencies').then(function ({data}) {
                     this.currenciesList = data;
                 })
             },
             updateLimit: function (currencyName, limit, balanceType) {
-                this.$http.put('http://172.31.3.72:8080/currencies/' + currencyName, {
+                var host = document.location.host;
+                this.$http.put('http://' + host + '/currencies/' + currencyName, {
                     limit: limit,
                     balanceType: balanceType
                 }, function (data, status, request) {
                     this.postResults = data;
-                    console.log("Data is " + data);
                 });
             },
             getStyles: function (priceStatus) {
@@ -148,6 +148,7 @@
     .card__button-wrap {
         margin-bottom: 8px;
     }
+
     .btn {
         width: 100%;
         padding: 4px 12px;

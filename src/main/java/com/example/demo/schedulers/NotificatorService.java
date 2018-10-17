@@ -4,15 +4,9 @@ package com.example.demo.schedulers;
 
 import com.example.demo.domain.Coin;
 
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-
-import static com.example.demo.util.NumberFormatter.DECIMAL_FORMAT;
 
 public interface NotificatorService {
 
