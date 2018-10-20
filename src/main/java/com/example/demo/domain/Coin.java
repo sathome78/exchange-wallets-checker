@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.domain.enums.CoinType;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -30,5 +31,11 @@ public class Coin {
     private PriceStatus priceStatus;
     @Column(name = "COIN_IMAGE")
     private String coinImage;
+    @Column(name = "COIN_TYPE")
+    @Enumerated(EnumType.STRING)
+    private CoinType coinType;
+
+    @Column(name = "ETH_TOKEN_CONTRACT")
+    private String ethTokenContract;
 
 }

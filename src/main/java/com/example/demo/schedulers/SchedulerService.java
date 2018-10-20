@@ -2,16 +2,13 @@ package com.example.demo.schedulers;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.PriceStatus;
+import com.example.demo.domain.dto.CoinWrapper;
+import com.example.demo.domain.enums.CoinType;
 import com.example.demo.repository.CoinRepository;
-import org.json.JSONObject;
+import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +16,10 @@ import java.util.Map;
 import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
 import static com.example.demo.schedulers.NotificatorService.LOW_THAN_MIN_AMOUNT;
 import static com.example.demo.schedulers.NotificatorService.PERMISSIBLE_RANGE;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class SchedulerService {
-
-    @Autowired
-    Client client;
 
     @Autowired
     CoinRepository coinRepository;
@@ -32,32 +27,23 @@ public class SchedulerService {
     @Autowired
     Map<String, NotificatorService> notificatorServiceMap;
 
+    @Autowired
+    Map<CoinType, CoinProcessor> processorMap;
+
 
     @Scheduled(fixedDelay = 30000, initialDelay = 0)
     public void allCoins() {
-        List<Coin> all = coinRepository.findAll();
-        all.forEach(this::process);
+        List<CoinWrapper> collect = coinRepository.findAll().stream().map(coin -> processorMap.get(coin.getCoinType()).process(coin)).collect(toList());
+        collect.forEach(this::process);
     }
 
-    public void process(Coin coin) {
+    public void process(CoinWrapper coinWrapper) {
         try {
-            Response response = client.
-                    target(String.format("https://exrates.me/getWalletBalanceByCurrencyName?currency=%s&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET", coin.getName())).
-                    request(MediaType.APPLICATION_JSON_TYPE).get();
-
-            String s = response.readEntity(String.class);
-
-            JSONObject jsonObject = new JSONObject(s);
-            String balance = jsonObject.getString(coin.getDetailName());
-            BigDecimal newAmount = new BigDecimal(balance);
-            if (newAmount.compareTo(coin.getCurrentAmount()) == 0) {
+            if (coinWrapper.getActualBalance().compareTo(coinWrapper.getCoin().getCurrentAmount()) == 0) {
                 return;
             }
-
-
-            coin.setCurrentAmount(newAmount);
-
-            check(coin, newAmount);
+            coinWrapper.getCoin().setCurrentAmount(coinWrapper.getActualBalance());
+            check(coinWrapper.getCoin(), coinWrapper.getActualBalance());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,8 +67,6 @@ public class SchedulerService {
             btcCoin.setLowThanMinAmountNotified(false);
             btcCoin.setPriceStatus(PriceStatus.NORMAL);
         }
-
-
         coinRepository.save(btcCoin);
     }
 
