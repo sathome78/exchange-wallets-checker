@@ -1,12 +1,15 @@
 package com.example.demo;
 
 import com.example.demo.domain.requestbody.Fuck;
+import com.example.demo.util.RequestUtil;
 import javafx.util.Pair;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,9 +24,13 @@ import java.util.stream.Collectors;
 import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
 import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.*;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ApplicationTests {
 
 	@Autowired
@@ -402,6 +409,17 @@ public class ApplicationTests {
 				map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.get("balance"))))
 				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
+	}
+
+	@SpyBean
+	RequestUtil requestUtil;
+	@Test
+	public void te(){
+		requestUtil.getEthTokens();
+		requestUtil.getEthTokens();
+
+
+		verify(requestUtil, times(1)).getEthTokens();
 	}
 
 }

@@ -31,7 +31,7 @@ public class SchedulerService {
     Map<CoinType, CoinProcessor> processorMap;
 
 
-    @Scheduled(fixedDelay = 30000, initialDelay = 0)
+//    @Scheduled(fixedDelay = 30000, initialDelay = 0)
     public void allCoins() {
         List<CoinWrapper> collect = coinRepository.findAll().stream().map(coin -> processorMap.get(coin.getCoinType()).process(coin)).collect(toList());
         collect.forEach(this::process);
