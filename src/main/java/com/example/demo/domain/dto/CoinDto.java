@@ -23,8 +23,8 @@ public class CoinDto {
         this.id = coin.getId();
         this.name = coin.getName();
         this.currentAmount = format(coin.getCurrentAmount());
-        this.minAmount = format(coin.getMinAmount());
-        this.maxAmount = format(coin.getMaxAmount());
+        this.minAmount = coin.getMinAmount().toString();
+        this.maxAmount = coin.getMaxAmount().toString();
         this.lowThanMinAmountNotified = coin.isLowThanMinAmountNotified();
         this.detailName = coin.getDetailName();
         this.priceStatus = coin.getPriceStatus();
