@@ -38,4 +38,7 @@ public class Coin {
     @Column(name = "ETH_TOKEN_CONTRACT")
     private String ethTokenContract;
 
+    @Column(name = "ENABLE")
+    private boolean enable;
+
 }

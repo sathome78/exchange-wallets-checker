@@ -39,7 +39,10 @@ public class CoinController {
 
     @GetMapping(value = "/currencies", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<CoinDto>> getCurrencies() {
-        List<CoinDto> name = coinRepository.findAll(Sort.by(Sort.Direction.ASC, "name")).stream().map(CoinDto::new).collect(Collectors.toList());
+        List<CoinDto> name = coinRepository.findAll(Sort.by(Sort.Direction.ASC, "name")).
+                stream().
+                map(CoinDto::new).
+                collect(Collectors.toList());
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
 

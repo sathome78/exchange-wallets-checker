@@ -9,6 +9,7 @@ import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -31,19 +32,24 @@ public class SchedulerService {
     Map<CoinType, CoinProcessor> processorMap;
 
 
-//    @Scheduled(fixedDelay = 30000, initialDelay = 0)
+    @Scheduled(fixedDelay = 30000, initialDelay = 0)
     public void allCoins() {
         List<CoinWrapper> collect = coinRepository.findAll().stream().map(coin -> processorMap.get(coin.getCoinType()).process(coin)).collect(toList());
         collect.forEach(this::process);
     }
 
     public void process(CoinWrapper coinWrapper) {
+        if (coinWrapper.getCoin().isEnable())
+            process(coinWrapper.getCoin(), coinWrapper.getActualBalance());
+    }
+
+    public void process(Coin coin, BigDecimal actualBalance) {
         try {
-            if (coinWrapper.getActualBalance().compareTo(coinWrapper.getCoin().getCurrentAmount()) == 0) {
+            if (actualBalance.compareTo(coin.getCurrentAmount()) == 0) {
                 return;
             }
-            coinWrapper.getCoin().setCurrentAmount(coinWrapper.getActualBalance());
-            check(coinWrapper.getCoin(), coinWrapper.getActualBalance());
+            coin.setCurrentAmount(actualBalance);
+            check(coin, actualBalance);
         } catch (Exception e) {
             e.printStackTrace();
         }
