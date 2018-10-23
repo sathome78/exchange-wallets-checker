@@ -24,12 +24,16 @@ public class EthTokenProcessor implements CoinProcessor {
     @Autowired
     RequestUtil requestUtil;
 
+    public static final String EMPTY_BALANCE = "0";
+
 
     public CoinWrapper process(Coin coin) {
         try {
 
             JSONObject jsonObject = requestUtil.getEthTokens();
-
+            JSONObject tokens = jsonObject.getJSONObject("tokens");
+            JSONObject ethToken = tokens.getJSONObject(coin.getEthTokenContract());
+            String decimal = ethToken.getString("decimals");
             Map<String, String> collect2 = jsonObject.
                     getJSONArray("balances").
                     toList().
@@ -38,14 +42,43 @@ public class EthTokenProcessor implements CoinProcessor {
                     map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
                     .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
-            String balance = collect2.get(coin.getEthTokenContract());
+            String balance = balance(collect2.get(coin.getEthTokenContract()), decimal) ;
 
-            return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
+             return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
         } catch (Exception e) {
             e.printStackTrace();
             return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(0)).build();
         }
+    }
 
+    private String balance(String balance, String decimal) {
+        if (balance.equals(EMPTY_BALANCE)) {
+            return EMPTY_BALANCE;
+        }
+        if (decimal.equals("0")) {
+            return balance;
+        }
+        if (balance.contains("e") || balance.contains("+")) {
+            return calculateWitheBalance(balance, decimal);
+        }
+        return divide(balance, decimal);
+    }
+
+    public String calculateWitheBalance(String balance, String decimal) {
+        int indexOfPlusSymbol = balance.indexOf("+");
+        String substring = balance.substring(indexOfPlusSymbol + 1);
+        int i = Integer.valueOf(substring) - Integer.valueOf(decimal);
+        double multiplyer = Math.pow(10.0, i);
+        String cleanBalance = balance.substring(0, indexOfPlusSymbol - 1);
+        BigDecimal multiply = new BigDecimal(cleanBalance).multiply(new BigDecimal(multiplyer));
+
+        return multiply.toString();
+    }
+
+    public String divide(String balance, String decimal) {
+        double pow = Math.pow(10.0, Double.valueOf(decimal));
+        BigDecimal divide = new BigDecimal(balance).divide(new BigDecimal(pow));
+        return divide.toString();
     }
 }
 

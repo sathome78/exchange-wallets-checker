@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface CoinRepository extends JpaRepository<Coin, Long> {
 
@@ -23,4 +24,6 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
     @Transactional
     @Query(nativeQuery = true, value = "UPDATE COIN SET MAX_AMOUNT=:newLimit where NAME=:name")
     int updateMaxLimit(@Param("newLimit") BigDecimal newLimit, @Param("name") String name);
+
+    List<Coin> findByEnableTrue();
 }

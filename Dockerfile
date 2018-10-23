@@ -1,4 +1,4 @@
-FROM java:8
+    ч]FROM java:8
 VOLUME /tmp
 ARG APP_PATH=/wallet-checker-2
 
