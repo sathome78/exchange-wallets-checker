@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+
 @Repository
 
 public class EthProcessor implements CoinProcessor {
@@ -18,6 +20,6 @@ public class EthProcessor implements CoinProcessor {
     public CoinWrapper process(Coin coin) {
         JSONObject response = requestUtil.getEthTokens();
 
-        return CoinWrapper.builder().coin(coin).actualBalance(null).build();
+        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(0)).build();
     }
 }

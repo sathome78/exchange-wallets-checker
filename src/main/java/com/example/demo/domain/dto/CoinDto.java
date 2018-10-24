@@ -2,6 +2,7 @@ package com.example.demo.domain.dto;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.PriceStatus;
+import com.example.demo.domain.enums.CoinType;
 import lombok.Data;
 
 import static com.example.demo.util.NumberFormatter.format;
@@ -9,6 +10,7 @@ import static com.example.demo.util.NumberFormatter.format;
 @Data
 public class CoinDto {
 
+    private CoinType coinType;
     private long id;
     private String name;
     private String currentAmount;
@@ -18,6 +20,7 @@ public class CoinDto {
     private String detailName;
     private PriceStatus priceStatus;
     private String coinImage;
+    private String ethContract;
 
     public CoinDto(Coin coin) {
         this.id = coin.getId();
@@ -29,5 +32,7 @@ public class CoinDto {
         this.detailName = coin.getDetailName();
         this.priceStatus = coin.getPriceStatus();
         this.coinImage = coin.getCoinImage();
+        this.ethContract = coin.getEthTokenContract();
+        this.coinType = coin.getCoinType();
     }
 }
