@@ -19,7 +19,8 @@ public class EthProcessor implements CoinProcessor {
 
     public CoinWrapper process(Coin coin) {
         JSONObject response = requestUtil.getEthTokens();
+        BigDecimal actualBalance = response.getBigDecimal("balance");
 
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(0)).build();
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 }
