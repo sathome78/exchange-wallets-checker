@@ -26,7 +26,9 @@ public class EtcCoinProcessor implements CoinProcessor {
         Response response = client.target(etcEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
         String stringJsonResponse = response.readEntity(String.class);
         JSONObject jsonObject = new JSONObject(stringJsonResponse);
-        double etcBalance = jsonObject.getJSONObject("balance").getDouble("ether");
+        double etcBalance = jsonObject.
+                getJSONObject("balance").
+                getDouble("ether");
         return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(etcBalance)).build();
     }
 }
