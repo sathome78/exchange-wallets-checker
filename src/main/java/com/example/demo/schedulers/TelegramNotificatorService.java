@@ -30,7 +30,7 @@ public class TelegramNotificatorService implements NotificatorService {
 
     @Override
     public void notificate(String template, Coin coin)  {
-        String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()));
+        String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())),valueOf(NumberFormatter.format(coin.getAmountInUSD())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()),valueOf(coin.getMinAmountInUSD()),valueOf(coin.getMaxAmountInUSD()));
         try {
             text = URLEncoder.encode(text,"UTF-8");
         } catch (UnsupportedEncodingException e) {

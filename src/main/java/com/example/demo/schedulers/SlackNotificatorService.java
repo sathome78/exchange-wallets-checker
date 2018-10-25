@@ -32,7 +32,7 @@ public class SlackNotificatorService implements NotificatorService {
     @Override
     public void notificate(String template, Coin coin) {
         try {
-            String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())), valueOf(NumberFormatter.format(coin.getMinAmount())), valueOf(coin.getMaxAmount()));
+            String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())),valueOf(NumberFormatter.format(coin.getAmountInUSD())), valueOf(NumberFormatter.format(coin.getMinAmount())), valueOf(coin.getMaxAmount()),valueOf(coin.getMinAmountInUSD()),valueOf(coin.getMaxAmountInUSD()));
                 JSONObject jsonObject = new JSONObject();
             jsonObject.put("channel", "alarm");
             jsonObject.put("text", text);
