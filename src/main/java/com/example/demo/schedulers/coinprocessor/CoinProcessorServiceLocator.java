@@ -32,6 +32,9 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor xrpProcessor;
 
+    @Autowired
+    private CoinProcessor stellarCoinProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -42,6 +45,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.ETC, etcCoinProcessor);
         processorMap.put(CoinType.ACHAIN, achainCoinProcessor);
         processorMap.put(CoinType.XRP, xrpProcessor);
+        processorMap.put(CoinType.STELLAR_COIN, stellarCoinProcessor);
         return processorMap;
     }
 }
