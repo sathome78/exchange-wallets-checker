@@ -2,10 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.PriceStatus;
+import com.example.demo.domain.dto.CoinCsvDto;
 import com.example.demo.domain.dto.CoinDto;
 import com.example.demo.domain.requestbody.CoinBalance;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.SchedulerService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -14,17 +16,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
 import static com.example.demo.domain.requestbody.BalanceType.MIN;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
 
 @Controller
 @CrossOrigin(value = {"http://localhost:8080", "http://172.31.3.72:8080/"})
+@Log4j2
 public class CoinController {
 
     private final CoinRepository coinRepository;
@@ -43,8 +46,20 @@ public class CoinController {
                 stream().
                 map(CoinDto::new).
                 collect(Collectors.toList());
+
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/currencies/load", produces = APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<String> loadCSV(@RequestParam("usd") boolean withUsd) {
+        if (withUsd) {
+            return new ResponseEntity<>(getCoinsCSV(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(getCoinsCSVWithoutUSD(), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value = "/currencies/")
 
     @PutMapping("/currencies/{currencyName}")
     public ResponseEntity<Map<String, Object>> updateMinBalance(@PathVariable String currencyName,
@@ -78,5 +93,17 @@ public class CoinController {
         return "index";
     }
 
+
+    public String getCoinsCSV() {
+        List<Coin> result = coinRepository.findAll();
+        return result.stream().map(CoinCsvDto::new).map(CoinCsvDto::toString)
+                .collect(Collectors.joining("", CoinCsvDto.getFullTitle(), ""));
+    }
+
+    public String getCoinsCSVWithoutUSD() {
+        List<Coin> result = coinRepository.findAll();
+        return result.stream().map(CoinCsvDto::new).map(CoinCsvDto::toStringWithoutUSD)
+                .collect(Collectors.joining("", CoinCsvDto.getTitleWithoutUSD(), ""));
+    }
 
 }

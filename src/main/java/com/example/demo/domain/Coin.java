@@ -41,4 +41,16 @@ public class Coin {
     @Column(name = "ENABLE")
     private boolean enable;
 
+    @Column(name = "RATE_TO_USD")
+    private BigDecimal rateToUSD;
+
+    @Column(name = "MIN_AMOUNT_USD")
+    private BigDecimal minAmountInUSD;
+
+    @Column(name = "MAX_AMOUNT_USD")
+    private BigDecimal maxAmountInUSD;
+
+    @Column(name = "AMOUNT_IN_USD")
+    private BigDecimal amountInUSD;
+
 }

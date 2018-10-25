@@ -14,7 +14,8 @@
     <a href="#"
        class="btn btn-success"
        @click.stop="getCoins">Load Coins</a>
-
+    <p class="btn btn-success" @click.stop="loadCsv">Load csv with USD</p>
+    <p class="btn btn-success" @click.stop="loadCsvWithoutUSD">Load csv without USD</p>
     <div id="wrapper-div">
         <div class="card" v-for="todo in currenciesList" v-bind:style="getStyles(todo.priceStatus)">
             <div class="card__header">
@@ -82,9 +83,34 @@
                 } else if (priceStatus === 'ABOVE') {
                     return 'border: red solid 3px';
                 }
+            },
+            loadCsv: function () {
+                var host = document.location.host;
+                this.$http.get('http://' + host + '/currencies/load?usd=true').then(function({data}){
+                  saveToDisk(data,"report_with_usd.csv")
+                })
+            },
+            loadCsvWithoutUSD: function () {
+                var host = document.location.host;
+                this.$http.get('http://' + host + '/currencies/load?usd=false').then(function({data}){
+                    saveToDisk(data,"report_without_usd.csv")
+                })
             }
         }
     });
+
+    function saveToDisk(data, filename) {
+        //wolper 23.04.18
+        //argument name changed to filename from 'name'
+        //var filename = name ? name : "downloadUsersWalletsSummaryInOut_" + currentRole + ".csv";
+
+        var link = document.createElement('a');
+        link.href = "data:text/plain;charset=utf-8,%EF%BB%BF" + encodeURIComponent(data);
+        link.download = filename;
+        var e = document.createEvent('MouseEvents');
+        e.initEvent('click', true, true);
+        link.dispatchEvent(e);
+    }
 </script>
 
 <style media="screen">
@@ -196,6 +222,7 @@
             width: 60%;
         }
     }
+
 
 </style>
 </html>
