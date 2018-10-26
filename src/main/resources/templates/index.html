@@ -15,13 +15,12 @@
 </head>
 <body>
 <div id="my_view">
-    <a href="#"
-       class="btn btn-success"
-       @click.stop="getCoins">Load Coins</a>
-
-    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal1</button>
-    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Open Modal2</button>
-    <div id="wrapper-div">
+    <div id="main-buttons">
+        <button type="button" class="btn btn-info btn-lg" @click.stop="getCoins">Load Coins</button>
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal1</button>
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Open Modal2</button>
+    </div>
+     <div id="wrapper-div">
         <div class="card" v-for="todo in currenciesList" v-bind:style="getStyles(todo.priceStatus)">
             <div class="card__header">
                 <div class="card__icon">
@@ -321,8 +320,12 @@
         background-color: #dddddd;
     }
 
-
     .modal-dialog{
+        width: 1000px;
+    }
+    #main-buttons{
+        display: flex;
+        margin: 10px auto 20px;
         width: 1000px;
     }
 </style>

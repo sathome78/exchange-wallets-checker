@@ -81,8 +81,6 @@ public class CoinController {
         }
     }
 
-    @GetMapping(value = "/currencies/")
-
     @PutMapping("/currencies/{currencyName}")
     public ResponseEntity<Map<String, Object>> updateMinBalance(@PathVariable String currencyName,
                                                                 @RequestBody CoinBalance coinBalance) {
