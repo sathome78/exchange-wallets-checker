@@ -5,11 +5,16 @@ import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.enums.CoinType;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 import static com.example.demo.util.NumberFormatter.format;
 
 @Data
 public class CoinDto {
 
+    private  BigDecimal maxAmountInUSD;
+    private BigDecimal minAmountInUSD;
+    private BigDecimal amountInUSD;
     private CoinType coinType;
     private long id;
     private String name;
@@ -34,5 +39,8 @@ public class CoinDto {
         this.coinImage = coin.getCoinImage();
         this.ethContract = coin.getEthTokenContract();
         this.coinType = coin.getCoinType();
+        this.amountInUSD = coin.getAmountInUSD();
+        this.minAmountInUSD = coin.getMinAmountInUSD();
+        this.maxAmountInUSD = coin.getMaxAmountInUSD();
     }
 }

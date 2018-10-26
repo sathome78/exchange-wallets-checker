@@ -5,14 +5,12 @@ import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.util.RequestUtil;
 import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -44,14 +42,20 @@ public class EthTokenProcessor implements CoinProcessor {
                     map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
                     .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
-            String balance = balance(collect2.get(coin.getEthTokenContract()), decimal) ;
+            String balance = balance(collect2.get(coin.getEthTokenContract()), decimal);
 
-             return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
+            return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("Coin is "+ coin);
+            log.error("Coin is " + coin);
             return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(0)).build();
         }
+    }
+
+    @Override
+    public BigDecimal getBalance(Coin coin, String wallet) {
+        return null;
+
     }
 
     private String balance(String balance, String decimal) {

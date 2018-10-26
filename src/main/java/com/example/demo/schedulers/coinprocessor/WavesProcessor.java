@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 
 @Service
 public class WavesProcessor implements CoinProcessor {
@@ -26,5 +27,10 @@ public class WavesProcessor implements CoinProcessor {
         JSONObject jsonResponse = new JSONObject(stringResponse);
 
         return CoinWrapper.builder().coin(coin).actualBalance(null).build();
+    }
+
+    @Override
+    public BigDecimal getBalance(Coin coin, String wallet) {
+        return null;
     }
 }

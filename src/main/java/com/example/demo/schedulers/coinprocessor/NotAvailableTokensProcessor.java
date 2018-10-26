@@ -11,4 +11,9 @@ public class NotAvailableTokensProcessor implements CoinProcessor {
     public CoinWrapper process(Coin coin) {
         return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(0)).build();
     }
+
+    @Override
+    public BigDecimal getBalance(Coin coin, String wallet) {
+        return null;
+    }
 }

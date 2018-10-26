@@ -31,4 +31,9 @@ public class EtcCoinProcessor implements CoinProcessor {
                 getDouble("ether");
         return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(etcBalance)).build();
     }
+
+    @Override
+    public BigDecimal getBalance(Coin coin, String wallet) {
+        return null;
+    }
 }

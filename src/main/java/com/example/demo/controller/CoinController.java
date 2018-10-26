@@ -5,8 +5,11 @@ import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.dto.CoinCsvDto;
 import com.example.demo.domain.dto.CoinDto;
 import com.example.demo.domain.requestbody.CoinBalance;
+import com.example.demo.exceptions.UnsupportedCoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.SchedulerService;
+import com.example.demo.schedulers.coinprocessor.CoinProcessor;
+import com.example.demo.schedulers.coinprocessor.CoinProcessorServiceLocator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +40,9 @@ public class CoinController {
     private final SchedulerService schedulerService;
 
     @Autowired
+    private CoinProcessorServiceLocator coinProcessorServiceLocator;
+
+    @Autowired
     public CoinController(CoinRepository coinRepository, SchedulerService schedulerService) {
         this.coinRepository = coinRepository;
         this.schedulerService = schedulerService;
@@ -48,6 +56,20 @@ public class CoinController {
                 collect(Collectors.toList());
 
         return new ResponseEntity<>(name, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/currencies/{currencyTiker}/balance")
+    public ResponseEntity<Map<String, Object>> getBalanceByWallet(@PathVariable String currencyTiker, @RequestParam("wallet") String wallet) {
+        Coin coin = coinRepository.findByName(currencyTiker);
+        CoinProcessor coinProcessor = coinProcessorServiceLocator.processorMap().getOrDefault(coin.getCoinType(), null);
+        if (coinProcessor == null) {
+            throw new UnsupportedCoinType("Coin is " + currencyTiker + " . Wallet is " + wallet);
+        }
+        BigDecimal balance = coinProcessor.getBalance(coin, wallet);
+        Map<String, Object> response = new HashMap<>();
+        response.put("balance", balance);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/currencies/load", produces = APPLICATION_OCTET_STREAM_VALUE)

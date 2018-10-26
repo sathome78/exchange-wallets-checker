@@ -5,7 +5,6 @@ import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.util.RequestUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -22,5 +21,11 @@ public class EthProcessor implements CoinProcessor {
         BigDecimal actualBalance = response.getBigDecimal("balance");
 
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
+    }
+
+    @Override
+    public BigDecimal getBalance(Coin coin, String wallet) {
+
+        return null;
     }
 }

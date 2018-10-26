@@ -40,4 +40,9 @@ public class AchainCoinProcessor implements CoinProcessor {
 
         return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(collect2.get(coin.getName()))).build();
     }
+
+    public BigDecimal getBalance(Coin coin, String wallet) {
+
+        return null;
+    }
 }

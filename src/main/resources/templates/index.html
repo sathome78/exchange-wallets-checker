@@ -8,14 +8,19 @@
     <title>Wallet-checker</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 <div id="my_view">
     <a href="#"
        class="btn btn-success"
        @click.stop="getCoins">Load Coins</a>
-    <p class="btn btn-success" @click.stop="loadCsv">Load csv with USD</p>
-    <p class="btn btn-success" @click.stop="loadCsvWithoutUSD">Load csv without USD</p>
+
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal1</button>
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Open Modal2</button>
     <div id="wrapper-div">
         <div class="card" v-for="todo in currenciesList" v-bind:style="getStyles(todo.priceStatus)">
             <div class="card__header">
@@ -48,7 +53,84 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Корректировка лимитов</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Таблица</p>
+                    <table>
+                        <tr>
+                            <th>id монеты</th>
+                            <th>Тикер монеты</th>
+                            <th>Текущий баланс</th>
+                            <th>Минимальный лимит</th>
+                            <th>Максимальный лимит</th>
+                        </tr>
+                        <tr v-for="currency in currenciesList">
+                            <th>{{currency.id}}</th>
+                            <th>{{currency.name}}</th>
+                            <th>{{currency.currentAmount}}</th>
+                            <th>{{currency.minAmount}}</th>
+                            <th>{{currency.maxAmount}}</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click.stop="loadCsv">Выгрузить CSV</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModal1" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Полная информация по монетам</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Таблица </p>
+                    <table>
+                        <tr>
+                            <th>id монеты</th>
+                            <th>Тикер монеты</th>
+                            <th>Текущий баланс</th>
+                            <th>Минимальный лимит</th>
+                            <th>Максимальный лимит</th>
+                            <th>Текущий баланс в $</th>
+                            <th>Минимальный лимит в $</th>
+                            <th>Максимальный лимит в $</th>
+                        </tr>
+                        <tr v-for="currency in currenciesList">
+                            <th>{{currency.id}}</th>
+                            <th>{{currency.name}}</th>
+                            <th>{{currency.currentAmount}}</th>
+                            <th>{{currency.minAmount}}</th>
+                            <th>{{currency.maxAmount}}</th>
+                            <th>{{currency.amountInUSD}}</th>
+                            <th>{{currency.minAmountInUSD}}</th>
+                            <th>{{currency.maxAmountInUSD}}</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click.stop="loadCsvWithoutUSD">Выгрузить CSV</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.0/vue.min.js"></script>
@@ -180,7 +262,7 @@
         padding: 4px 12px;
         border: 1px solid #237BEF;
         border-radius: 4px;
-        background-color: #fff;
+        /*background-color: #fff;*/
         outline: none;
         cursor: pointer;
     }
@@ -223,6 +305,25 @@
         }
     }
 
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
 
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+
+    .modal-dialog{
+        width: 1000px;
+    }
 </style>
 </html>

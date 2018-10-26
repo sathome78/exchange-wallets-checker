@@ -3,7 +3,6 @@ package com.example.demo.schedulers.coinprocessor;
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
 import javafx.util.Pair;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,5 +42,10 @@ public class StellarCoinProcessor implements CoinProcessor {
 
         return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(coinBalance)).build();
 
+    }
+
+    @Override
+    public BigDecimal getBalance(Coin coin, String wallet) {
+        return null;
     }
 }

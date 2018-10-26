@@ -29,4 +29,9 @@ public class BtcProcessor implements CoinProcessor {
 
         return CoinWrapper.builder().actualBalance(new BigDecimal(balance)).coin(coin).build();
     }
+
+    @Override
+    public BigDecimal getBalance(Coin coin, String wallet) {
+        return null;
+    }
 }
