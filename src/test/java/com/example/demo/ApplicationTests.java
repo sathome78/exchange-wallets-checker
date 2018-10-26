@@ -1,6 +1,10 @@
 package com.example.demo;
 
+import com.example.demo.domain.Coin;
 import com.example.demo.domain.requestbody.Fuck;
+import com.example.demo.repository.CoinRepository;
+import com.example.demo.schedulers.NotificatorService;
+import com.example.demo.util.NumberFormatter;
 import com.example.demo.util.RequestUtil;
 import javafx.util.Pair;
 import net.bytebuddy.asm.Advice;
@@ -28,10 +32,12 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.*;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -39,42 +45,60 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ApplicationTests {
-//
-//	@Autowired
-//	public JavaMailSender emailSender;
-//
-//	@Autowired
-//	Client client;
-//
-//	@Test
-//	public void contextLoads() {
-////		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-////		simpleMailMessage.setTo("dmitrenkonikita1213@gmail.com");
-////		simpleMailMessage.setFrom("sender@upholding.biz");
-////		simpleMailMessage.setText("hello");
-////		emailSender.send(simpleMailMessage);
-//		BigDecimal bigDecimal = new BigDecimal(300000000);
-//		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000");
-//        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
-//        decimalFormatSymbols.setGroupingSeparator(' ');
-//
-//        decimalFormat.setDecimalFormatSymbols(decimalFormatSymbols);
-//		System.out.println(decimalFormat.format(bigDecimal));
-//	}
-//
-//	@SpyBean
-//	RequestUtil requestUtil;
-//	@Test
-//	public void te(){
-//		requestUtil.getEthTokens();
-//		requestUtil.getEthTokens();
-//
-//
-//		verify(requestUtil, times(1)).getEthTokens();
-//	}
+
+	@Autowired
+	public JavaMailSender emailSender;
+
+	@Autowired
+	Client client;
+
+	@Autowired
+    private CoinRepository coinRepository;
+
+	@Test
+	public void contextLoads() {
+//		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//		simpleMailMessage.setTo("dmitrenkonikita1213@gmail.com");
+//		simpleMailMessage.setFrom("sender@upholding.biz");
+//		simpleMailMessage.setText("hello");
+//		emailSender.send(simpleMailMessage);
+		BigDecimal bigDecimal = new BigDecimal(300000000);
+		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000");
+        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+        decimalFormatSymbols.setGroupingSeparator(' ');
+
+        decimalFormat.setDecimalFormatSymbols(decimalFormatSymbols);
+		System.out.println(decimalFormat.format(bigDecimal));
+	}
+
+	@Test
+    public void testFormatting(){
+        Coin coin = coinRepository.findByName("BTC");
+        String text = format(NotificatorService.ABOVE_MAX_LIMIT,
+                coin.getName(),
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()),
+                valueOf(NumberFormatter.format(coin.getCurrentAmount())),
+                valueOf(NumberFormatter.format(coin.getAmountInUSD())),
+                valueOf(coin.getMinAmount()),
+                valueOf(coin.getMaxAmount()),
+                valueOf(coin.getMinAmountInUSD()),
+                valueOf(coin.getMaxAmountInUSD()));
+        System.out.println(text);
+    }
+
+	@SpyBean
+	RequestUtil requestUtil;
+	@Test
+	public void te(){
+		requestUtil.getEthTokens();
+		requestUtil.getEthTokens();
+
+
+		verify(requestUtil, times(1)).getEthTokens();
+	}
 //
 //	@Test
 //	public void testEtcToken() throws InterruptedException, IOException {
