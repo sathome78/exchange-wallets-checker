@@ -6,10 +6,16 @@ import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.domain.enums.CoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
+import org.glassfish.jersey.client.ClientBackgroundScheduler;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +36,12 @@ public class SchedulerService {
 
     @Autowired
     Map<CoinType, CoinProcessor> processorMap;
+
+    @Autowired
+    private Client client;
+
+    @Value("${currency.usd.api}")
+    private String currencyUsd;
 
 
     @Scheduled(fixedDelay = 30000, initialDelay = 0)
@@ -74,6 +86,25 @@ public class SchedulerService {
             btcCoin.setPriceStatus(PriceStatus.NORMAL);
         }
         coinRepository.save(btcCoin);
+    }
+
+    @Scheduled(fixedDelay = 30000, initialDelay = 0)
+    public void updateUSD() {
+        Response response = client.target(currencyUsd).request(MediaType.APPLICATION_JSON_TYPE).get();
+        String stringResponse = response.readEntity(String.class);
+        JSONObject resp = new JSONObject(stringResponse);
+        List<Coin> all = coinRepository.findAll();
+        all.forEach(coin -> convert(resp, coin));
+        coinRepository.saveAll(all);
+    }
+
+    private void convert(JSONObject resp, Coin coin) {
+        try {
+            double usdRate = resp.getJSONObject(coin.getName()).getDouble("usd_rate");
+            coin.updateUSDData(usdRate);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
 
