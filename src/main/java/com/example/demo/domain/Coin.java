@@ -54,9 +54,24 @@ public class Coin {
     private BigDecimal amountInUSD;
 
     public void updateUSDData(double coinUSDRates) {
-        this.amountInUSD = new BigDecimal(coinUSDRates);
-        this.amountInUSD = this.getMaxAmount().multiply(this.getRateToUSD());
-        this.minAmountInUSD = this.getMinAmount().multiply(this.getRateToUSD());
-        this.maxAmountInUSD = this.getMaxAmount().multiply(this.getRateToUSD());
+        this.rateToUSD = new BigDecimal(coinUSDRates);
+        this.amountInUSD = this.currentAmount.multiply(this.rateToUSD);
+        this.minAmountInUSD = this.minAmount.multiply(this.rateToUSD);
+        this.maxAmountInUSD = this.maxAmount.multiply(this.rateToUSD);
+    }
+
+    public void updateBalanceAndLimits(String[] data){
+        this.amountInUSD = new BigDecimal(data[1]);
+        this.minAmount = new BigDecimal(data[1]);
+        this.maxAmount = new BigDecimal(data[2]);
+        this.amountInUSD = this.currentAmount.multiply(this.rateToUSD);
+        this.minAmountInUSD = this.minAmount.multiply(this.rateToUSD);
+        this.maxAmountInUSD = this.maxAmount.multiply(this.rateToUSD);
+
+    }
+
+    public Coin(String[] csvRow){
+        this.name = csvRow[1];
+
     }
 }

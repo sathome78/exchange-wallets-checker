@@ -167,13 +167,13 @@
             },
             loadCsv: function () {
                 var host = document.location.host;
-                this.$http.get('http://' + host + '/currencies/load?usd=true').then(function({data}){
+                this.$http.get('http://' + host + '/currencies/load?usd=false').then(function({data}){
                   saveToDisk(data,"report_with_usd.csv")
                 })
             },
             loadCsvWithoutUSD: function () {
                 var host = document.location.host;
-                this.$http.get('http://' + host + '/currencies/load?usd=false').then(function({data}){
+                this.$http.get('http://' + host + '/currencies/load?usd=true').then(function({data}){
                     saveToDisk(data,"report_without_usd.csv")
                 })
             }

@@ -11,6 +11,7 @@ import com.example.demo.schedulers.SchedulerService;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import com.example.demo.schedulers.coinprocessor.CoinProcessorServiceLocator;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -18,15 +19,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
 import static com.example.demo.domain.requestbody.BalanceType.MIN;
+import static java.util.Arrays.*;
+import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
 
@@ -106,6 +109,30 @@ public class CoinController {
         schedulerService.check(coin, coin.getCurrentAmount());
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //TODO - test
+    @PutMapping("/currencies")
+    public ResponseEntity<Map<String, Object>> updateWithFile(@RequestParam("file") MultipartFile file) throws IOException {
+        String string = IOUtils.toString(file.getInputStream(), "UTF-8");
+
+        List<String[]> csvRow = stream(string.split("\\r?\\n")).
+                map(unit -> unit.split(";")).
+                collect(Collectors.toList());
+        csvRow.remove(0);
+        Map<String, String[]> collect = csvRow.
+                stream().
+                collect(toMap(element -> element[1], element -> element));
+
+        List<String> listOfCoins = csvRow.stream().map(row -> row[1]).collect(Collectors.toList());
+
+        List<Coin> coins = coinRepository.findByNameInNames(listOfCoins);
+
+        coins.forEach(coin -> coin.updateBalanceAndLimits(collect.get(coin.getName())));
+
+        coinRepository.saveAll(coins);
+
+        return new ResponseEntity<>(Collections.emptyMap(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
