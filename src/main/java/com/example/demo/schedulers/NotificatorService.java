@@ -15,25 +15,25 @@ public interface NotificatorService {
     String ABOVE_MAX_LIMIT =
             "\uD83C\uDF4E Кошелёк: %s\nПревышен максимальный лимит!\nВремя: %s\n\n" +
             "Баланс: %s  \nБаланс в $: %s\n\n" +
-            "Мин.лимит: %s \nMax.Лимит: %s\n\n"+
-            "Мин.лимит в $: %s \nMax.Лимит в $: %s\n";
+            "Мин.лимит: %s \nMax.лимит: %s\n\n"+
+            "Мин.лимит в $: %s \nMax.лимит в $: %s\n";
 
     String LOW_THAN_MIN_AMOUNT  =
             "\uD83C\uDF4B Кошелёк: %s\nНиже нижнего лимита!\nВремя: %s\n\n" +
             "Баланс: %s  \nБаланс в $: %s\n\n" +
-            "Мин.лимит: %s \nMax.Лимит: %s\n\n"+
-            "Мин.лимит в $: %s \nMax.Лимит в $: %s\n";
+            "Мин.лимит: %s \nMax.лимит: %s\n\n"+
+            "Мин.лимит в $: %s \nMax.лимит в $: %s\n";
 
     String PERMISSIBLE_RANGE =
             "\uD83C\uDF4F Кошелёк: %s\nКоличество в допустимом диапазоне!\nВремя: %s\n\n" +
             "Баланс: %s  \nБаланс в $: %s\n\n" +
-            "Мин.лимит: %s \nMax.Лимит: %s\n\n"+
-            "Мин.лимит в $: %s \nMax.Лимит в $: %s\n";
+            "Мин.лимит: %s \nMax.лимит: %s\n\n"+
+            "Мин.лимит в $: %s \nMax.лимит в $: %s\n";
 
 
-    void notificate(String template, Coin coin);
+    void notificate(String renderedTemplate);
 
-    default String getCurrentDate() {
+    static String getCurrentDate() {
         return dateFormat.format(new Date());
     }
 }

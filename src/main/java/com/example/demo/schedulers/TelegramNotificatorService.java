@@ -29,16 +29,16 @@ public class TelegramNotificatorService implements NotificatorService {
     private String botUrl;
 
     @Override
-    public void notificate(String template, Coin coin)  {
-        String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())),valueOf(NumberFormatter.format(coin.getAmountInUSD())), valueOf(coin.getMinAmount()), valueOf(coin.getMaxAmount()),valueOf(coin.getMinAmountInUSD()),valueOf(coin.getMaxAmountInUSD()));
+    public void notificate(String renderedTemplate)  {
+
         try {
-            text = URLEncoder.encode(text,"UTF-8");
+            renderedTemplate = URLEncoder.encode(renderedTemplate,"UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Response response = client.target(format(botUrl, text)).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(format(botUrl, renderedTemplate)).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-        log.info("Send notification to telegramm {}.", text, response.readEntity(String.class));
+        log.info("Send notification to telegramm {}.", renderedTemplate, response.readEntity(String.class));
 
     }
 }

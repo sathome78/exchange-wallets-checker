@@ -30,12 +30,12 @@ public class SlackNotificatorService implements NotificatorService {
     private String botAccessToken;
 
     @Override
-    public void notificate(String template, Coin coin) {
+    public void notificate(String renderedTemplate){
         try {
-            String text = format(template, coin.getName(), getCurrentDate(), valueOf(NumberFormatter.format(coin.getCurrentAmount())),valueOf(NumberFormatter.format(coin.getAmountInUSD())), valueOf(NumberFormatter.format(coin.getMinAmount())), valueOf(coin.getMaxAmount()),valueOf(coin.getMinAmountInUSD()),valueOf(coin.getMaxAmountInUSD()));
-                JSONObject jsonObject = new JSONObject();
+
+            JSONObject jsonObject = new JSONObject();
             jsonObject.put("channel", "alarm");
-            jsonObject.put("text", text);
+            jsonObject.put("text", renderedTemplate);
 
             Response response = client.
                     target(slackBaseUrl).
