@@ -1,5 +1,6 @@
 package com.example.demo.schedulers.coinprocessor;
 
+import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.enums.CoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
+import static com.example.demo.schedulers.NotificatorService.LOW_THAN_MIN_AMOUNT;
+import static com.example.demo.schedulers.NotificatorService.PERMISSIBLE_RANGE;
 
 @Service
 public class CoinProcessorServiceLocator {
@@ -55,5 +60,15 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.XEM_COIN, xemProcessor);
         processorMap.put(CoinType.XEM_MOSAIC, xemMosaicProcessor);
         return processorMap;
+    }
+
+    @Bean
+    public Map<PriceStatus, String> templatesMap() {
+        Map<PriceStatus, String> templatesMap = new HashMap<>();
+        templatesMap.put(PriceStatus.ABOVE, ABOVE_MAX_LIMIT);
+        templatesMap.put(PriceStatus.LOW, LOW_THAN_MIN_AMOUNT);
+        templatesMap.put(PriceStatus.NORMAL, PERMISSIBLE_RANGE);
+        templatesMap.put(null, ABOVE_MAX_LIMIT);
+        return templatesMap;
     }
 }

@@ -6,6 +6,8 @@ import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.domain.enums.CoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
+import com.example.demo.util.NumberFormatter;
+import javafx.util.Pair;
 import org.glassfish.jersey.client.ClientBackgroundScheduler;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
-import static com.example.demo.schedulers.NotificatorService.LOW_THAN_MIN_AMOUNT;
-import static com.example.demo.schedulers.NotificatorService.PERMISSIBLE_RANGE;
+import static com.example.demo.schedulers.NotificatorService.*;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -36,6 +38,9 @@ public class SchedulerService {
 
     @Autowired
     Map<CoinType, CoinProcessor> processorMap;
+
+    @Autowired
+    Map<PriceStatus, String> templatesMap;
 
     @Autowired
     private Client client;
@@ -68,22 +73,10 @@ public class SchedulerService {
     }
 
     public void check(Coin btcCoin, BigDecimal newAmount) {
-
-        if (newAmount.compareTo(btcCoin.getMaxAmount()) > 0) {
-            notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(ABOVE_MAX_LIMIT, btcCoin));
-            btcCoin.setPriceStatus(PriceStatus.ABOVE);
-        }
-
-        if (newAmount.compareTo(btcCoin.getMinAmount()) < 0 && !btcCoin.isLowThanMinAmountNotified()) {
-            notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(LOW_THAN_MIN_AMOUNT, btcCoin));
-            btcCoin.setLowThanMinAmountNotified(true);
-            btcCoin.setPriceStatus(PriceStatus.LOW);
-        }
-
-        if (newAmount.compareTo(btcCoin.getMinAmount()) > 0 && newAmount.compareTo(btcCoin.getMaxAmount()) < 0 && (btcCoin.isLowThanMinAmountNotified() || btcCoin.getPriceStatus() == PriceStatus.ABOVE)) {
-            notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(PERMISSIBLE_RANGE, btcCoin));
-            btcCoin.setLowThanMinAmountNotified(false);
-            btcCoin.setPriceStatus(PriceStatus.NORMAL);
+        Pair<PriceStatus,Boolean> status = getStatus(btcCoin, newAmount);
+        if(status.getValue()){
+            String template = renderTemplate(templatesMap.get(status.getKey()), btcCoin);
+            notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(template));
         }
         coinRepository.save(btcCoin);
     }
@@ -103,8 +96,46 @@ public class SchedulerService {
             double usdRate = resp.getJSONObject(coin.getName()).getDouble("usd_rate");
             coin.updateUSDData(usdRate);
         } catch (RuntimeException ignored) {
-
         }
+    }
+
+    private String renderTemplate(String template, Coin coin) {
+        return format(
+                template,
+                coin.getName(),
+                getCurrentDate(),
+                valueOf(NumberFormatter.format(coin.getCurrentAmount())),
+                valueOf(NumberFormatter.format(coin.getAmountInUSD())),
+                valueOf(NumberFormatter.format(coin.getMinAmount())),
+                valueOf(NumberFormatter.format(coin.getMaxAmount())),
+                valueOf(NumberFormatter.format(coin.getMinAmountInUSD())),
+                valueOf(NumberFormatter.format(coin.getMaxAmountInUSD()))
+        );
+    }
+
+    private Pair<PriceStatus,Boolean> getStatus(Coin btcCoin, BigDecimal newAmount) {
+        PriceStatus priceStatus = null;
+        boolean sendNotification = false;
+        if (newAmount.compareTo(btcCoin.getMaxAmount()) > 0) {
+            priceStatus = PriceStatus.ABOVE;
+            sendNotification = true;
+        }
+
+        if (newAmount.compareTo(btcCoin.getMinAmount()) < 0 && !btcCoin.isLowThanMinAmountNotified()) {
+            btcCoin.setLowThanMinAmountNotified(true);
+            priceStatus = PriceStatus.LOW;
+            sendNotification = true;
+        }
+
+        if (newAmount.compareTo(btcCoin.getMinAmount()) > 0 && newAmount.compareTo(btcCoin.getMaxAmount()) < 0 && (btcCoin.isLowThanMinAmountNotified() || btcCoin.getPriceStatus() == PriceStatus.ABOVE)) {
+            btcCoin.setLowThanMinAmountNotified(false);
+            priceStatus = PriceStatus.NORMAL;
+            sendNotification = true;
+        }
+
+        btcCoin.setPriceStatus(priceStatus);
+
+        return new Pair<>(priceStatus,sendNotification);
     }
 
 
