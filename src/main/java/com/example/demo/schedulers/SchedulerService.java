@@ -8,7 +8,6 @@ import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import com.example.demo.util.NumberFormatter;
 import javafx.util.Pair;
-import org.glassfish.jersey.client.ClientBackgroundScheduler;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
