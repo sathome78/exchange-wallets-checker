@@ -1,7 +1,5 @@
 package com.example.demo.schedulers;
 
-import com.example.demo.domain.Coin;
-import com.example.demo.util.NumberFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,13 +8,10 @@ import org.springframework.stereotype.Service;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.NumberFormat;
 
 import static java.lang.String.format;
-import static java.lang.String.valueOf;
 
 @Service
 @Slf4j(topic = "TelegramNotificatorService")

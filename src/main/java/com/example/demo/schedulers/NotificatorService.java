@@ -1,9 +1,6 @@
 package com.example.demo.schedulers;
 
 
-
-import com.example.demo.domain.Coin;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

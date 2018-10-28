@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
-import static com.example.demo.schedulers.NotificatorService.LOW_THAN_MIN_AMOUNT;
-import static com.example.demo.schedulers.NotificatorService.PERMISSIBLE_RANGE;
+import static com.example.demo.schedulers.NotificatorService.*;
 
 @Service
 public class CoinProcessorServiceLocator {

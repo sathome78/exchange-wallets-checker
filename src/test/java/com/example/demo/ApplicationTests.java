@@ -1,47 +1,27 @@
 package com.example.demo;
 
 import com.example.demo.domain.Coin;
-import com.example.demo.domain.requestbody.Fuck;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.NotificatorService;
 import com.example.demo.util.NumberFormatter;
 import com.example.demo.util.RequestUtil;
-import javafx.util.Pair;
-import net.bytebuddy.asm.Advice;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
 
-import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static java.util.stream.Collectors.*;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 

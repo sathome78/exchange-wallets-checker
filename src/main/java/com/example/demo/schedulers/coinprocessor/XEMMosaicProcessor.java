@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Double.valueOf;
 import static java.lang.Math.pow;
-import static java.lang.String.*;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
 @Service("xemMosaicProcessor")

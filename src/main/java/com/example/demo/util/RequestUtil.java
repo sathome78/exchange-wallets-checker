@@ -1,8 +1,5 @@
 package com.example.demo.util;
 
-import com.example.demo.domain.Coin;
-import com.example.demo.domain.dto.CoinWrapper;
-import javafx.util.Pair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,12 +8,6 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.lang.String.valueOf;
 
 @Service
 public class RequestUtil {

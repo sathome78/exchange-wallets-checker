@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.demo.schedulers.NotificatorService.*;
+import static com.example.demo.schedulers.NotificatorService.getCurrentDate;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.toList;

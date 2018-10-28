@@ -1,7 +1,5 @@
 package com.example.demo.schedulers;
 
-import com.example.demo.domain.Coin;
-import com.example.demo.util.NumberFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +9,6 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import static java.lang.String.format;
-import static java.lang.String.valueOf;
 
 @Component
 
