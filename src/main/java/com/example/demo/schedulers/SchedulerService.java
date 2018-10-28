@@ -102,8 +102,8 @@ public class SchedulerService {
         try {
             double usdRate = resp.getJSONObject(coin.getName()).getDouble("usd_rate");
             coin.updateUSDData(usdRate);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
+        } catch (RuntimeException ignored) {
+
         }
     }
 
