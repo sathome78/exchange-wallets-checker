@@ -20,6 +20,8 @@ public class XEMProcessor implements CoinProcessor {
 
     @Value("${xem.endpoint}")
     private String xemEndpoint;
+    @Value("${xem.endpoint.basic}")
+    private String xemBasicEndpoint;
 
     public CoinWrapper process(Coin coin) {
         Response response = client.target(xemEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
@@ -32,6 +34,10 @@ public class XEMProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        return null;
+        Response response = client.target(xemBasicEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+        JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
+        BigDecimal bigDecimal = jsonObject.getJSONObject("account").getBigDecimal("balance");
+        BigDecimal newBalance = bigDecimal.divide(new BigDecimal(1000000));
+        return newBalance;
     }
 }

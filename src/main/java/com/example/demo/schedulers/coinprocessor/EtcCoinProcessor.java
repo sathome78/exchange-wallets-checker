@@ -19,6 +19,9 @@ public class EtcCoinProcessor implements CoinProcessor {
     @Value("${etc.endpoint}")
     private String etcEndpoint;
 
+    @Value("https://api.gastracker.io/addr/")
+    private String basicEndpoint;
+
     @Autowired
     Client client;
 
@@ -34,6 +37,15 @@ public class EtcCoinProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        return null;
+        Response response = client.target(basicEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+
+        String stringJsonResponse = response.readEntity(String.class);
+        JSONObject jsonObject = new JSONObject(stringJsonResponse);
+
+        double etcBalance = jsonObject.
+                getJSONObject("balance").
+                getDouble("ether");
+
+        return new BigDecimal(etcBalance);
     }
 }

@@ -10,6 +10,7 @@ import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.SchedulerService;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import com.example.demo.schedulers.coinprocessor.CoinProcessorServiceLocator;
+import com.google.common.base.Strings;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
@@ -65,15 +63,20 @@ public class CoinController {
     }
 
     @GetMapping(value = "/currencies/{currencyTiker}/balance")
-    public ResponseEntity<Map<String, Object>> getBalanceByWallet(@PathVariable String currencyTiker, @RequestParam("wallet") String wallet) {
+    public ResponseEntity<Map<String, Object>> getBalanceByWallet(@PathVariable String currencyTiker,
+                                                                  @RequestParam(value = "wallet") String wallet,
+                                                                  @RequestParam(value = "eth_contract", required = false) String ethContract) {
         Coin coin = coinRepository.findByName(currencyTiker);
         CoinProcessor coinProcessor = coinProcessorServiceLocator.processorMap().getOrDefault(coin.getCoinType(), null);
         if (coinProcessor == null) {
-            throw new UnsupportedCoinType("Coin is " + currencyTiker + " . Wallet is " + wallet);
+            Map<String, Object> objectObjectMap = Collections.emptyMap();
+            objectObjectMap.put("balance", 0);
+            return new ResponseEntity(objectObjectMap, HttpStatus.OK);
         }
+        if (!Strings.isNullOrEmpty(ethContract)) wallet = wallet + "," + ethContract;
         BigDecimal balance = coinProcessor.getBalance(coin, wallet);
         Map<String, Object> response = new HashMap<>();
-        response.put("balance", balance);
+        response.put("balance", Optional.ofNullable(balance).orElse(new BigDecimal(0)));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

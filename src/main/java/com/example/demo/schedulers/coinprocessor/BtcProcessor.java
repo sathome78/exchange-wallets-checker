@@ -2,20 +2,27 @@ package com.example.demo.schedulers.coinprocessor;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
+import com.example.demo.schedulers.coinprocessor.btccoinsprocessor.BTCProcessor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Repository
 public class BtcProcessor implements CoinProcessor {
 
     @Autowired
     Client client;
+
+    @Autowired
+    @Qualifier("btcProcessorMap")
+    private Map<String, BTCProcessor> btcProcessorMap;
 
     public CoinWrapper process(Coin coin) {
         Response response = client.
@@ -32,6 +39,7 @@ public class BtcProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        return null;
+        BTCProcessor btcProcessor = btcProcessorMap.get(coin.getName());
+        return btcProcessor.getBalance(coin, wallet);
     }
 }

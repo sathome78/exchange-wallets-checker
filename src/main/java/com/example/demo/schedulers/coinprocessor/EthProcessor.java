@@ -25,7 +25,8 @@ public class EthProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
+        JSONObject ethTokens = requestUtil.getEthTokens(wallet);
 
-        return null;
+        return ethTokens.getBigDecimal("balance");
     }
 }

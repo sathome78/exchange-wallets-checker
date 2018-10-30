@@ -59,6 +59,24 @@ public class XEMMosaicProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("address", wallet);
+        Response response = client.target(mosaicEndpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(jsonObject.toString()));
+
+        List<HashMap<String, Object>> collect1 = new JSONArray(response.readEntity(String.class)).
+                toList().
+                stream().
+                map(item -> (HashMap<String, Object>) item).
+                collect(Collectors.toList());
+
+        for (HashMap<String, Object> collect : collect1) {
+            String nameSpace = format("%s:%s", collect.get("namespace"), collect.get("mosaic"));
+            boolean isCoin = nameSpace.equalsIgnoreCase(coin.getDetailName());
+            if (isCoin) {
+                BigDecimal quantity = new BigDecimal(valueOf(collect.get("quantity")));
+                return quantity.divide(new BigDecimal(pow(10, valueOf(valueOf(collect.get("div"))))));
+            }
+        }
         return null;
     }
 }

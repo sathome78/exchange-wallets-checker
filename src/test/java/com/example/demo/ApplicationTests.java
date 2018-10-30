@@ -25,8 +25,8 @@ import static java.lang.String.valueOf;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class ApplicationTests {
 
 	@Autowired
@@ -37,48 +37,48 @@ public class ApplicationTests {
 
 	@Autowired
     private CoinRepository coinRepository;
-
-	@Test
-	public void contextLoads() {
-//		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-//		simpleMailMessage.setTo("dmitrenkonikita1213@gmail.com");
-//		simpleMailMessage.setFrom("sender@upholding.biz");
-//		simpleMailMessage.setText("hello");
-//		emailSender.send(simpleMailMessage);
-		BigDecimal bigDecimal = new BigDecimal(300000000);
-		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000");
-        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
-        decimalFormatSymbols.setGroupingSeparator(' ');
-
-        decimalFormat.setDecimalFormatSymbols(decimalFormatSymbols);
-		System.out.println(decimalFormat.format(bigDecimal));
-	}
-
-	@Test
-    public void testFormatting(){
-        Coin coin = coinRepository.findByName("BTC");
-        String text = format(NotificatorService.ABOVE_MAX_LIMIT,
-                coin.getName(),
-                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()),
-                valueOf(NumberFormatter.format(coin.getCurrentAmount())),
-                valueOf(NumberFormatter.format(coin.getAmountInUSD())),
-                valueOf(coin.getMinAmount()),
-                valueOf(coin.getMaxAmount()),
-                valueOf(coin.getMinAmountInUSD()),
-                valueOf(coin.getMaxAmountInUSD()));
-        System.out.println(text);
-    }
-
-	@SpyBean
-	RequestUtil requestUtil;
-	@Test
-	public void te(){
-		requestUtil.getEthTokens();
-		requestUtil.getEthTokens();
-
-
-		verify(requestUtil, times(1)).getEthTokens();
-	}
+//
+//	@Test
+//	public void contextLoads() {
+////		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+////		simpleMailMessage.setTo("dmitrenkonikita1213@gmail.com");
+////		simpleMailMessage.setFrom("sender@upholding.biz");
+////		simpleMailMessage.setText("hello");
+////		emailSender.send(simpleMailMessage);
+//		BigDecimal bigDecimal = new BigDecimal(300000000);
+//		final DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.000");
+//        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+//        decimalFormatSymbols.setGroupingSeparator(' ');
+//
+//        decimalFormat.setDecimalFormatSymbols(decimalFormatSymbols);
+//		System.out.println(decimalFormat.format(bigDecimal));
+//	}
+//
+//	@Test
+//    public void testFormatting(){
+//        Coin coin = coinRepository.findByName("BTC");
+//        String text = format(NotificatorService.ABOVE_MAX_LIMIT,
+//                coin.getName(),
+//                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()),
+//                valueOf(NumberFormatter.format(coin.getCurrentAmount())),
+//                valueOf(NumberFormatter.format(coin.getAmountInUSD())),
+//                valueOf(coin.getMinAmount()),
+//                valueOf(coin.getMaxAmount()),
+//                valueOf(coin.getMinAmountInUSD()),
+//                valueOf(coin.getMaxAmountInUSD()));
+//        System.out.println(text);
+//    }
+//
+//	@SpyBean
+//	RequestUtil requestUtil;
+//	@Test
+//	public void te(){
+//		requestUtil.getEthTokens();
+//		requestUtil.getEthTokens();
+//
+//
+//		verify(requestUtil, times(1)).getEthTokens();
+//	}
 //
 //	@Test
 //	public void testEtcToken() throws InterruptedException, IOException {

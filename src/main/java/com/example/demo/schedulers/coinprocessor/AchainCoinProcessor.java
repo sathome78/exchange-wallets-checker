@@ -27,6 +27,9 @@ public class AchainCoinProcessor implements CoinProcessor {
     @Value("${achain.endpoint}")
     private String achainEndpoint;
 
+    @Value("${achain.endpoint.basic}")
+    private String basicWallet;
+
     public CoinWrapper process(Coin coin) {
         Response response = client.target(achainEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
 
@@ -42,7 +45,16 @@ public class AchainCoinProcessor implements CoinProcessor {
     }
 
     public BigDecimal getBalance(Coin coin, String wallet) {
+        Response response = client.target(basicWallet + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-        return null;
+        Map<String, String> collect2 = new JSONObject(response.readEntity(String.class)).
+                getJSONArray("data").
+                toList().
+                stream().
+                map(item -> (HashMap<String, Object>) item).
+                map(element -> new Pair<>(valueOf(element.get("coinType")), valueOf(element.getOrDefault("balance", "0"))))
+                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+
+        return new BigDecimal(collect2.get(coin.getName()));
     }
 }
