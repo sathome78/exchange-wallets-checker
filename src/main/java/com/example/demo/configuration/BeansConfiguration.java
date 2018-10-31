@@ -49,7 +49,7 @@ public class BeansConfiguration {
     private BTCGenericProcessor dashCoinProcessor;
 
     @Autowired
-    private BTCGenericProcessor btcProcessor;
+    private BTCGenericProcessor btcTargetProcessor;
 
     @Autowired
     private BTCGenericProcessor bcaCoinProcessor;
@@ -91,7 +91,7 @@ public class BeansConfiguration {
         btcProcessorMap.put("ATB", atbCoinProcessor);
         btcProcessorMap.put("XFC", xfcCoinProcessor);
         btcProcessorMap.put("DASH", dashCoinProcessor);
-        btcProcessorMap.put("BTC", btcProcessor);
+        btcProcessorMap.put("BTC", btcTargetProcessor);
         btcProcessorMap.put("BCA", bcaCoinProcessor);
         btcProcessorMap.put("BTCP", btcpCoinProcessor);
         btcProcessorMap.put("HSR", hsrCoinProcessor);

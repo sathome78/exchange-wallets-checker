@@ -11,8 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
-@Service("btcProcessor")
-public class BTCProcessor implements BTCGenericProcessor {
+@Service("btcTargetProcessor")
+public class BTCTargetProcessor implements BTCGenericProcessor {
 
     @Value("${btc.btc.coin}")
     private String coinBaseURL;
