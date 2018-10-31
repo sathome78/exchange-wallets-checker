@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Service("lbtcCoinProcessor")
-public class LBTCCoinProcessor implements BTCProcessor {
+public class LBTCCoinProcessor implements BTCGenericProcessor {
 
     @Value("${btc.lbtc.coin}")
     private String lbtcCoin;
@@ -23,7 +23,6 @@ public class LBTCCoinProcessor implements BTCProcessor {
     public BigDecimal getBalance(Coin coin, String wallet) {
         Response response = client.target(lbtcCoin + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        JSONObject jsonObject = new JSONObject(s);
-        return jsonObject.getBigDecimal("balance");
+        return new JSONObject(s).getBigDecimal("balance");
     }
 }

@@ -2,10 +2,8 @@ package com.example.demo.schedulers.coinprocessor;
 
 import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.enums.CoinType;
-import com.example.demo.schedulers.coinprocessor.btccoinsprocessor.BTCProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

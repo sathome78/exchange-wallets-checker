@@ -1,6 +1,6 @@
 package com.example.demo.configuration;
 
-import com.example.demo.schedulers.coinprocessor.btccoinsprocessor.BTCProcessor;
+import com.example.demo.schedulers.coinprocessor.btccoinsprocessor.BTCGenericProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,33 +13,45 @@ import java.util.Map;
 public class BeansConfiguration {
 
     @Autowired
-    private BTCProcessor lbtcCoinProcessor;
+    private BTCGenericProcessor lbtcCoinProcessor;
 
     @Autowired
-    private BTCProcessor ftoCoinProcessor;
+    private BTCGenericProcessor ftoCoinProcessor;
 
     @Autowired
-    private BTCProcessor bcxCoinProcessor;
+    private BTCGenericProcessor bcxCoinProcessor;
 
     @Autowired
-    private BTCProcessor btcDiamondCoinProcessor;
+    private BTCGenericProcessor btcDiamondCoinProcessor;
 
     @Autowired
-    private BTCProcessor btgCoinProcessor;
+    private BTCGenericProcessor btgCoinProcessor;
 
     @Autowired
-    private BTCProcessor btxCoinProcessor;
+    private BTCGenericProcessor btxCoinProcessor;
 
     @Autowired
-    private BTCProcessor eqlCoinProcessor;
+    private BTCGenericProcessor eqlCoinProcessor;
 
     @Autowired
-    private BTCProcessor bciCoinProcessor;
+    private BTCGenericProcessor bciCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor bchCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor atbCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor xfcCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor dashCoinProcessor;
 
     @Bean
     @Order(999)
-    public Map<String, BTCProcessor> btcProcessorMap() {
-        Map<String, BTCProcessor> btcProcessorMap = new HashMap<>();
+    public Map<String, BTCGenericProcessor> btcProcessorMap() {
+        Map<String, BTCGenericProcessor> btcProcessorMap = new HashMap<>();
         btcProcessorMap.put("LBTC", lbtcCoinProcessor);
         btcProcessorMap.put("FTO", ftoCoinProcessor);
         btcProcessorMap.put("EQL", eqlCoinProcessor);
@@ -48,6 +60,10 @@ public class BeansConfiguration {
         btcProcessorMap.put("BCD", btcDiamondCoinProcessor);
         btcProcessorMap.put("BCX", bcxCoinProcessor);
         btcProcessorMap.put("BCI", bciCoinProcessor);
+        btcProcessorMap.put("BCH", bchCoinProcessor);
+        btcProcessorMap.put("ATB", atbCoinProcessor);
+        btcProcessorMap.put("XFC", xfcCoinProcessor);
+        btcProcessorMap.put("DASH", dashCoinProcessor);
         return btcProcessorMap;
     }
 

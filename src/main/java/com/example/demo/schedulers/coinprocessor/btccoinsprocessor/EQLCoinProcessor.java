@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Service("eqlCoinProcessor")
-public class EQLCoinProcessor implements BTCProcessor {
+public class EQLCoinProcessor implements BTCGenericProcessor {
 
     @Value("${btc.eql.coin}")
     private String eqlCoinUrl;
@@ -23,7 +23,6 @@ public class EQLCoinProcessor implements BTCProcessor {
     public BigDecimal getBalance(Coin coin, String wallet) {
         Response response = client.target(String.format(eqlCoinUrl, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        JSONObject jsonObject = new JSONObject(s);
-        return jsonObject.getBigDecimal("balance");
+        return new JSONObject(s).getBigDecimal("balance");
     }
 }

@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Service("btcDiamondCoinProcessor")
-public class BTCDIamondCoinProcessor implements BTCProcessor {
+public class BTCDIamondCoinProcessor implements BTCGenericProcessor {
 
     @Value("${btc.bcd.coin}")
     private String bcdCoin;
@@ -21,7 +21,7 @@ public class BTCDIamondCoinProcessor implements BTCProcessor {
     private Client client;
 
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(bcdCoin + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(String.format(bcdCoin, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         return new JSONObject(s).getJSONObject("data").getBigDecimal("balance").divide(new BigDecimal(10000000));
     }

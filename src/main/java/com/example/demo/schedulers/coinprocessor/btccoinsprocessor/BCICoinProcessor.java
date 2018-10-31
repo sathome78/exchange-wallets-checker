@@ -12,18 +12,17 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Service("bciCoinProcessor")
-public class BCICoinProcessor implements BTCProcessor {
+public class BCICoinProcessor implements BTCGenericProcessor {
 
     @Value("${btc.bci.coin")
-    private String value;
+    private String coinBaseURL;
 
     @Autowired
     private Client client;
 
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(String.format(value, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(String.format(coinBaseURL, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        JSONObject jsonObject = new JSONObject(s);
-        return jsonObject.getBigDecimal("balance");
+        return new JSONObject(s).getBigDecimal("balance");
     }
 }

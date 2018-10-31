@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Service("ftoCoinProcessor")
-public class FTOCoinProcessor implements BTCProcessor {
+public class FTOCoinProcessor implements BTCGenericProcessor {
 
     @Value("${btc.fto.coin}")
     private String ftoBaseUrl;
@@ -23,7 +23,6 @@ public class FTOCoinProcessor implements BTCProcessor {
     public BigDecimal getBalance(Coin coin, String wallet) {
         Response response = client.target(String.format(ftoBaseUrl, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        JSONObject jsonObject = new JSONObject(s);
-        return jsonObject.getBigDecimal("balance");
+        return new JSONObject(s).getBigDecimal("balance");
     }
 }

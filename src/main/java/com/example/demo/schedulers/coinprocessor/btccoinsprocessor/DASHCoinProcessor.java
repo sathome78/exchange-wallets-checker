@@ -11,17 +11,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
-@Service("bcxCoinProcessor")
-public class BCXCoinProcessor implements BTCGenericProcessor {
+@Service("dashCoinProcessor")
+public class DASHCoinProcessor implements BTCGenericProcessor {
 
-    @Value("${btc.bcx.coin}")
+    @Value("${btc.dash.coin")
     private String coinBaseURL;
 
     @Autowired
     private Client client;
 
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(String.format(coinBaseURL, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(coinBaseURL + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         return new JSONObject(s).getBigDecimal("balance");
     }

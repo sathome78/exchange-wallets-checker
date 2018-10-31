@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Service("btgCoinProcessor")
-public class BTGCoinProcessor  implements BTCProcessor {
+public class BTGCoinProcessor  implements BTCGenericProcessor {
 
     @Value("${btc.btg.coin}")
     private String btgBaseAddress;

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 
 @Service("btxCoinProcessor")
-public class BTXCoinProcessor implements BTCProcessor {
+public class BTXCoinProcessor implements BTCGenericProcessor {
 
     @Value("{btc.btx.coin}")
     private String btcBaseAdress;
@@ -24,7 +24,6 @@ public class BTXCoinProcessor implements BTCProcessor {
     public BigDecimal getBalance(Coin coin, String wallet) {
         Response response = client.target(String.format(btcBaseAdress, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        JSONObject jsonObject = new JSONObject(s);
-        return jsonObject.getBigDecimal("balance");
+        return new JSONObject(s).getBigDecimal("balance");
     }
 }

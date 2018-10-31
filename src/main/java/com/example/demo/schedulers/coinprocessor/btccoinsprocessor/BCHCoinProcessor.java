@@ -11,10 +11,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
-@Service("bcxCoinProcessor")
-public class BCXCoinProcessor implements BTCGenericProcessor {
+@Service("bchCoinProcessor")
+public class BCHCoinProcessor implements BTCGenericProcessor {
 
-    @Value("${btc.bcx.coin}")
+    @Value("${btc.bch.coin}")
     private String coinBaseURL;
 
     @Autowired
