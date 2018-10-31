@@ -48,6 +48,33 @@ public class BeansConfiguration {
     @Autowired
     private BTCGenericProcessor dashCoinProcessor;
 
+    @Autowired
+    private BTCGenericProcessor btcProcessor;
+
+    @Autowired
+    private BTCGenericProcessor bcaCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor btcpCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor hsrCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor lccCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor ptcCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor sicCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor szcCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor toaCoinProcessor;
+
     @Bean
     @Order(999)
     public Map<String, BTCGenericProcessor> btcProcessorMap() {
@@ -64,6 +91,15 @@ public class BeansConfiguration {
         btcProcessorMap.put("ATB", atbCoinProcessor);
         btcProcessorMap.put("XFC", xfcCoinProcessor);
         btcProcessorMap.put("DASH", dashCoinProcessor);
+        btcProcessorMap.put("BTC", btcProcessor);
+        btcProcessorMap.put("BCA", bcaCoinProcessor);
+        btcProcessorMap.put("BTCP", btcpCoinProcessor);
+        btcProcessorMap.put("HSR", hsrCoinProcessor);
+        btcProcessorMap.put("LCC", lccCoinProcessor);
+        btcProcessorMap.put("PTC", ptcCoinProcessor);
+        btcProcessorMap.put("SIC", sicCoinProcessor);
+        btcProcessorMap.put("SZC", szcCoinProcessor);
+        btcProcessorMap.put("TOA", toaCoinProcessor);
         return btcProcessorMap;
     }
 

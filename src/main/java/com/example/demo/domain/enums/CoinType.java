@@ -9,7 +9,8 @@ public enum CoinType {
     XRP(6),
     STELLAR_COIN(7),
     XEM_COIN(8),
-    XEM_MOSAIC(9);
+    XEM_MOSAIC(9),
+    FIAT(10);
 
     private final int i;
 
