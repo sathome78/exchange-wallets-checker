@@ -71,6 +71,9 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor cloProcessor;
 
+    @Autowired
+    private CoinProcessor iotaProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -91,6 +94,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.NTY, ntyProcessor);
         processorMap.put(CoinType.DCR, dcrProcessor);
         processorMap.put(CoinType.CLO, cloProcessor);
+        processorMap.put(CoinType.IOTA, iotaProcessor);
         return processorMap;
     }
 

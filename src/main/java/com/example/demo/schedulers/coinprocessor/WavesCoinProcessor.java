@@ -29,7 +29,7 @@ public class WavesCoinProcessor implements CoinProcessor {
         double pow = Math.pow(10, 8);
         Response response = client.target(endpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
         JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
-        BigDecimal balance = jsonObject.getBigDecimal("actual").divide(new BigDecimal(pow));
+        BigDecimal balance = jsonObject.getBigDecimal("available").divide(new BigDecimal(pow));
         return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
     }
 
@@ -38,6 +38,6 @@ public class WavesCoinProcessor implements CoinProcessor {
         double pow = Math.pow(10, 8);
         Response response = client.target(basicEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
-        return jsonObject.getBigDecimal("actual").divide(new BigDecimal(pow));
+        return jsonObject.getBigDecimal("available").divide(new BigDecimal(pow));
     }
 }

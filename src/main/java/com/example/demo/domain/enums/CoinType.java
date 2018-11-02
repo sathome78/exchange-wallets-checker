@@ -10,7 +10,7 @@ public enum CoinType {
     STELLAR_COIN(7),
     XEM_COIN(8),
     XEM_MOSAIC(9),
-    FIAT(10), WAVES(11), WAVES_COIN(12), TRON(13), QTUM(14), NTY(15), DCR(16), CLO(17);
+    FIAT(10), WAVES(11), WAVES_COIN(12), TRON(13), QTUM(14), NTY(15), DCR(16), CLO(17), IOTA(18);
 
     private final int i;
 
