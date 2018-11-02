@@ -50,7 +50,7 @@ public class SchedulerService {
 
     @Scheduled(fixedDelay = 30000, initialDelay = 0)
     public void allCoins() {
-        List<CoinWrapper> collect = coinRepository.findByEnableTrue().stream().map(coin -> processorMap.get(coin.getCoinType()).process(coin)).collect(toList());
+        List<CoinWrapper> collect = coinRepository.findByEnableTrue().parallelStream().map(coin -> processorMap.get(coin.getCoinType()).process(coin)).collect(toList());
         collect.forEach(this::process);
     }
 
@@ -72,8 +72,8 @@ public class SchedulerService {
     }
 
     public void check(Coin btcCoin, BigDecimal newAmount) {
-        Pair<PriceStatus,Boolean> status = getStatus(btcCoin, newAmount);
-        if(status.getValue()){
+        Pair<PriceStatus, Boolean> status = getStatus(btcCoin, newAmount);
+        if (status.getValue()) {
             String template = renderTemplate(templatesMap.get(status.getKey()), btcCoin);
             notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(template));
         }
@@ -112,7 +112,7 @@ public class SchedulerService {
         );
     }
 
-    private Pair<PriceStatus,Boolean> getStatus(Coin btcCoin, BigDecimal newAmount) {
+    private Pair<PriceStatus, Boolean> getStatus(Coin btcCoin, BigDecimal newAmount) {
         PriceStatus priceStatus = null;
         boolean sendNotification = false;
         if (newAmount.compareTo(btcCoin.getMaxAmount()) > 0) {
@@ -134,7 +134,7 @@ public class SchedulerService {
 
         btcCoin.setPriceStatus(priceStatus);
 
-        return new Pair<>(priceStatus,sendNotification);
+        return new Pair<>(priceStatus, sendNotification);
     }
 
 

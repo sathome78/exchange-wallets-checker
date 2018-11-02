@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
-@Service
+@Service("cloProcessor")
 public class CLOCoinProcessor implements CoinProcessor {
 
 

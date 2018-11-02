@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static java.util.Collections.singletonList;
 
-@Service
+@Service("ntyProcessor")
 public class NTYCoinProcessor implements CoinProcessor {
 
     @Value("${nty.endpoint}")

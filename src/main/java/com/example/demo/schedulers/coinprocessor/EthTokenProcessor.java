@@ -33,7 +33,7 @@ public class EthTokenProcessor implements CoinProcessor {
             JSONObject jsonObject = requestUtil.getEthTokens();
             JSONObject tokens = jsonObject.getJSONObject("tokens");
             JSONObject ethToken = tokens.getJSONObject(coin.getEthTokenContract());
-            String decimal = ethToken.getString("decimals");
+            String decimal = String.valueOf(ethToken.get("decimals"));
             Map<String, String> collect2 = jsonObject.
                     getJSONArray("balances").
                     toList().
