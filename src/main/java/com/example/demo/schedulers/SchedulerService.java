@@ -114,7 +114,7 @@ public class SchedulerService {
     }
 
     private Pair<PriceStatus, Boolean> getStatus(Coin btcCoin, BigDecimal newAmount) {
-        PriceStatus priceStatus = null;
+        PriceStatus priceStatus = btcCoin.getPriceStatus();
         boolean sendNotification = false;
         if (newAmount.compareTo(btcCoin.getMaxAmount()) > 0) {
             priceStatus = PriceStatus.ABOVE;
