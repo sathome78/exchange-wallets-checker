@@ -29,7 +29,9 @@ public class UtilTes {
     @Test
     public void getBalanceOfCLO() {
         Client client = ClientBuilder.newClient();
-        Response response = client.target("https://explorer.callisto.network/account/0x21b049ee1569f3bdd785847868f920de9b062588").request(MediaType.TEXT_HTML).get();
+        Response response = client.target("https://explorer.callisto.network/account/0xe4f3cab1f11d5a917ac73c80927e64ee4b1a445a").request(MediaType.TEXT_HTML).get();
+        String substring = response.readEntity(String.class).substring(1385, 1398);
+        System.out.println(substring);
     }
 
     @Test

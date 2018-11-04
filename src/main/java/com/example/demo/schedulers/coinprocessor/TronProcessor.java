@@ -16,17 +16,17 @@ import java.math.BigDecimal;
 public class TronProcessor implements CoinProcessor {
 
     @Value("${tron.endpoint}")
-    private String moneroEndpoint;
+    private String tronEndpoint;
 
 
     @Value("${tron.endpoint.basic}")
-    private String moneroEndpointBasic;
+    private String tronEndpointBasic;
 
     @Autowired
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(moneroEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(tronEndpointBasic).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal actualBalance = new JSONObject(s).getJSONArray("balances").getJSONObject(0).getBigDecimal("balance");
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
@@ -35,7 +35,7 @@ public class TronProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(moneroEndpointBasic + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(tronEndpointBasic + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         return new JSONObject(s).getJSONArray("balances").getJSONObject(0).getBigDecimal("balance");
     }

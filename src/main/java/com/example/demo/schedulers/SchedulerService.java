@@ -68,6 +68,7 @@ public class SchedulerService {
             check(coin, actualBalance);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Coin id " + coin.getName());
         }
     }
 

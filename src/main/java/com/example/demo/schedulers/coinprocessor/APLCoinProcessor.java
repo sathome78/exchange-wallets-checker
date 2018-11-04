@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
-@Service
+@Service("aplCoinProcessor")
 public class APLCoinProcessor implements CoinProcessor {
 
     @Value("${apl.endpoint}")

@@ -2,6 +2,7 @@ package com.example.demo.configuration;
 
 import com.example.demo.schedulers.coinprocessor.btccoinsprocessor.BTCGenericProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

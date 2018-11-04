@@ -18,31 +18,32 @@ public class XRPProcessor implements CoinProcessor {
     @Value("${xrp.endpoint}")
     private String xrpEndpoint;
 
+    @Value("${xrp.endpoint.basic}")
+    private String xrpEndpointBasic;
+
     @Autowired
     Client client;
 
     public CoinWrapper process(Coin coin) {
         Response response = client.target(xrpEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-         String s = response.readEntity(String.class);
+        String s = response.readEntity(String.class);
 
         JSONObject jsonObject = new JSONObject(s);
-
-        String string = jsonObject.
-                getJSONArray("transactions").
-                getJSONObject(0).
-                getJSONObject("meta").
-                getJSONArray("AffectedNodes").
-                getJSONObject(1).
-                getJSONObject("ModifiedNode").
-                getJSONObject("FinalFields").
-                getString("Balance");
+        String string = jsonObject.getJSONArray("balances").getJSONObject(0).getString("value");
 
         return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(string)).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        return null;
+        Response response = client.target(xrpEndpointBasic).request(MediaType.APPLICATION_JSON_TYPE).get();
+
+        String s = response.readEntity(String.class);
+
+        JSONObject jsonObject = new JSONObject(s);
+        String string = jsonObject.getJSONArray("balances").getJSONObject(0).getString("value");
+
+        return new BigDecimal(string);
     }
 }
