@@ -23,6 +23,13 @@ public class BTCTargetProcessor implements BTCGenericProcessor {
     public BigDecimal getBalance(Coin coin, String wallet) {
         Response response = client.target(String.format(coinBaseURL, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        return new JSONObject(s).getBigDecimal("balance");
+        BigDecimal bigDecimal = new JSONObject(s).
+                getJSONObject("data").
+                getJSONObject("bitcoin_addresses").
+                getJSONObject("data").
+                getJSONObject(wallet).
+                getJSONObject("address").
+                getBigDecimal("balance");
+        return bigDecimal.divide(new BigDecimal(Math.pow(10, 8)));
     }
 }

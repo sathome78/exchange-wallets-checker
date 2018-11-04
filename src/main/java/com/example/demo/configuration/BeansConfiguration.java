@@ -100,6 +100,9 @@ public class BeansConfiguration {
     @Autowired
     private BTCGenericProcessor nycCoinProcessor;
 
+    @Autowired
+    private BTCGenericProcessor dcrCoinProcessor;
+
     @Bean
     @Order(999)
 
@@ -134,6 +137,7 @@ public class BeansConfiguration {
         btcProcessorMap.put("DDX", ddxCoinProcessor);
         btcProcessorMap.put("CLX", clxGenericCoinProcessor);
         btcProcessorMap.put("NYC", nycCoinProcessor);
+        btcProcessorMap.put("DCR    ", dcrCoinProcessor);
         return btcProcessorMap;
     }
 

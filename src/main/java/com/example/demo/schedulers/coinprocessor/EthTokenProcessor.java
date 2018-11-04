@@ -54,20 +54,24 @@ public class EthTokenProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        String[] split = wallet.split(",");
-        JSONObject jsonObject = requestUtil.getEthTokens(split[0]);
-        JSONObject tokens = jsonObject.getJSONObject("tokens");
-        JSONObject ethToken = tokens.getJSONObject(split[1]);
-        String decimal = ethToken.getString("decimals");
-        Map<String, String> collect2 = jsonObject.
-                getJSONArray("balances").
-                toList().
-                stream().
-                map(item -> (HashMap<String, Object>) item).
-                map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
-                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+        try {
+            String[] split = wallet.split(",");
+            JSONObject jsonObject = requestUtil.getEthTokens(split[0]);
+            JSONObject tokens = jsonObject.getJSONObject("tokens");
+            JSONObject ethToken = tokens.getJSONObject(split[1]);
+            String decimal = String.valueOf(ethToken.get("decimals"));
+            Map<String, String> collect2 = jsonObject.
+                    getJSONArray("balances").
+                    toList().
+                    stream().
+                    map(item -> (HashMap<String, Object>) item).
+                    map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
+                    .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
-        return new BigDecimal(balance(collect2.get(split[1]), decimal));
+            return new BigDecimal(balance(collect2.get(split[1]), decimal));
+        } catch (Exception e) {
+            return BigDecimal.ZERO;
+        }
     }
 
     private String balance(String balance, String decimal) {

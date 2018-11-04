@@ -5,7 +5,6 @@ import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.dto.CoinCsvDto;
 import com.example.demo.domain.dto.CoinDto;
 import com.example.demo.domain.requestbody.CoinBalance;
-import com.example.demo.exceptions.UnsupportedCoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.SchedulerService;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
@@ -91,7 +90,7 @@ public class CoinController {
     }
 
     @PutMapping("/currencies/{currencyName}")
-    public ResponseEntity<Map<String, Object>> updateMinBalance(@PathVariable String currencyName,
+    public ResponseEntity<Map<String, Object>> updateBalance(@PathVariable String currencyName,
                                                                 @RequestBody CoinBalance coinBalance) {
 
         if (coinBalance.getBalanceType() == MIN)

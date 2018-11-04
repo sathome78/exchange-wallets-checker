@@ -37,7 +37,7 @@ public class XRPProcessor implements CoinProcessor {
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(xrpEndpointBasic).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(String.format(xrpEndpointBasic, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String s = response.readEntity(String.class);
 

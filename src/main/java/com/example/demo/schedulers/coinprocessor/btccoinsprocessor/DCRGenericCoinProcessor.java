@@ -1,7 +1,8 @@
-package com.example.demo.schedulers.coinprocessor;
+package com.example.demo.schedulers.coinprocessor.btccoinsprocessor;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
+import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
-@Service("dcrProcessor")
-public class DCRCoinProcessor implements CoinProcessor {
+@Service("dcrCoinProcessor")
+public class DCRGenericCoinProcessor implements BTCGenericProcessor {
 
 
     @Value("${dcr.endpoint}")
