@@ -4,11 +4,15 @@ import com.example.demo.schedulers.coinprocessor.EthTokenProcessor;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.security.cert.X509Certificate;
 
 public class UtilTes {
 
@@ -119,6 +123,16 @@ public class UtilTes {
         System.out.println(s);
     }
 
+
+    @Test
+    public void apl() throws Exception {
+        double pow = Math.pow(10, 7);
+        Response response = client().target("https://explorer.apollowallet.org:4443/apl?&requestType=getAccount&includeEffectiveBalance=true&account=APL-LFZZ-ECDW-LXRG-4V4D9").request(MediaType.TEXT_HTML).get();
+        String s = response.readEntity(String.class);
+        BigDecimal balanceATM = new BigDecimal(new JSONObject(s).getString("balanceATM")).divide(new BigDecimal(pow));
+        System.out.println(balanceATM);
+    }
+
     @Test
     public void testPow() {
         BigDecimal npxs = new BigDecimal(33560599029L);
@@ -137,5 +151,21 @@ public class UtilTes {
         BigDecimal bigDecimal2 = new BigDecimal(5000000);
         BigDecimal cache = bigDecimal2.divide(new BigDecimal(pow));
         System.out.println(cache);
+    }
+
+    public static Client client() throws Exception {
+        SSLContext sslcontext = SSLContext.getInstance("TLS");
+
+        sslcontext.init(null, new TrustManager[]{new X509TrustManager() {
+            public void checkClientTrusted(X509Certificate[] arg0, String arg1) {}
+            public void checkServerTrusted(X509Certificate[] arg0, String arg1) {}
+            public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+        }}, new java.security.SecureRandom());
+
+        return ClientBuilder.newBuilder()
+                .sslContext(sslcontext)
+                .hostnameVerifier((s1, s2) -> true)
+                .build();
+
     }
 }

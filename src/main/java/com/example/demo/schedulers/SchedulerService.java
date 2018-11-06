@@ -65,6 +65,7 @@ public class SchedulerService {
                 return;
             }
             coin.setCurrentAmount(actualBalance);
+            coin.setAmountInUSD(actualBalance.multiply(coin.getRateToUSD()));
             check(coin, actualBalance);
         } catch (Exception e) {
             e.printStackTrace();

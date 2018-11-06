@@ -58,7 +58,7 @@ public class EthTokenProcessor implements CoinProcessor {
             String[] split = wallet.split(",");
             JSONObject jsonObject = requestUtil.getEthTokens(split[0]);
             JSONObject tokens = jsonObject.getJSONObject("tokens");
-            JSONObject ethToken = tokens.getJSONObject(split[1]);
+            JSONObject ethToken = tokens.getJSONObject(split[1].toLowerCase());
             String decimal = String.valueOf(ethToken.get("decimals"));
             Map<String, String> collect2 = jsonObject.
                     getJSONArray("balances").
@@ -68,8 +68,9 @@ public class EthTokenProcessor implements CoinProcessor {
                     map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
                     .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
-            return new BigDecimal(balance(collect2.get(split[1]), decimal));
+            return new BigDecimal(balance(collect2.get(split[1].toLowerCase()), decimal));
         } catch (Exception e) {
+            e.printStackTrace();
             return BigDecimal.ZERO;
         }
     }
