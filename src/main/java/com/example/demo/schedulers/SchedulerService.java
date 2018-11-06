@@ -8,6 +8,8 @@ import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import com.example.demo.util.NumberFormatter;
 import javafx.util.Pair;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,7 @@ import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@Log4j2
 public class SchedulerService {
 
     @Autowired
@@ -50,8 +53,17 @@ public class SchedulerService {
 
     @Scheduled(fixedDelay = 30000, initialDelay = 0)
     public void allCoins() {
-        List<CoinWrapper> collect = coinRepository.findByEnableTrue().parallelStream().map(coin -> processorMap.get(coin.getCoinType()).process(coin)).collect(toList());
+        List<CoinWrapper> collect = coinRepository.findByEnableTrue().parallelStream().map(this::process).collect(toList());
         collect.forEach(this::process);
+    }
+
+    public CoinWrapper process(Coin coin) {
+        try {
+            return processorMap.get(coin.getCoinType()).process(coin);
+        } catch (Exception e) {
+            log.warn("Unable to retrieve balance of token " + coin.getName());
+            return CoinWrapper.builder().coin(coin).actualBalance(coin.getCurrentAmount()).build();
+        }
     }
 
     public void process(CoinWrapper coinWrapper) {

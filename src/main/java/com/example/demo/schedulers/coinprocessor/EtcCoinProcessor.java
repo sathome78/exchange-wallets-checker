@@ -2,6 +2,7 @@ package com.example.demo.schedulers.coinprocessor;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
+import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Repository
-
+@Log4j2
 public class EtcCoinProcessor implements CoinProcessor {
 
     @Value("${etc.endpoint}")

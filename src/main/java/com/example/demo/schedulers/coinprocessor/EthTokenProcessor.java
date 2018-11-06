@@ -28,28 +28,21 @@ public class EthTokenProcessor implements CoinProcessor {
 
 
     public CoinWrapper process(Coin coin) {
-        try {
+        JSONObject jsonObject = requestUtil.getEthTokens();
+        JSONObject tokens = jsonObject.getJSONObject("tokens");
+        JSONObject ethToken = tokens.getJSONObject(coin.getEthTokenContract());
+        String decimal = String.valueOf(ethToken.get("decimals"));
+        Map<String, String> collect2 = jsonObject.
+                getJSONArray("balances").
+                toList().
+                stream().
+                map(item -> (HashMap<String, Object>) item).
+                map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
+                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
-            JSONObject jsonObject = requestUtil.getEthTokens();
-            JSONObject tokens = jsonObject.getJSONObject("tokens");
-            JSONObject ethToken = tokens.getJSONObject(coin.getEthTokenContract());
-            String decimal = String.valueOf(ethToken.get("decimals"));
-            Map<String, String> collect2 = jsonObject.
-                    getJSONArray("balances").
-                    toList().
-                    stream().
-                    map(item -> (HashMap<String, Object>) item).
-                    map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
-                    .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+        String balance = balance(collect2.get(coin.getEthTokenContract()), decimal);
 
-            String balance = balance(collect2.get(coin.getEthTokenContract()), decimal);
-
-            return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Coin is " + coin);
-            return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(0)).build();
-        }
+        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
     }
 
     @Override

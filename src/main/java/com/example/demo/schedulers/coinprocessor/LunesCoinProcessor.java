@@ -29,10 +29,8 @@ public class LunesCoinProcessor implements CoinProcessor {
         Response response = client.target(lunesAddressEndpoint + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal available = new JSONObject(s).getBigDecimal("available");
-        Response response1 = client.target(lunesTransactionEndpoint + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        double decimals = new JSONObject(response1.readEntity(String.class)).getDouble("decimals");
 
-        return CoinWrapper.builder().coin(coin).actualBalance(available.divide(new BigDecimal(Math.pow(10, decimals)))).build();
+        return CoinWrapper.builder().coin(coin).actualBalance(available.divide(new BigDecimal(Math.pow(10, 8)))).build();
 
     }
 
@@ -41,10 +39,8 @@ public class LunesCoinProcessor implements CoinProcessor {
         Response response = client.target(lunesAddressEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal available = new JSONObject(s).getBigDecimal("available");
-        Response response1 = client.target(lunesTransactionEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
-        double decimals = new JSONObject(response1.readEntity(String.class)).getDouble("decimals");
 
-        return available.divide(new BigDecimal(Math.pow(10, decimals)));
+        return available.divide(new BigDecimal(Math.pow(10, 8)));
 
     }
 }
