@@ -21,7 +21,7 @@ public enum CoinType {
     IOTA(18),
     LSK(19),
     ETZ(20),
-    APL(21);
+    APL(21), KAZE(22), STREAM(23), ETI(24), LUNES(25), GOL(26);
 
     private final int i;
 

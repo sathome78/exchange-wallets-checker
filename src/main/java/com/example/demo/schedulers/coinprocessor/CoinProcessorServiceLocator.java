@@ -83,6 +83,21 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor aplCoinProcessor;
 
+    @Autowired
+    private CoinProcessor kazeCoinProcessor;
+
+    @Autowired
+    private CoinProcessor streamCoinProcessor;
+
+    @Autowired
+    private CoinProcessor etiCoinProcessor;
+
+    @Autowired
+    private CoinProcessor lunesCoinProcessor;
+
+    @Autowired
+    private CoinProcessor golCoinProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -107,6 +122,11 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.LSK, lskCoinProcessor);
         processorMap.put(CoinType.ETZ, etzCoinProcessor);
         processorMap.put(CoinType.APL, aplCoinProcessor);
+        processorMap.put(CoinType.KAZE, kazeCoinProcessor);
+        processorMap.put(CoinType.STREAM, streamCoinProcessor);
+        processorMap.put(CoinType.ETI, etiCoinProcessor);
+        processorMap.put(CoinType.LUNES, lunesCoinProcessor);
+        processorMap.put(CoinType.GOL, golCoinProcessor);
         return processorMap;
     }
 
