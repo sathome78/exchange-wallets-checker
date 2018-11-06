@@ -61,10 +61,8 @@ public class Coin {
     }
 
     public void updateBalanceAndLimits(String[] data){
-        this.amountInUSD = new BigDecimal(data[1]);
         this.minAmount = new BigDecimal(data[1]);
         this.maxAmount = new BigDecimal(data[2]);
-        this.amountInUSD = this.currentAmount.multiply(this.rateToUSD);
         this.minAmountInUSD = this.minAmount.multiply(this.rateToUSD);
         this.maxAmountInUSD = this.maxAmount.multiply(this.rateToUSD);
 

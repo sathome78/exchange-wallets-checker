@@ -19,6 +19,7 @@
         <button type="button" class="btn btn-info btn-lg" @click.stop="getCoins">Load Coins</button>
         <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal1</button>
         <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Open Modal2</button>
+        <button id="success" type="button" class="btn btn-info btn-lg" style="display: none" data-toggle="modal" data-target="#myModal2">Open Modal2</button>
     </div>
      <div id="wrapper-div">
         <div class="card" v-for="todo in currenciesList" v-bind:style="getStyles(todo.priceStatus)">
@@ -83,6 +84,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" @click.stop="loadCsv">Выгрузить CSV</button>
                     <button type="button" class="btn btn-default" @click.stop="uploadCSV">Загрузить CSV</button>
+                    <input type="file" name="file" itemref="fileinput" ref="fileinput">
                 </div>
             </div>
 
@@ -127,7 +129,23 @@
                 </div>
             </div>
         </div>
+    </div><div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Монета успешно загружена</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
     </div>
+</div>
 </div>
 
 
@@ -176,6 +194,17 @@
                 var host = document.location.host;
                 this.$http.get('http://' + host + '/currencies/load?usd=true').then(function({data}){
                     saveToDisk(data,"report_without_usd.csv")
+                })
+            },
+            uploadCSV: function(){
+                var host = document.location.host;
+                var formData = new FormData();
+                console.log(this.$refs);
+                var fileToUpload = this.$refs.fileinput.files[0];
+                formData.append('file', fileToUpload);
+
+                this.$http.put('http://' + host + '/currencies',formData).then(function({data}){
+                    document.getElementById("success").click();
                 })
             }
         }
