@@ -28,7 +28,7 @@ public class ARKCoinProcessor implements CoinProcessor {
     public CoinWrapper process(Coin coin) {
         Response response = client.target(arkEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        String balance = new JSONObject(s).getString("balance");
+        String balance = new JSONObject(s).getJSONObject("account").getString("balance");
         BigDecimal divide = new BigDecimal(balance).divide(new BigDecimal(100000000));
         return CoinWrapper.builder().coin(coin).actualBalance(divide).build();
     }
@@ -37,7 +37,7 @@ public class ARKCoinProcessor implements CoinProcessor {
     public BigDecimal getBalance(Coin coin, String wallet) {
         Response response = client.target(arkEndpointBasic + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
-        String balance = new JSONObject(s).getString("balance");
+        String balance = new JSONObject(s).getJSONObject("account").getString("balance");
         return new BigDecimal(balance).divide(new BigDecimal(100000000));
     }
 

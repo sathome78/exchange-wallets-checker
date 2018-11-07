@@ -101,6 +101,9 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor arkCoinProcessor;
 
+    @Autowired
+    private CoinProcessor riseCoinProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -131,6 +134,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.LUNES, lunesCoinProcessor);
         processorMap.put(CoinType.GOL, golCoinProcessor);
         processorMap.put(CoinType.ARK, arkCoinProcessor);
+        processorMap.put(CoinType.RISE, riseCoinProcessor);
         return processorMap;
     }
 

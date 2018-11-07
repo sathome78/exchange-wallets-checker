@@ -15,22 +15,26 @@ import java.math.BigDecimal;
 @Service
 public class WavesProcessor implements CoinProcessor {
 
-    @Value("${waves.endpoint}")
+    @Value("${waves.endpoint.basic}")
     private String wavesEndpoint;
 
     @Autowired
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(wavesEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(wavesEndpoint+coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String stringResponse = response.readEntity(String.class);
         JSONObject jsonResponse = new JSONObject(stringResponse);
+        BigDecimal actualBalance = jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10,8)));
 
-        return CoinWrapper.builder().coin(coin).actualBalance(null).build();
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        return null;
+        Response response = client.target(wavesEndpoint+coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        String stringResponse = response.readEntity(String.class);
+        JSONObject jsonResponse = new JSONObject(stringResponse);
+        return jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10,8)));
     }
 }

@@ -15,10 +15,6 @@ import java.math.BigDecimal;
 @Service
 public class WavesCoinProcessor implements CoinProcessor {
 
-
-    @Value("${waves.endpoint}")
-    private String endpoint;
-
     @Value("${waves.endpoint.basic}")
     private String basicEndpoint;
 
@@ -27,7 +23,7 @@ public class WavesCoinProcessor implements CoinProcessor {
 
     public CoinWrapper process(Coin coin) {
         double pow = Math.pow(10, 8);
-        Response response = client.target(endpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(String.format(basicEndpoint, coin.getEthTokenContract())).request(MediaType.APPLICATION_JSON_TYPE).get();
         JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
         BigDecimal balance = jsonObject.getBigDecimal("available").divide(new BigDecimal(pow));
         return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
