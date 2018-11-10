@@ -103,9 +103,15 @@ public class BeansConfiguration {
     @Autowired
     private BTCGenericProcessor dcrCoinProcessor;
 
+    @Autowired
+    private BTCGenericProcessor abbcCoinProcessor;
+
+    @Autowired
+    private BTCGenericProcessor cbcCoinProcessor;
+
+
     @Bean
     @Order(999)
-
     public Map<String, BTCGenericProcessor> btcProcessorMap() {
         Map<String, BTCGenericProcessor> btcProcessorMap = new HashMap<>();
         btcProcessorMap.put("LBTC", lbtcCoinProcessor);
@@ -137,7 +143,9 @@ public class BeansConfiguration {
         btcProcessorMap.put("DDX", ddxCoinProcessor);
         btcProcessorMap.put("CLX", clxGenericCoinProcessor);
         btcProcessorMap.put("NYC", nycCoinProcessor);
-        btcProcessorMap.put("DCR    ", dcrCoinProcessor);
+        btcProcessorMap.put("DCR", dcrCoinProcessor);
+        btcProcessorMap.put("ABBC", abbcCoinProcessor);
+        btcProcessorMap.put("CBC", cbcCoinProcessor);
         return btcProcessorMap;
     }
 
