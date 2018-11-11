@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.schedulers.coinprocessor.EthTokenProcessor;
 import org.json.JSONObject;
 import org.junit.Test;
