@@ -25,7 +25,7 @@ public class XRPProcessor implements CoinProcessor {
     Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(xrpEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(String.format(xrpEndpoint, coin.getCoinAddress())).request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String s = response.readEntity(String.class);
 

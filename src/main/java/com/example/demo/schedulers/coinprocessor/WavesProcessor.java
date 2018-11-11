@@ -22,19 +22,19 @@ public class WavesProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(wavesEndpoint+coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(wavesEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String stringResponse = response.readEntity(String.class);
         JSONObject jsonResponse = new JSONObject(stringResponse);
-        BigDecimal actualBalance = jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10,8)));
+        BigDecimal actualBalance = jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10, 8)));
 
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(wavesEndpoint+coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(wavesEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String stringResponse = response.readEntity(String.class);
         JSONObject jsonResponse = new JSONObject(stringResponse);
-        return jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10,8)));
+        return jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10, 8)));
     }
 }

@@ -19,14 +19,11 @@ public class ARKCoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
-    @Value("${ark.endpoint}")
-    private String arkEndpoint;
-
     @Value("${ark.endpoint.basic}")
     private String arkEndpointBasic;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(arkEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(arkEndpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         String balance = new JSONObject(s).getJSONObject("account").getString("balance");
         BigDecimal divide = new BigDecimal(balance).divide(new BigDecimal(100000000));

@@ -22,7 +22,7 @@ public class QTUMCoinProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(String.format(qtumBasicEndpoint, coin.getEthTokenContract())).request(MediaType.TEXT_HTML).get();
+        Response response = client.target(String.format(qtumBasicEndpoint, coin.getCoinAddress())).request(MediaType.TEXT_HTML).get();
         String s = response.readEntity(String.class).trim();
         BigDecimal balance = new JSONObject(s).getBigDecimal("balance");
         return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
@@ -30,7 +30,7 @@ public class QTUMCoinProcessor implements CoinProcessor {
 
 
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(String.format(qtumBasicEndpoint, coin.getEthTokenContract())).request(MediaType.TEXT_HTML).get();
+        Response response = client.target(String.format(qtumBasicEndpoint, wallet)).request(MediaType.TEXT_HTML).get();
         String s = response.readEntity(String.class).trim();
         return new JSONObject(s).getBigDecimal("balance");
     }

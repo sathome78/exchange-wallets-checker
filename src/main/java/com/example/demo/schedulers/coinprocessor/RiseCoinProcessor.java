@@ -24,7 +24,7 @@ public class RiseCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(riseEndpoint + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(riseEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String balance = new JSONObject(response.readEntity(String.class)).getString("balance");
         BigDecimal actualBalance = new BigDecimal(balance).divide(new BigDecimal(Math.pow(10, 8)));
 
@@ -32,7 +32,7 @@ public class RiseCoinProcessor implements CoinProcessor {
     }
 
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(riseEndpoint + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(riseEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String balance = new JSONObject(response.readEntity(String.class)).getString("balance");
         return new BigDecimal(balance).divide(new BigDecimal(Math.pow(10, 8)));
     }

@@ -15,19 +15,13 @@ import java.math.BigDecimal;
 @Service("dcrProcessor")
 public class DCRCoinProcessor implements CoinProcessor {
 
-
-    @Value("${dcr.endpoint}")
-    private String dcrEndpoint;
-
     @Value("${dcr.endpoint.basic}")
     private String dcrBasicEndpoint;
-
-
     @Autowired
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(String.format(dcrEndpoint, coin.getEthTokenContract())).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(String.format(dcrBasicEndpoint, coin.getCoinAddress())).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal balance = new JSONObject(s).getBigDecimal("balance");
         return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
