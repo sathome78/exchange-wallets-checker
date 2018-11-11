@@ -122,7 +122,6 @@ public class CoinController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //TODO - test
     @PutMapping("/currencies")
     public ResponseEntity<Map<String, Object>> updateWithFile(@RequestParam("file") MultipartFile file) throws IOException {
         String string = IOUtils.toString(file.getInputStream(), "UTF-8");

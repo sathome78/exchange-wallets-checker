@@ -31,12 +31,9 @@ public class XEMMosaicProcessor implements CoinProcessor {
     @Value("${xem.mosaic.endpoint}")
     private String mosaicEndpoint;
 
-    @Value("${xem.main.address}")
-    private String mainAddress;
-
     public CoinWrapper process(Coin coin) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("address", mainAddress);
+        jsonObject.put("address", coin.getCoinAddress());
         Response response = client.target(mosaicEndpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(jsonObject.toString()));
 
         List<HashMap<String, Object>> collect1 = new JSONArray(response.readEntity(String.class)).
