@@ -26,7 +26,7 @@ public class LunesCoinProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(lunesAddressEndpoint + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(lunesAddressEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal available = new JSONObject(s).getBigDecimal("available");
 

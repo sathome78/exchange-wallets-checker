@@ -15,9 +15,6 @@ import java.math.BigDecimal;
 @Service
 public class TronProcessor implements CoinProcessor {
 
-    @Value("${tron.endpoint}")
-    private String tronEndpoint;
-
 
     @Value("${tron.endpoint.basic}")
     private String tronEndpointBasic;
@@ -26,7 +23,7 @@ public class TronProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(tronEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(tronEndpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal actualBalance = new JSONObject(s).getJSONArray("balances").getJSONObject(0).getBigDecimal("balance");
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();

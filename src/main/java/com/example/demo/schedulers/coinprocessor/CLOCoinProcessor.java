@@ -15,9 +15,6 @@ import java.math.BigDecimal;
 public class CLOCoinProcessor implements CoinProcessor {
 
 
-    @Value("${clo.endpoint}")
-    private String cloEndpoint;
-
     @Value("${clo.endpoint.basic}")
     private String cloEndpointBasic;
 
@@ -25,7 +22,7 @@ public class CLOCoinProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(cloEndpoint).request(MediaType.TEXT_HTML).get();
+        Response response = client.target(cloEndpointBasic + coin.getCoinAddress()).request(MediaType.TEXT_HTML).get();
         String substring = response.readEntity(String.class).substring(1385, 1398);
         return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(substring)).build();
     }
@@ -38,3 +35,4 @@ public class CLOCoinProcessor implements CoinProcessor {
     }
 
 }
+

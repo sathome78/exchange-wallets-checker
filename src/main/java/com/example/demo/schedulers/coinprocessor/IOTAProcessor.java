@@ -15,9 +15,6 @@ import java.math.BigDecimal;
 @Service("iotaProcessor")
 public class IOTAProcessor implements CoinProcessor {
 
-    @Value("${iota.endpoint}")
-    private String iotaEndpoint;
-
     @Value("${iota.endpoint.basic}")
     private String iotaEndpointBasic;
 
@@ -25,7 +22,7 @@ public class IOTAProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(iotaEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(iotaEndpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         return CoinWrapper.builder().coin(coin).actualBalance(new JSONObject(s).getBigDecimal("balance")).build();
     }

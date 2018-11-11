@@ -29,7 +29,7 @@ public class ETICoinProcessor implements CoinProcessor {
     @Override
     public CoinWrapper process(Coin coin) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("addr", coin.getEthTokenContract());
+        requestBody.put("addr", coin.getCoinAddress());
         requestBody.put("options", singletonList("balance"));
         Response post = client.target(etiEndpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
         String s = post.readEntity(String.class);

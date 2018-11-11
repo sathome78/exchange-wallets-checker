@@ -94,7 +94,7 @@ public class SchedulerService {
         coinRepository.save(btcCoin);
     }
 
-    @Scheduled(fixedDelay = 30000, initialDelay = 0)
+//    @Scheduled(fixedDelay = 30000, initialDelay = 0)
     public void updateUSD() {
         Response response = client.target(currencyUsd).request(MediaType.APPLICATION_JSON_TYPE).get();
         String stringResponse = response.readEntity(String.class);

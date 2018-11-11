@@ -23,7 +23,7 @@ public class KazeCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(kazeEndpointBasic + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(kazeEndpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal bigDecimal = new JSONObject(s).getJSONArray("balance").getJSONObject(1).getBigDecimal("amount");
         return CoinWrapper.builder().coin(coin).actualBalance(bigDecimal).build();

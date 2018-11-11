@@ -23,7 +23,7 @@ public class GolCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(golBasicEndpoint + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(golBasicEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String jsonResponse = response.readEntity(String.class);
         String balance = new JSONObject(jsonResponse).getJSONArray("info").getJSONObject(0).getString("balance");
         return CoinWrapper.builder().actualBalance(new BigDecimal(balance)).coin(coin).build();

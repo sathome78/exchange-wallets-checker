@@ -24,14 +24,11 @@ public class AchainCoinProcessor implements CoinProcessor {
     @Autowired
     Client client;
 
-    @Value("${achain.endpoint}")
-    private String achainEndpoint;
-
     @Value("${achain.endpoint.basic}")
     private String basicWallet;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(achainEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(basicWallet + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
 
         Map<String, String> collect2 = new JSONObject(response.readEntity(String.class)).
                 getJSONArray("data").

@@ -15,9 +15,6 @@ import java.math.BigDecimal;
 @Service("aplCoinProcessor")
 public class APLCoinProcessor implements CoinProcessor {
 
-    @Value("${apl.endpoint}")
-    private String endpoint;
-
     @Value("${apl.endpoint.basic}")
     private String baseEndpoint;
 
@@ -26,7 +23,7 @@ public class APLCoinProcessor implements CoinProcessor {
 
     public CoinWrapper process(Coin coin) {
         double pow = Math.pow(10, 7);
-        Response response = client.target(endpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(baseEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal balanceATM = new BigDecimal(new JSONObject(s).getString("balanceATM")).divide(new BigDecimal(pow));
         return CoinWrapper.builder().coin(coin).actualBalance(balanceATM).build();

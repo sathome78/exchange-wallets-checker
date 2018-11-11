@@ -14,9 +14,6 @@ import java.math.BigDecimal;
 @Service("neoCoinProcessor")
 public class NEOCoinProcessor implements CoinProcessor {
 
-    @Value("${neo.endpoint}")
-    private String neoEndpoint;
-
     @Value("${neo.endpoint.basic}")
     private String endpointBasic;
 
@@ -25,7 +22,7 @@ public class NEOCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(neoEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(endpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
 
         return null;
     }

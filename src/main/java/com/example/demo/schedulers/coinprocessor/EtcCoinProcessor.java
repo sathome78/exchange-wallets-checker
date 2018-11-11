@@ -17,17 +17,14 @@ import java.math.BigDecimal;
 @Log4j2
 public class EtcCoinProcessor implements CoinProcessor {
 
-    @Value("${etc.endpoint}")
-    private String etcEndpoint;
-
-    @Value("https://api.gastracker.io/addr/")
+    @Value("${etc.endpoint.basic}")
     private String basicEndpoint;
 
     @Autowired
     Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(etcEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(basicEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String stringJsonResponse = response.readEntity(String.class);
         JSONObject jsonObject = new JSONObject(stringJsonResponse);
         double etcBalance = jsonObject.
