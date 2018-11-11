@@ -61,6 +61,12 @@ public class CoinController {
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
+    @PostMapping("/currencies/")
+    private ResponseEntity<Map<String, Object>> addNewWallet(@RequestBody Coin coin) {
+        coinRepository.save(coin);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping(value = "/currencies/{currencyTiker}/balance")
     public ResponseEntity<Map<String, Object>> getBalanceByWallet(@PathVariable String currencyTiker,
                                                                   @RequestParam(value = "wallet") String wallet,
@@ -91,7 +97,7 @@ public class CoinController {
 
     @PutMapping("/currencies/{currencyName}")
     public ResponseEntity<Map<String, Object>> updateBalance(@PathVariable String currencyName,
-                                                                @RequestBody CoinBalance coinBalance) {
+                                                             @RequestBody CoinBalance coinBalance) {
 
         if (coinBalance.getBalanceType() == MIN)
             coinRepository.updateMinLimit(coinBalance.getLimit(), currencyName);

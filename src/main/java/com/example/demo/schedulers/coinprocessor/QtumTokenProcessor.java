@@ -23,17 +23,17 @@ public class QtumTokenProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(qtumTokenEndpoint + coin.getEthTokenContract()).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(qtumTokenEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         JSONArray jsonArray = new JSONArray(s);
-        BigDecimal actualBalance = coin.getCurrentAmount();
+        BigDecimal actualBalance = null;
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             String amount = jsonObject.getString("amount");
             String symbol = jsonObject.getJSONObject("contract").getString("symbol");
             if (symbol.equals(coin.getName())) {
                 String decimals = jsonObject.getJSONObject("contract").getString("decimals");
-                actualBalance = new BigDecimal(amount).divide(new BigDecimal(decimals));
+                actualBalance = new BigDecimal(amount).divide(new BigDecimal(Math.pow(10, Double.valueOf(decimals))));
             }
         }
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
@@ -51,7 +51,7 @@ public class QtumTokenProcessor implements CoinProcessor {
             String symbol = jsonObject.getJSONObject("contract").getString("symbol");
             if (symbol.equals(coin.getName())) {
                 String decimals = jsonObject.getJSONObject("contract").getString("decimals");
-                return new BigDecimal(amount).divide(new BigDecimal(decimals));
+                return new BigDecimal(amount).divide(new BigDecimal(Math.pow(10, Double.valueOf(decimals))));
             }
         }
         return null;
