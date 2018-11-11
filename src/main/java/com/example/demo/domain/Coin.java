@@ -53,6 +53,9 @@ public class Coin {
     @Column(name = "AMOUNT_IN_USD")
     private BigDecimal amountInUSD;
 
+    @Column(name = "MAIN")
+    private boolean main;
+
     public void updateUSDData(double coinUSDRates) {
         this.rateToUSD = new BigDecimal(coinUSDRates);
         this.amountInUSD = this.currentAmount.multiply(this.rateToUSD);
