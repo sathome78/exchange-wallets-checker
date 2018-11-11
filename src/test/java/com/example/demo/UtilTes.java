@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.schedulers.coinprocessor.EthTokenProcessor;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -9,10 +10,15 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Collections.singletonList;
 
 public class UtilTes {
 
@@ -132,6 +138,19 @@ public class UtilTes {
         BigDecimal balanceATM = new BigDecimal(new JSONObject(s).getString("balanceATM")).divide(new BigDecimal(pow));
         System.out.println(balanceATM);
     }
+
+    @Test
+    public void etz() throws Exception {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("addr", "0x67d982400C4655448ee0cDfe9974C4d60a1E9A3A");
+        requestBody.put("options", singletonList("balance"));
+        Response post = client().target("https://explorer.etherzero.org/web3relay").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
+        String s = post.readEntity(String.class);
+        String balance = new JSONObject(post.readEntity(String.class)).getString("balance");
+
+        System.out.println(balance);
+    }
+
 
     @Test
     public void testPow() {
