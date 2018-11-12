@@ -28,7 +28,7 @@ public class EthTokenProcessor implements CoinProcessor {
 
 
     public CoinWrapper process(Coin coin) {
-        JSONObject jsonObject = requestUtil.getEthTokens();
+        JSONObject jsonObject = requestUtil.getEthTokens(coin.getCoinAddress());
         JSONObject tokens = jsonObject.getJSONObject("tokens");
         JSONObject ethToken = tokens.getJSONObject(coin.getEthTokenContract());
         String decimal = String.valueOf(ethToken.get("decimals"));

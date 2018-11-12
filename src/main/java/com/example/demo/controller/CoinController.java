@@ -62,8 +62,24 @@ public class CoinController {
     }
 
     @PostMapping("/currencies/")
-    private ResponseEntity<Map<String, Object>> addNewWallet(@RequestBody Coin coin) {
-        coinRepository.save(coin);
+    private ResponseEntity<Map<String, Object>> addNewCoin(@RequestParam("ticker") String ticker, @RequestParam("address") String address, @RequestParam("eth_contract") String ethContract) {
+
+        List<Coin> byName = coinRepository.findAllByName(ticker);
+
+        Coin coin = byName.stream().findFirst().get();
+
+        Coin coinBase = Coin.builder().
+                name(ticker).
+                priceStatus(PriceStatus.NORMAL).
+                detailName(ticker).
+                coinAddress(address).
+                ethTokenContract(ethContract).
+                coinType(coin.getCoinType()).
+                main(false).
+                enable(false).build();
+
+        coinRepository.save(coinBase);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -82,6 +98,18 @@ public class CoinController {
         BigDecimal balance = coinProcessor.getBalance(coin, wallet);
         Map<String, Object> response = new HashMap<>();
         response.put("balance", Optional.ofNullable(balance).orElse(new BigDecimal(0)));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/currencies/balance/reserved")
+    public ResponseEntity<Map<String, Object>> responseEntity() {
+        Map<String, Object> response = new HashMap<>();
+        List<Coin> byMainFalse = coinRepository.findByMainFalse();
+        byMainFalse.forEach(coin -> {
+            String key = String.join("||", coin.getName(), coin.getCoinAddress(), coin.getEthTokenContract());
+            response.put(key, coin.getCurrentAmount());
+        });
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

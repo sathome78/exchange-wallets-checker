@@ -30,14 +30,14 @@ public class RequestUtil {
         return new JSONObject(response);
     }
 
-    @Cacheable(value = "getEthTokens", key = "#ethTokenAddress")
-    public JSONObject getEthTokens(String ethTokenAddress) {
-        String url = ethTokenBaseAddress + ethTokenAddress + "&showTx=all";
+    @Cacheable(value = "getEthTokens", key = "#coinAddress")
+    public JSONObject getEthTokens(String coinAddress) {
+        String url = ethTokenBaseAddress + coinAddress + "&showTx=all";
         try {
             String response = client.target(url).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(String.class);
             return new JSONObject(response);
         } catch (Exception e) {
-            log.warn("Unable to retrieve information about eth token with wallet " + ethTokenAddress);
+            log.warn("Unable to retrieve information about eth token with wallet " + coinAddress);
             return null;
         }
     }

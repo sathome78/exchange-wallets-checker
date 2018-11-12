@@ -33,5 +33,11 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
     @Query(value = " SELECT * FROM COIN WHERE NAME IN (:names)" , nativeQuery = true)
     List<Coin> findByNameInNames(@Param("names")List<String> names);
 
+    List<Coin> findByMainFalse(Sort name);
+
+    List<Coin> findByMainFalse();
+
+    List<Coin> findAllByName(String name);
+
 
 }
