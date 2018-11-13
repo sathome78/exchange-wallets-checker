@@ -1,16 +1,17 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.enums.CoinType;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Table(name = "COIN")
 @Entity
-@Data
 @Builder
+@Getter
+@Setter
+@AllArgsConstructor
 public class Coin {
 
     @Id
@@ -73,11 +74,11 @@ public class Coin {
         this.maxAmount = new BigDecimal(data[2]);
         this.minAmountInUSD = this.minAmount.multiply(this.rateToUSD);
         this.maxAmountInUSD = this.maxAmount.multiply(this.rateToUSD);
-
     }
 
     public Coin(String[] csvRow){
         this.name = csvRow[1];
-
     }
+
+    public Coin(){}
 }

@@ -61,8 +61,10 @@ public class CoinController {
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
-    @PostMapping("/currencies/")
-    private ResponseEntity<Map<String, Object>> addNewCoin(@RequestParam("ticker") String ticker, @RequestParam("address") String address, @RequestParam("eth_contract") String ethContract) {
+    @PostMapping("/currencies/add")
+    private ResponseEntity<Map<String, Object>> addWallet(@RequestParam("ticker") String ticker,
+                                                          @RequestParam("address") String address,
+                                                          @RequestParam(value = "eth_contract", required = false) String ethContract) {
 
         List<Coin> byName = coinRepository.findAllByName(ticker);
 
@@ -76,12 +78,24 @@ public class CoinController {
                 ethTokenContract(ethContract).
                 coinType(coin.getCoinType()).
                 main(false).
-                enable(false).build();
+                amountInUSD(new BigDecimal(0)).
+                minAmountInUSD(new BigDecimal(-99999)).
+                maxAmountInUSD(new BigDecimal(999999999)).
+                currentAmount(new BigDecimal(0)).
+                maxAmount(new BigDecimal(999999999)).minAmount(new BigDecimal(-99999)).
+                enable(true).build();
 
         coinRepository.save(coinBase);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/currencies")
+    ResponseEntity<Map<String, Object>> deleteWallet(@RequestParam("ticker") String ticker, @RequestParam("address") String address, @RequestParam("eth_contract") String ethContract) {
+//        coinRepository
+        return null;
+    }
+
 
     @GetMapping(value = "/currencies/{currencyTiker}/balance")
     public ResponseEntity<Map<String, Object>> getBalanceByWallet(@PathVariable String currencyTiker,
