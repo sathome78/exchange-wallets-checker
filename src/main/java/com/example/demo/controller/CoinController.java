@@ -91,9 +91,9 @@ public class CoinController {
     }
 
     @DeleteMapping("/currencies")
-    ResponseEntity<Map<String, Object>> deleteWallet(@RequestParam("ticker") String ticker, @RequestParam("address") String address, @RequestParam("eth_contract") String ethContract) {
-//        coinRepository
-        return null;
+    ResponseEntity<Map<String, Object>> deleteWallet(@RequestParam("ticker") String ticker) {
+        coinRepository.deleteByName(ticker);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

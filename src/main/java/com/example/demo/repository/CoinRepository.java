@@ -40,4 +40,5 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
     List<Coin> findAllByName(String name);
 
 
+    int deleteByName(String ticker);
 }
