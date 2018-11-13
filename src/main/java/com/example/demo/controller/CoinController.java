@@ -92,7 +92,7 @@ public class CoinController {
 
     @DeleteMapping(value = "/currencies", consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Map<String, Object>> deleteWallet(@RequestParam("ticker") String ticker, @RequestParam("ethTokenContract") String ethTokenContract, @RequestParam("coinAddress")String coinAddress) {
-        coinRepository.deleteByNameAndEthTokenContractAndCoinAddressAndMain(ticker, ethTokenContract, coinAddress, true);
+        coinRepository.deleteByNameAndEthTokenContractAndCoinAddressAndMain(ticker, ethTokenContract, coinAddress, false);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
