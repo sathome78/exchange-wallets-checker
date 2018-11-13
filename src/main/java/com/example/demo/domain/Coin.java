@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Coin {
 
     @Id

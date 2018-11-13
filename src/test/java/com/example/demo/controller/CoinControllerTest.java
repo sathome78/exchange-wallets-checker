@@ -34,7 +34,11 @@ public class CoinControllerTest {
         Coin coin = listOfWDSC.get(0);
         int sizeBefore = listOfWDSC.size();
         coinRepository.deleteByNameAndEthTokenContractAndCoinAddressAndMain(coin.getName(), coin.getEthTokenContract(), coin.getCoinAddress(), false);
-        assertEquals(sizeBefore - 1, coinRepository.findAllByName("ACT").size());
+        List<Coin> listAfterDelete = coinRepository.findAllByName("ACT");
+        assertEquals(sizeBefore, listAfterDelete.size() - 1);
+        for (Coin coin1 : listAfterDelete) {
+            assert !coin1.equals(coin);
+        }
 
     }
 }
