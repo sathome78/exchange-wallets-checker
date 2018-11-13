@@ -31,11 +31,14 @@ public class CoinControllerTest {
     @Test
     public void deleteWallet() throws Exception{
         List<Coin> listOfWDSC = coinRepository.findAllByName("ACT");
-        Coin coin = listOfWDSC.get(0);
+        Coin coin = null;
+        for (Coin coin1 : listOfWDSC) {
+            if (!coin1.isMain()) coin = coin1;
+        }
         int sizeBefore = listOfWDSC.size();
         coinRepository.deleteByNameAndEthTokenContractAndCoinAddressAndMain(coin.getName(), coin.getEthTokenContract(), coin.getCoinAddress(), false);
         List<Coin> listAfterDelete = coinRepository.findAllByName("ACT");
-        assertEquals(sizeBefore, listAfterDelete.size() - 1);
+        assertEquals(sizeBefore - 1, listAfterDelete.size());
         for (Coin coin1 : listAfterDelete) {
             assert !coin1.equals(coin);
         }
