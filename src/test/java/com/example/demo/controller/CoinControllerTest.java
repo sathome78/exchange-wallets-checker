@@ -1,13 +1,22 @@
 package com.example.demo.controller;
 
 import com.example.demo.Application;
+import com.example.demo.domain.Coin;
+import com.example.demo.repository.CoinRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
@@ -16,10 +25,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest(classes = Application.class)
 public class CoinControllerTest {
 
+    @Autowired
+    CoinRepository coinRepository;
 
     @Test
     public void deleteWallet() throws Exception{
-        System.out.println("ok");
+        List<Coin> listOfWDSC = coinRepository.findAllByName("ACT");
+        Coin coin = listOfWDSC.get(0);
+        int sizeBefore = listOfWDSC.size();
+        coinRepository.deleteByNameAndEthTokenContractAndCoinAddressAndMain(coin.getName(), coin.getEthTokenContract(), coin.getCoinAddress(), false);
+        assertEquals(sizeBefore - 1, coinRepository.findAllByName("ACT").size());
 
     }
 }
