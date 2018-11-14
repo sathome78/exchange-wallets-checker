@@ -4,6 +4,7 @@ import com.example.demo.domain.Coin;
 import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.dto.CoinCsvDto;
 import com.example.demo.domain.dto.CoinDto;
+import com.example.demo.domain.dto.ReservedWalletDto;
 import com.example.demo.domain.requestbody.CoinBalance;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.SchedulerService;
@@ -18,12 +19,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
@@ -61,10 +73,12 @@ public class CoinController {
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
-    @PostMapping("/currencies/add")
-    private ResponseEntity<Map<String, Object>> addWallet(@RequestParam("ticker") String ticker,
-                                                          @RequestParam("address") String address,
-                                                          @RequestParam(value = "eth_contract", required = false) String ethContract) {
+    @PostMapping(value = "/currencies/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> addWallet(@RequestBody ReservedWalletDto request) {
+
+        final String ticker = request.getTicker();
+        final String address = request.getAddress();
+        final String ethContract = request.getEthContract();
 
         List<Coin> byName = coinRepository.findAllByName(ticker);
 
@@ -87,13 +101,19 @@ public class CoinController {
 
         coinRepository.save(coinBase);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(Boolean.TRUE);
     }
 
-    @DeleteMapping(value = "/currencies", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Map<String, Object>> deleteWallet(@RequestParam("ticker") String ticker, @RequestParam("ethTokenContract") String ethTokenContract, @RequestParam("coinAddress")String coinAddress) {
-        coinRepository.deleteByNameAndEthTokenContractAndCoinAddressAndMain(ticker, ethTokenContract, coinAddress, false);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @DeleteMapping(value = "/currencies/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> deleteWallet(@RequestBody ReservedWalletDto request) {
+
+        final String ticker = request.getTicker();
+        final String address = request.getAddress();
+        final String ethContract = request.getEthContract();
+
+        coinRepository.deleteByNameAndEthTokenContractAndCoinAddressAndMain(ticker, ethContract, address, false);
+
+        return ResponseEntity.ok(Boolean.TRUE);
     }
 
 
