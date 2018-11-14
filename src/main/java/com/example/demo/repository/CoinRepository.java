@@ -39,5 +39,7 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
 
     List<Coin> findAllByName(String name);
 
-
+    @Modifying
+    @Transactional
+    int deleteByNameAndEthTokenContractAndCoinAddressAndMain(String name, String ethTokenContract, String coinAddress, boolean isMain);
 }
