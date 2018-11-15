@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.schedulers.coinprocessor.EthTokenProcessor;
+import com.example.demo.schedulers.coinprocessor.NEOCoinProcessor;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -20,6 +21,8 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 
 public class UtilTes {
+
+    private Client client = ClientBuilder.newClient();
 
     @Test
     public void test() {
@@ -128,6 +131,11 @@ public class UtilTes {
         System.out.println(s);
     }
 
+    @Test
+    public void neo(){
+
+        //
+    }
 
     @Test
     public void apl() throws Exception {
