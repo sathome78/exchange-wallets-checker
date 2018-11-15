@@ -22,20 +22,20 @@ public class XEMProcessor implements CoinProcessor {
     private String xemBasicEndpoint;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(xemBasicEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
-        BigDecimal bigDecimal = jsonObject.getJSONObject("account").getBigDecimal("balance");
-        BigDecimal newBalance = bigDecimal.divide(new BigDecimal(1000000));
+        BigDecimal newBalance = getBigDecimal(coin.getCoinAddress());
 
         return CoinWrapper.builder().coin(coin).actualBalance(newBalance).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(xemBasicEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+        return getBigDecimal(wallet);
+    }
+
+    private BigDecimal getBigDecimal(String coinAddress) {
+        Response response = client.target(xemBasicEndpoint + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
         JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
         BigDecimal bigDecimal = jsonObject.getJSONObject("account").getBigDecimal("balance");
-        BigDecimal newBalance = bigDecimal.divide(new BigDecimal(1000000));
-        return newBalance;
+        return bigDecimal.divide(new BigDecimal(1000000));
     }
 }

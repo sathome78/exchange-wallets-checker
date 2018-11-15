@@ -28,6 +28,10 @@ public class IOTAProcessor implements CoinProcessor {
     }
 
     public BigDecimal getBalance(Coin coin, String wallet) {
+        return getBigDecimal(wallet);
+    }
+
+    private BigDecimal getBigDecimal(String wallet) {
         Response response = client.target(iotaEndpointBasic + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         return new JSONObject(s).getBigDecimal("balance");

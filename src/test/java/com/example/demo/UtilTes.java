@@ -1,7 +1,9 @@
 package com.example.demo;
 
 import com.example.demo.schedulers.coinprocessor.EthTokenProcessor;
+import com.example.demo.schedulers.coinprocessor.IOTAProcessor;
 import com.example.demo.schedulers.coinprocessor.NEOCoinProcessor;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -16,9 +18,11 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
+import static java.util.Collections.sort;
 
 public class UtilTes {
 
@@ -130,11 +134,14 @@ public class UtilTes {
         s = s.substring(s.lastIndexOf("</td><td>")+"</td><td>".length(),s.indexOf("</td></tr>"));
         System.out.println(s);
     }
-
+//
     @Test
     public void neo(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("address", "NC7ROGDITAJRT57CK27MQBSNBLNTUZTFKVXAILXQ");
+        Response response = client.target("http://explorer.nemchina.com/namespace/mosaicListByAddress").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(jsonObject.toString()));
 
-        //
+        System.out.println(response.readEntity(String.class));
     }
 
     @Test

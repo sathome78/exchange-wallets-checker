@@ -30,7 +30,9 @@ public enum CoinType {
     ARK(27),
     RISE(28),
     QTUM_TOKEN_COIN(29),
-    NEO(30);
+    NEO(30),
+    GAS(31),
+    GX(32), NPXSXEM(33);
 
     private final int i;
 

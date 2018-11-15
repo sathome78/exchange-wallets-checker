@@ -14,6 +14,7 @@ import static com.example.demo.schedulers.NotificatorService.*;
 @Service
 public class CoinProcessorServiceLocator {
 
+    public static final String GAME_X = "GameX";
     @Autowired
     private CoinProcessor btcProcessor;
 
@@ -110,6 +111,9 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor neoCoinProcessor;
 
+    @Autowired
+    private CoinProcessor gasProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -143,6 +147,10 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.RISE, riseCoinProcessor);
         processorMap.put(CoinType.QTUM_TOKEN_COIN, qtumTokenProcessor);
         processorMap.put(CoinType.NEO, neoCoinProcessor);
+        processorMap.put(CoinType.GAS, gasProcessor);
+        processorMap.put(CoinType.GX, new WavesTokenProcessor(GAME_X));
+        processorMap.put(CoinType.NPXSXEM, new WavesTokenProcessor(GAME_X));
+        processorMap.put(CoinType.CLO, new WavesTokenProcessor(GAME_X));
         return processorMap;
     }
 
