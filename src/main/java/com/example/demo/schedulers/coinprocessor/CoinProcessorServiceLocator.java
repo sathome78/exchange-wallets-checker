@@ -131,8 +131,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.XEM_COIN, xemProcessor);
         processorMap.put(CoinType.XEM_MOSAIC, xemMosaicProcessor);
         processorMap.put(CoinType.WAVES, wavesProcessor);
-        processorMap.put(CoinType.WAVES_COIN, wavesCoinProcessor);
-        processorMap.put(CoinType.WAVES_TOKEN, wavesTokenProcessor);
+        processorMap.put(CoinType.WAVES_COIN, wavesTokenProcessor);
         processorMap.put(CoinType.TRON, tronProcessor);
         processorMap.put(CoinType.QTUM, qtumProcessor);
         processorMap.put(CoinType.NTY, ntyProcessor);
