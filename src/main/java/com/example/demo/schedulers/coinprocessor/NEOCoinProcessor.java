@@ -32,8 +32,9 @@ public class NEOCoinProcessor implements CoinProcessor {
     }
 
     private BigDecimal getAmount(String address) {
-        Response response = client.target("https://otcgo.cn/api/v1/balances/" + address).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(endpointBasic + address).request(MediaType.APPLICATION_JSON_TYPE).get();
         JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
         return jsonObject.getJSONArray("balances").getJSONObject(0).getBigDecimal("total");
     }
+
 }

@@ -20,6 +20,7 @@ import static java.util.Collections.singletonList;
 @Service("cloProcessor")
 public class CLOCoinProcessor implements CoinProcessor {
 
+    @Value("clo.endpoint.basic")
     private String cloEndpoint = "https://callistoexplorer.com/web3relay";
 
     @Autowired

@@ -114,6 +114,9 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor gasProcessor;
 
+    @Autowired
+    private CoinProcessor wavesTokenProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -129,6 +132,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.XEM_MOSAIC, xemMosaicProcessor);
         processorMap.put(CoinType.WAVES, wavesProcessor);
         processorMap.put(CoinType.WAVES_COIN, wavesCoinProcessor);
+        processorMap.put(CoinType.WAVES_TOKEN, wavesTokenProcessor);
         processorMap.put(CoinType.TRON, tronProcessor);
         processorMap.put(CoinType.QTUM, qtumProcessor);
         processorMap.put(CoinType.NTY, ntyProcessor);
@@ -148,9 +152,6 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.QTUM_TOKEN_COIN, qtumTokenProcessor);
         processorMap.put(CoinType.NEO, neoCoinProcessor);
         processorMap.put(CoinType.GAS, gasProcessor);
-        processorMap.put(CoinType.GX, new WavesTokenProcessor(GAME_X));
-        processorMap.put(CoinType.NPXSXEM, new WavesTokenProcessor(GAME_X));
-        processorMap.put(CoinType.CLO, new WavesTokenProcessor(GAME_X));
         return processorMap;
     }
 

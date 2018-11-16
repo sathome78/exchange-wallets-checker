@@ -3,17 +3,18 @@ package com.example.demo.schedulers.coinprocessor;
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 
-//todo test
 @Service("gasProcessor")
 public class GASProcessor implements CoinProcessor {
 
-    private String gasEndpoint = "https://neoscan.io/address/";
+    @Value("gas.endpoint.basic")
+    private String gasEndpoint;
 
     @Autowired
     Client client;
@@ -36,4 +37,5 @@ public class GASProcessor implements CoinProcessor {
         int indexOfEnd = response.indexOf("</p>", indexOfBegin);
         return new BigDecimal(response.substring(indexOfBegin + from.length(), indexOfEnd));
     }
+
 }
