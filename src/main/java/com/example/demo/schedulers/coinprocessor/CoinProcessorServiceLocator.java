@@ -14,7 +14,6 @@ import static com.example.demo.schedulers.NotificatorService.*;
 @Service
 public class CoinProcessorServiceLocator {
 
-    public static final String GAME_X = "GameX";
     @Autowired
     private CoinProcessor btcProcessor;
 
@@ -48,11 +47,6 @@ public class CoinProcessorServiceLocator {
 
     @Autowired
     private CoinProcessor wavesProcessor;
-
-
-    @Autowired
-    private CoinProcessor wavesCoinProcessor;
-
 
     @Autowired
     private CoinProcessor tronProcessor;

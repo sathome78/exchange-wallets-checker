@@ -21,10 +21,10 @@ import static java.util.Collections.singletonList;
 public class CLOCoinProcessor implements CoinProcessor {
 
     @Value("clo.endpoint.basic")
-    private String cloEndpoint = "https://callistoexplorer.com/web3relay";
+    private String cloEndpoint;
 
     @Autowired
-    Client client;
+    private Client client;
 
     @Override
     public CoinWrapper process(Coin coin) {
