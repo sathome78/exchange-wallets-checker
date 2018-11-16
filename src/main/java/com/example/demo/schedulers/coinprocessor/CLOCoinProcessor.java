@@ -20,7 +20,7 @@ import static java.util.Collections.singletonList;
 @Service("cloProcessor")
 public class CLOCoinProcessor implements CoinProcessor {
 
-    @Value("clo.endpoint.basic")
+    @Value("${clo.endpoint.basic}")
     private String cloEndpoint;
 
     @Autowired
