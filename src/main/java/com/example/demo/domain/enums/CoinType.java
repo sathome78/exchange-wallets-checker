@@ -29,7 +29,9 @@ public enum CoinType {
     GOL(26),
     ARK(27),
     RISE(28),
-    QTUM_TOKEN_COIN(29);
+    QTUM_TOKEN_COIN(29),
+    NEO(30),
+    GAS(31);
 
     private final int i;
 

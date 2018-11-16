@@ -1,6 +1,10 @@
 package com.example.demo;
 
+import com.example.demo.exceptions.UnsupportedCoinType;
 import com.example.demo.schedulers.coinprocessor.EthTokenProcessor;
+import com.example.demo.schedulers.coinprocessor.IOTAProcessor;
+import com.example.demo.schedulers.coinprocessor.NEOCoinProcessor;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -15,11 +19,15 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
+import static java.util.Collections.sort;
 
 public class UtilTes {
+
+    private Client client = ClientBuilder.newClient();
 
     @Test
     public void test() {
@@ -127,7 +135,19 @@ public class UtilTes {
         s = s.substring(s.lastIndexOf("</td><td>")+"</td><td>".length(),s.indexOf("</td></tr>"));
         System.out.println(s);
     }
+//
+    @Test
+    public void neo(){
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("addr", "0x3362d2b0d8b85Ea88e377bBbF97A7ff37C297449");
+        requestBody.put("options", singletonList("balance"));
+        Response post = client.target("https://callistoexplorer.com/web3relay").request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
+        String s = post.readEntity(String.class);
+        System.out.println(s);
+        String balance = new JSONObject(s).getString("balance");
+        System.out.println(new BigDecimal(balance));
 
+    }
 
     @Test
     public void apl() throws Exception {
