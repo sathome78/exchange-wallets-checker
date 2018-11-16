@@ -16,8 +16,6 @@ import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 
 @Service("wavesTokenProcessor")
-@Scope("prototype")
-@NoArgsConstructor
 public class WavesTokenProcessor implements CoinProcessor{
 
     @Autowired
@@ -38,6 +36,12 @@ public class WavesTokenProcessor implements CoinProcessor{
 
     private BigDecimal getAmount(String address, String name){
         JSONArray balances = new JSONObject(client.target(wavesTokenEndpoint + address).request(MediaType.APPLICATION_JSON).get().readEntity(String.class)).getJSONArray("balances");
+        for (Object balance : balances) {
+            JSONObject jsonObject = (JSONObject) balance;
+            if (jsonObject.getJSONObject("issueTransaction").getString("name").equalsIgnoreCase(name)) return jsonObject.getBigDecimal("balance").divide(new BigDecimal(Math.pow(10, 2)));
+
+        }
+
         for (int i = 0; i < balances.length(); i++) {
             JSONObject jsonObject = balances.getJSONObject(i);
             if (jsonObject.getJSONObject("issueTransaction").getString("name").equalsIgnoreCase(name)) return jsonObject.getBigDecimal("balance").divide(new BigDecimal(Math.pow(10, 2)));
