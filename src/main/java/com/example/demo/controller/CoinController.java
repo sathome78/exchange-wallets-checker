@@ -121,7 +121,7 @@ public class CoinController {
     public ResponseEntity<Map<String, Object>> getBalanceByWallet(@PathVariable String currencyTiker,
                                                                   @RequestParam(value = "wallet") String wallet,
                                                                   @RequestParam(value = "eth_contract", required = false) String ethContract) {
-        Coin coin = coinRepository.findByName(currencyTiker);
+        Coin coin = coinRepository.findByNameAndCoinAddressContaining(currencyTiker, wallet);
         CoinProcessor coinProcessor = coinProcessorServiceLocator.processorMap().getOrDefault(coin.getCoinType(), null);
         if (coinProcessor == null) {
             Map<String, Object> objectObjectMap = Collections.emptyMap();
