@@ -2,6 +2,7 @@ package com.example.demo.schedulers.coinprocessor;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 @Service("gasProcessor")
 public class GASProcessor implements CoinProcessor {
 
-    @Value("gas.endpoint.basic")
+    @Value("${gas.endpoint.basic}")
     private String gasEndpoint;
 
     @Autowired
@@ -30,12 +31,8 @@ public class GASProcessor implements CoinProcessor {
     }
 
     private BigDecimal getAmount(String address) {
-        String response = client.target(gasEndpoint + address).request(MediaType.TEXT_HTML).get().readEntity(String.class);
-        String from = "<div class=\"total-gas-balance\">\n" +
-                "<p class=\"balance-amount\">";
-        int indexOfBegin = response.indexOf(from);
-        int indexOfEnd = response.indexOf("</p>", indexOfBegin);
-        return new BigDecimal(response.substring(indexOfBegin + from.length(), indexOfEnd));
+        String response = client.target(gasEndpoint + address).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(String.class);
+        return new JSONObject(response).getJSONArray("balance").getJSONObject(5).getBigDecimal("amount");
     }
 
 }
