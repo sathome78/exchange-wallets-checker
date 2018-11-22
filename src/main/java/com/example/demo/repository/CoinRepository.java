@@ -18,17 +18,17 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
 
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "UPDATE COIN SET MIN_AMOUNT=:newLimit where NAME=:name")
+    @Query(nativeQuery = true, value = "UPDATE COIN SET MIN_AMOUNT=:newLimit where NAME=:name AND MAIN=true")
     int updateMinLimit(@Param("newLimit") BigDecimal newLimit, @Param("name") String name);
 
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "UPDATE COIN SET MAX_AMOUNT=:newLimit where NAME=:name")
+    @Query(nativeQuery = true, value = "UPDATE COIN SET MAX_AMOUNT=:newLimit where NAME=:name AND MAIN=true")
     int updateMaxLimit(@Param("newLimit") BigDecimal newLimit, @Param("name") String name);
 
     List<Coin> findByEnableTrue();
 
-    List<Coin> findByEnableTrue(Sort name);
+    List<Coin> findByEnableTrueAndMainTrue(Sort name);
 
     @Query(value = " SELECT * FROM COIN WHERE NAME IN (:names)" , nativeQuery = true)
     List<Coin> findByNameInNames(@Param("names")List<String> names);
@@ -42,6 +42,4 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
     @Modifying
     @Transactional
     int deleteByNameAndEthTokenContractAndCoinAddressAndMain(String name, String ethTokenContract, String coinAddress, boolean isMain);
-
-    Coin findByNameAndCoinAddressContaining(String name, String coinAddress);
 }

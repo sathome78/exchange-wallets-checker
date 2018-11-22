@@ -65,7 +65,7 @@ public class CoinController {
 
     @GetMapping(value = "/currencies", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<CoinDto>> getCurrencies() {
-        List<CoinDto> name = coinRepository.findByEnableTrue(Sort.by(Sort.Direction.ASC, "name")).
+        List<CoinDto> name = coinRepository.findByEnableTrueAndMainTrue(Sort.by(Sort.Direction.ASC, "name")).
                 stream().
                 map(CoinDto::new).
                 collect(Collectors.toList());
@@ -92,6 +92,7 @@ public class CoinController {
                 ethTokenContract(ethContract).
                 coinType(coin.getCoinType()).
                 main(false).
+                rateToUSD(coin.getRateToUSD()).
                 amountInUSD(new BigDecimal(0)).
                 minAmountInUSD(new BigDecimal(-99999)).
                 maxAmountInUSD(new BigDecimal(999999999)).
@@ -121,15 +122,15 @@ public class CoinController {
     public ResponseEntity<Map<String, Object>> getBalanceByWallet(@PathVariable String currencyTiker,
                                                                   @RequestParam(value = "wallet") String wallet,
                                                                   @RequestParam(value = "eth_contract", required = false) String ethContract) {
-        Coin coin = coinRepository.findByNameAndCoinAddressContaining(currencyTiker, wallet);
-        CoinProcessor coinProcessor = coinProcessorServiceLocator.processorMap().getOrDefault(coin.getCoinType(), null);
+        List<Coin> coin = coinRepository.findAllByName(currencyTiker);
+        CoinProcessor coinProcessor = coinProcessorServiceLocator.processorMap().getOrDefault(coin.stream().findFirst().get().getCoinType(), null);
         if (coinProcessor == null) {
             Map<String, Object> objectObjectMap = Collections.emptyMap();
             objectObjectMap.put("balance", 0);
             return new ResponseEntity(objectObjectMap, HttpStatus.OK);
         }
         if (!Strings.isNullOrEmpty(ethContract)) wallet = wallet + "," + ethContract;
-        BigDecimal balance = coinProcessor.getBalance(coin, wallet);
+        BigDecimal balance = coinProcessor.getBalance(coin.get(0), wallet);
         Map<String, Object> response = new HashMap<>();
         response.put("balance", Optional.ofNullable(balance).orElse(new BigDecimal(0)));
 
