@@ -109,6 +109,9 @@ public class BeansConfiguration {
     @Autowired
     private BTCGenericProcessor cbcCoinProcessor;
 
+    @Autowired
+    private BTCGenericProcessor qCoinProcessor;
+
 
     @Bean
     @Order(999)
@@ -146,6 +149,7 @@ public class BeansConfiguration {
         btcProcessorMap.put("DCR", dcrCoinProcessor);
         btcProcessorMap.put("ABBC", abbcCoinProcessor);
         btcProcessorMap.put("CBC", cbcCoinProcessor);
+        btcProcessorMap.put("Q", qCoinProcessor);
         return btcProcessorMap;
     }
 

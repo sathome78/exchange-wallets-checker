@@ -19,9 +19,12 @@ public class CRYPCoinProcessor implements BTCGenericProcessor {
     @Value("${btc.cryp.coin}")
     private String baseURL;
 
-    @Autowired
-    private Client client;
+    private final Client client;
 
+    @Autowired
+    public CRYPCoinProcessor(Client client) {
+        this.client = client;
+    }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
