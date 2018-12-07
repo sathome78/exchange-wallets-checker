@@ -20,6 +20,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +92,7 @@ public class SchedulerService {
             String template = renderTemplate(templatesMap.get(status.getKey()), btcCoin);
             notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(template));
         }
+        btcCoin.setDate(new Date());
         coinRepository.save(btcCoin);
     }
 

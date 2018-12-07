@@ -76,9 +76,9 @@ public class CoinController {
     @PostMapping(value = "/currencies/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> addWallet(@RequestBody ReservedWalletDto request) {
 
-        final String ticker = request.getTicker();
-        final String address = request.getAddress();
-        final String ethContract = request.getEthContract();
+        final String ticker = request.getTicker().trim();
+        final String address = request.getAddress().trim();
+        final String ethContract = request.getEthContract().trim();
 
         List<Coin> byName = coinRepository.findAllByName(ticker);
 
@@ -129,7 +129,7 @@ public class CoinController {
             objectObjectMap.put("balance", 0);
             return new ResponseEntity(objectObjectMap, HttpStatus.OK);
         }
-        if (!Strings.isNullOrEmpty(ethContract)) wallet = wallet + "," + ethContract;
+        if (!Strings.isNullOrEmpty(ethContract)) wallet = wallet.trim() + "," + ethContract.trim();
         BigDecimal balance = coinProcessor.getBalance(coin.get(0), wallet);
         Map<String, Object> response = new HashMap<>();
         response.put("balance", Optional.ofNullable(balance).orElse(new BigDecimal(0)));

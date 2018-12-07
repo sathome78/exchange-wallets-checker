@@ -18,17 +18,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@DirtiesContext
-@ContextConfiguration(locations = "classpath:dao-tests.xml")
-@PropertySource("classpath:application.properties")
-@SpringBootTest(classes = Application.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@DirtiesContext
+//@ContextConfiguration(locations = "classpath:dao-tests.xml")
+//@PropertySource("classpath:application.properties")
+//@SpringBootTest(classes = Application.class)
 public class CoinControllerTest {
 
     @Autowired
     CoinRepository coinRepository;
 
-    @Test
+//    @Test
     public void deleteWallet() throws Exception{
         List<Coin> listOfWDSC = coinRepository.findAllByName("ACT");
         Coin coin = null;
