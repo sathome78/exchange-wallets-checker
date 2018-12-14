@@ -7,6 +7,7 @@ import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ public class EthTokenProcessor implements CoinProcessor {
     RequestUtil requestUtil;
 
     public static final String EMPTY_BALANCE = "0";
+
 
 
     public CoinWrapper process(Coin coin) {

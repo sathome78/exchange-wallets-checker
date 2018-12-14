@@ -25,8 +25,8 @@ import static java.lang.String.valueOf;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ApplicationTests {
 
 	@Autowired
@@ -69,16 +69,18 @@ public class ApplicationTests {
 //        System.out.println(text);
 //    }
 //
-//	@SpyBean
-//	RequestUtil requestUtil;
-//	@Test
-//	public void te(){
-//		requestUtil.getEthTokens();
-//		requestUtil.getEthTokens();
-//
-//
-//		verify(requestUtil, times(1)).getEthTokens();
-//	}
+	@Autowired
+	RequestUtil requestUtil;
+
+
+	@Test
+	public void te(){
+		requestUtil.getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
+		requestUtil.getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
+
+
+//		verify(requestUtil, times(1)).getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
+	}
 //
 //	@Test
 //	public void testEtcToken() throws InterruptedException, IOException {

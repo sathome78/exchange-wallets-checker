@@ -15,22 +15,13 @@ import javax.ws.rs.core.MediaType;
 public class RequestUtil {
 
 
-    @Value("${eth.endpoint}")
-    private String ethTokenAddress;
-
     @Value("${eth.endpoint.basic}")
     private String ethTokenBaseAddress;
 
     @Autowired
     private Client client;
 
-    @Cacheable("addresses")
-    public JSONObject getEthTokens() {
-        String response = client.target(ethTokenAddress).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(String.class);
-        return new JSONObject(response);
-    }
-
-    @Cacheable(value = "getEthTokens", key = "#coinAddress")
+    @Cacheable(value = "getEthTokens", key = "#p0")
     public JSONObject getEthTokens(String coinAddress) {
         String url = ethTokenBaseAddress + coinAddress + "&showTx=all";
         try {
@@ -38,8 +29,9 @@ public class RequestUtil {
             return new JSONObject(response);
         } catch (Exception e) {
             log.warn("Unable to retrieve information about eth token with wallet " + coinAddress);
-            return null;
+            return new JSONObject();
         }
     }
+
 
 }

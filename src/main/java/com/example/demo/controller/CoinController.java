@@ -75,10 +75,10 @@ public class CoinController {
 
     @PostMapping(value = "/currencies/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> addWallet(@RequestBody ReservedWalletDto request) {
-
+        log.info("Request body is "+request);
         final String ticker = request.getTicker().trim();
         final String address = request.getAddress().trim();
-        final String ethContract = request.getEthContract().trim();
+        final String ethContract = Optional.ofNullable(request.getEthContract()).orElse("");
 
         List<Coin> byName = coinRepository.findAllByName(ticker);
 
