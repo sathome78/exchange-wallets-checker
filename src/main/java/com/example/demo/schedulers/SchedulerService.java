@@ -52,7 +52,7 @@ public class SchedulerService {
     private String currencyUsd;
 
 
-    @Scheduled(fixedDelay = 30000, initialDelay = 0)
+    @Scheduled(fixedDelay = 120000, initialDelay = 0)
     public void allCoins() {
         List<CoinWrapper> collect = coinRepository.findByEnableTrue().parallelStream().map(this::process).collect(toList());
         collect.forEach(this::process);
