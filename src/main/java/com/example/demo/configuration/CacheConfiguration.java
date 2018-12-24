@@ -1,6 +1,5 @@
 package com.example.demo.configuration;
 
-import com.google.common.cache.CacheBuilder;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -11,23 +10,22 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.cache.CacheBuilder.*;
+
 @Configuration
 @EnableCaching
-public class CacheConfiguration  {
+public class CacheConfiguration {
 
 
     @Bean
     public CacheManager cacheManager() {
-        ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager("getEthTokens") {
-
-            @Override
+        return new ConcurrentMapCacheManager("getEthTokens") {
             protected Cache createConcurrentMapCache(final String name) {
-                return new ConcurrentMapCache(name,
-                                              CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build().asMap(), false);
+                return new ConcurrentMapCache(name, newBuilder().expireAfterWrite(20, TimeUnit.MINUTES)
+                                                                .build()
+                                                                .asMap(), false);
             }
         };
-
-        return cacheManager;
     }
 
 }
