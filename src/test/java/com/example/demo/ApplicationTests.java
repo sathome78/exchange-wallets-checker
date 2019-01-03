@@ -75,9 +75,9 @@ public class ApplicationTests {
 
 	@Test
 	public void te(){
-		requestUtil.getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
-		requestUtil.getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
-
+//		requestUtil.getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
+//		requestUtil.getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
+		requestUtil.getEthAddressAmount("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
 
 //		verify(requestUtil, times(1)).getEthTokens("0x645830ee2c984bb6ec14da7eeca8ee30b399fb11");
 	}

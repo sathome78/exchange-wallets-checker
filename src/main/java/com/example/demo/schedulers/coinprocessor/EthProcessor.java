@@ -19,20 +19,15 @@ public class EthProcessor implements CoinProcessor {
     RequestUtil requestUtil;
 
     public CoinWrapper process(Coin coin) {
-        JSONObject response = requestUtil.getEthTokens(coin.getCoinAddress());
-        log.info("Response from ETH " + response);
-        BigDecimal actualBalance = response.getBigDecimal("balance");
-        log.info("Actual balance "+actualBalance);
+        BigDecimal ethAddressAmount = requestUtil.getEthAddressAmount(coin.getCoinAddress());
         return CoinWrapper.builder()
                           .coin(coin)
-                          .actualBalance(actualBalance)
+                          .actualBalance(ethAddressAmount)
                           .build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        JSONObject ethTokens = requestUtil.getEthTokens(wallet);
-
-        return ethTokens.getBigDecimal("balance");
+        return requestUtil.getEthAddressAmount(wallet);
     }
 }
