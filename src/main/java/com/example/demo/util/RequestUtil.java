@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
 @Service
@@ -21,6 +22,9 @@ public class RequestUtil {
 
     @Value("${eth.endpoint.etherchain.basic}")
     private String etherchainBasicAddress;
+
+    @Value("${eth.endpoint.token.basic}")
+    private String ethTokenBasicAddress;
 
     @Autowired
     private Client client;
@@ -45,5 +49,14 @@ public class RequestUtil {
         return new BigDecimal(eth);
     }
 
+    public BigDecimal getTokenValue(String ethAddress, String tokenName) {
+        Response response = client.target(String.format(ethTokenBasicAddress, ethAddress, tokenName)).request(MediaType.TEXT_HTML_TYPE).get();
+        String jsonResponse = response.readEntity(String.class);
+        String layout = new JSONObject(jsonResponse).getString("layout");
+        int i = layout.indexOf("<td style='position:relative; border-left:none;border-right:none'>");
+        String firstSubstring = layout.substring(i + "<td style='position:relative; border-left:none;border-right:none'>".length());
+        String ethToken = firstSubstring.substring(0, firstSubstring.indexOf(" ")).replaceAll(",","");
+        return new BigDecimal(ethToken);
+    }
 
 }

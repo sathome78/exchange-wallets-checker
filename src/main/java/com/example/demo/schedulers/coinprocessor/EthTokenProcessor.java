@@ -28,60 +28,16 @@ public class EthTokenProcessor implements CoinProcessor {
     public static final String EMPTY_BALANCE = "0";
 
 
-
     public CoinWrapper process(Coin coin) {
-        JSONObject jsonObject = requestUtil.getEthTokens(coin.getCoinAddress());
-        JSONObject tokens = jsonObject.getJSONObject("tokens");
-        JSONObject ethToken = tokens.getJSONObject(coin.getEthTokenContract());
-        String decimal = String.valueOf(ethToken.get("decimals"));
-        Map<String, String> collect2 = jsonObject.
-                getJSONArray("balances").
-                toList().
-                stream().
-                map(item -> (HashMap<String, Object>) item).
-                map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
-                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-
-        String balance = balance(collect2.get(coin.getEthTokenContract()), decimal);
-
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
+        BigDecimal tokenValue = requestUtil.getTokenValue(coin.getCoinAddress(), coin.getName());
+        return CoinWrapper.builder().coin(coin).actualBalance(tokenValue).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        try {
-            String[] split = wallet.split(",");
-            JSONObject jsonObject = requestUtil.getEthTokens(split[0]);
-            JSONObject tokens = jsonObject.getJSONObject("tokens");
-            JSONObject ethToken = tokens.getJSONObject(split[1].toLowerCase());
-            String decimal = String.valueOf(ethToken.get("decimals"));
-            Map<String, String> collect2 = jsonObject.
-                    getJSONArray("balances").
-                    toList().
-                    stream().
-                    map(item -> (HashMap<String, Object>) item).
-                    map(element -> new Pair<>(valueOf(element.get("contract")), valueOf(element.getOrDefault("balance", "0"))))
-                    .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-
-            return new BigDecimal(balance(collect2.get(split[1].toLowerCase()), decimal));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return BigDecimal.ZERO;
-        }
+        return requestUtil.getTokenValue(wallet, coin.getName());
     }
 
-    private String balance(String balance, String decimal) {
-        if (balance.equals(EMPTY_BALANCE)) {
-            return EMPTY_BALANCE;
-        }
-        if (decimal.equals("0")) {
-            return balance;
-        }
-        if (balance.contains("e") || balance.contains("+")) {
-            return calculateWitheBalance(balance, decimal);
-        }
-        return divide(balance, decimal);
-    }
 
     public String calculateWitheBalance(String balance, String decimal) {
         int indexOfPlusSymbol = balance.indexOf("+");
