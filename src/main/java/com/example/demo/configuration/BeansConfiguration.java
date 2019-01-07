@@ -2,7 +2,6 @@ package com.example.demo.configuration;
 
 import com.example.demo.schedulers.coinprocessor.btccoinsprocessor.BTCGenericProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -112,6 +111,9 @@ public class BeansConfiguration {
     @Autowired
     private BTCGenericProcessor qCoinProcessor;
 
+    @Autowired
+    private BTCGenericProcessor CTXCoinProcessor;
+
 
     @Bean
     @Order(999)
@@ -150,6 +152,7 @@ public class BeansConfiguration {
         btcProcessorMap.put("ABBC", abbcCoinProcessor);
         btcProcessorMap.put("CBC", cbcCoinProcessor);
         btcProcessorMap.put("Q", qCoinProcessor);
+        btcProcessorMap.put("CTX", CTXCoinProcessor);
         return btcProcessorMap;
     }
 
