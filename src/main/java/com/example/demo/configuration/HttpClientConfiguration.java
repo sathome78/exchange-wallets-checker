@@ -1,5 +1,7 @@
 package com.example.demo.configuration;
 
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,8 +25,12 @@ public class HttpClientConfiguration {
             public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
         }}, new java.security.SecureRandom());
 
+        ClientConfig configuration = new ClientConfig();
+        configuration.register(ClientProperties.CONNECT_TIMEOUT,10000);
+
         return ClientBuilder.newBuilder()
                 .sslContext(sslcontext)
+                .withConfig(configuration)
                 .hostnameVerifier((s1, s2) -> true)
                 .build();
 
