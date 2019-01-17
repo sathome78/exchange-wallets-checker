@@ -22,7 +22,7 @@ public class APLCoinProcessor implements CoinProcessor {
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        double pow = Math.pow(10, 7);
+        double pow = Math.pow(10, 8);
         Response response = client.target(baseEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         BigDecimal balanceATM = new BigDecimal(new JSONObject(s).getString("balanceATM")).divide(new BigDecimal(pow));
