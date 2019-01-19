@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 
 import com.example.demo.domain.Coin;
+import com.example.demo.domain.enums.CoinType;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,6 +28,11 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
     int updateMaxLimit(@Param("newLimit") BigDecimal newLimit, @Param("name") String name);
 
     List<Coin> findByEnableTrue();
+
+    List<Coin> findByEnableTrueAndCoinType(CoinType coinType);
+
+    @Query(nativeQuery = true, value = "SELECT DISTINCT COIN_TYPE FROM COIN ")
+    List<String> findCoinTypes();
 
     List<Coin> findByEnableTrueAndMainTrue(Sort name);
 

@@ -14,7 +14,9 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import sun.nio.ch.ThreadPool;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import static com.example.demo.schedulers.NotificatorService.getCurrentDate;
 import static java.lang.String.format;
@@ -53,9 +56,24 @@ public class SchedulerService {
 
 
     @Scheduled(fixedDelay = 120000, initialDelay = 0)
-    public void allCoins() {
-        List<CoinWrapper> collect = coinRepository.findByEnableTrue().stream().map(this::process).collect(toList());
-        collect.forEach(this::process);
+    public void allCoins() throws InterruptedException {
+//        List<CoinWrapper> collect = coinRepository.findByEnableTrue().stream().map(this::process).collect(toList());
+//        collect.forEach(this::process);
+        List<String> coinTypes = coinRepository.findCoinTypes();
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+
+        for (String coinType : coinTypes) {
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    log.info("Send request with coinType " + coinType);
+                    Response response = client.target("http://localhost:8080/process/" + coinType).request(MediaType.APPLICATION_JSON_TYPE).get();
+                    log.info("Finish request with coinType  " + coinType);
+                }
+            });
+
+            Thread.sleep(5000);
+        }
     }
 
     public CoinWrapper process(Coin coin) {

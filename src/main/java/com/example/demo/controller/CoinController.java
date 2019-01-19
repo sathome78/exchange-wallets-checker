@@ -4,7 +4,9 @@ import com.example.demo.domain.Coin;
 import com.example.demo.domain.PriceStatus;
 import com.example.demo.domain.dto.CoinCsvDto;
 import com.example.demo.domain.dto.CoinDto;
+import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.domain.dto.ReservedWalletDto;
+import com.example.demo.domain.enums.CoinType;
 import com.example.demo.domain.requestbody.CoinBalance;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.SchedulerService;
@@ -41,6 +43,7 @@ import java.util.stream.Collectors;
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
 import static com.example.demo.domain.requestbody.BalanceType.MIN;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
@@ -73,9 +76,17 @@ public class CoinController {
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/process/{coinType}")
+    public ResponseEntity<String> processWallets(@PathVariable("coinType") CoinType coinType) {
+        List<CoinWrapper> collect = coinRepository.findByEnableTrueAndCoinType(coinType).stream().map(schedulerService::process).collect(toList());
+        collect.forEach(schedulerService::process);
+        return new ResponseEntity<>("{\"status\":\"success\"}", HttpStatus.OK);
+
+    }
+
     @PostMapping(value = "/currencies/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> addWallet(@RequestBody ReservedWalletDto request) {
-        log.info("Request body is "+request);
+        log.info("Request body is " + request);
         final String ticker = request.getTicker().trim();
         final String address = request.getAddress().trim();
         final String ethContract = Optional.ofNullable(request.getEthContract()).orElse("");
