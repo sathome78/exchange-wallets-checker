@@ -81,7 +81,13 @@ public class CoinController {
         List<CoinWrapper> collect = coinRepository.findByEnableTrueAndCoinType(coinType).stream().map(schedulerService::process).collect(toList());
         collect.forEach(schedulerService::process);
         return new ResponseEntity<>("{\"status\":\"success\"}", HttpStatus.OK);
+    }
 
+    @GetMapping(value = "/process")
+    public ResponseEntity<String> processAll() {
+        List<CoinWrapper> collect = coinRepository.findByEnableTrue().stream().map(schedulerService::process).collect(toList());
+        collect.forEach(schedulerService::process);
+        return new ResponseEntity<>("{\"status\":\"success\"}", HttpStatus.OK);
     }
 
     @PostMapping(value = "/currencies/add", consumes = MediaType.APPLICATION_JSON_VALUE)
