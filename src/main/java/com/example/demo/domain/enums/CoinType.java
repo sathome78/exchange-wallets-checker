@@ -31,7 +31,7 @@ public enum CoinType {
     RISE(28),
     QTUM_TOKEN_COIN(29),
     NEO(30),
-    GAS(31);
+    GAS(31), EDR(32);
 
     private final int i;
 

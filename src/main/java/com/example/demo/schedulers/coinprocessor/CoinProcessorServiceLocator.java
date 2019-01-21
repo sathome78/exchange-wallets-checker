@@ -111,6 +111,9 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor wavesTokenProcessor;
 
+    @Autowired
+    private CoinProcessor edrCoinProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -145,6 +148,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.QTUM_TOKEN_COIN, qtumTokenProcessor);
         processorMap.put(CoinType.NEO, neoCoinProcessor);
         processorMap.put(CoinType.GAS, gasProcessor);
+        processorMap.put(CoinType.EDR, edrCoinProcessor);
         return processorMap;
     }
 

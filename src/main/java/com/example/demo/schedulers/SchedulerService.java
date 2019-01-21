@@ -55,7 +55,7 @@ public class SchedulerService {
     private String currencyUsd;
 
 
-    @Scheduled(fixedDelay = 18000000, initialDelay = 0)
+    @Scheduled(fixedDelay = 1800000, initialDelay = 0)
     public void allCoins() throws InterruptedException {
 //        List<CoinWrapper> collect = coinRepository.findByEnableTrue().stream().map(this::process).collect(toList());
 //        collect.forEach(this::process);
@@ -65,7 +65,6 @@ public class SchedulerService {
             log.info("Send request with coinType " + coinType);
             Response response = client.target("http://localhost:8080/process/" + coinType).request(MediaType.APPLICATION_JSON_TYPE).get();
             log.info("Finish request with coinType  " + coinType);
-
             Thread.sleep(5000);
         }
     }
