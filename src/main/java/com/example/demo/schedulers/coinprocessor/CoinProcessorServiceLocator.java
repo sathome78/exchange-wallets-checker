@@ -114,6 +114,9 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor edrCoinProcessor;
 
+    @Autowired
+    private CoinProcessor USDTProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -149,6 +152,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.NEO, neoCoinProcessor);
         processorMap.put(CoinType.GAS, gasProcessor);
         processorMap.put(CoinType.EDR, edrCoinProcessor);
+        processorMap.put(CoinType.USDT, USDTProcessor);
         return processorMap;
     }
 
