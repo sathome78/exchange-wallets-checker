@@ -3,12 +3,10 @@ package com.example.demo.schedulers.coinprocessor;
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.exceptions.UnsupportedCoinType;
-import lombok.NoArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.client.Client;

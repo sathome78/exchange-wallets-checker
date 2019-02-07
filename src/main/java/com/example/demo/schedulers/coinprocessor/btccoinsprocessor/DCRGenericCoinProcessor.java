@@ -2,7 +2,6 @@ package com.example.demo.schedulers.coinprocessor.btccoinsprocessor;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
-import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

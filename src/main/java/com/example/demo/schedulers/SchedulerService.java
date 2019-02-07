@@ -6,17 +6,15 @@ import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.domain.enums.CoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
+import com.example.demo.schedulers.fiatprocessor.FiatProcessor;
 import com.example.demo.util.NumberFormatter;
 import javafx.util.Pair;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import sun.nio.ch.ThreadPool;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
@@ -25,48 +23,62 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import static com.example.demo.schedulers.NotificatorService.getCurrentDate;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static java.util.stream.Collectors.toList;
 
 @Service
 @Log4j2
 public class SchedulerService {
 
-    @Autowired
-    CoinRepository coinRepository;
+    private final CoinRepository coinRepository;
+    private final Map<String, NotificatorService> notificatorServiceMap;
+    private final Map<CoinType, CoinProcessor> processorMap;
+    private final Map<PriceStatus, String> templatesMap;
+    private final Client client;
+    private final FiatProcessor payeerProcessor;
+    private final FiatProcessor advCashProcessor;
 
-    @Autowired
-    Map<String, NotificatorService> notificatorServiceMap;
 
-    @Autowired
-    Map<CoinType, CoinProcessor> processorMap;
-
-    @Autowired
-    Map<PriceStatus, String> templatesMap;
-
-    @Autowired
-    private Client client;
 
     @Value("${currency.usd.api}")
     private String currencyUsd;
 
+    @Autowired
+    public SchedulerService(CoinRepository coinRepository, Map<String, NotificatorService> notificatorServiceMap, Map<CoinType, CoinProcessor> processorMap, Map<PriceStatus, String> templatesMap, Client client, FiatProcessor advCashProcessor, FiatProcessor payeerProcessor) {
+        this.coinRepository = coinRepository;
+        this.notificatorServiceMap = notificatorServiceMap;
+        this.processorMap = processorMap;
+        this.templatesMap = templatesMap;
+        this.client = client;
+        this.advCashProcessor = advCashProcessor;
+        this.payeerProcessor = payeerProcessor;
+    }
+
 
     @Scheduled(fixedDelay = 1800000, initialDelay = 0)
     public void allCoins() throws InterruptedException {
-//        List<CoinWrapper> collect = coinRepository.findByEnableTrue().stream().map(this::process).collect(toList());
-//        collect.forEach(this::process);
-        List<String> coinTypes = coinRepository.findCoinTypes();
+        coinRepository.findCoinTypes().forEach(element->{
+            log.info("Send request with coinType " + element);
+            client.target("http://localhost:8080/process/" + element).request(MediaType.APPLICATION_JSON_TYPE).get();
+            log.info("Finish request with coinType  " + element);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-        for (String coinType : coinTypes) {
-            log.info("Send request with coinType " + coinType);
-            Response response = client.target("http://localhost:8080/process/" + coinType).request(MediaType.APPLICATION_JSON_TYPE).get();
-            log.info("Finish request with coinType  " + coinType);
-            Thread.sleep(5000);
-        }
+    @Scheduled(fixedDelay = 1800000, initialDelay = 10000)
+    public void processAdvcash() {
+        payeerProcessor.process();
+    }
+
+    @Scheduled(fixedDelay = 1800000, initialDelay = 10000)
+    public void processPayeerMoney() {
+        advCashProcessor.process();
     }
 
     public CoinWrapper process(Coin coin) {

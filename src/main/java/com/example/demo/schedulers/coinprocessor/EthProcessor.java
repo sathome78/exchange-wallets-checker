@@ -3,9 +3,7 @@ package com.example.demo.schedulers.coinprocessor;
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.util.RequestUtil;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

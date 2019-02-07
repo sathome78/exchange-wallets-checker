@@ -5,12 +5,12 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import java.security.cert.X509Certificate;
 
 @Configuration
 public class HttpClientConfiguration {

@@ -3,19 +3,11 @@ package com.example.demo.schedulers.coinprocessor;
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.util.RequestUtil;
-import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.lang.String.valueOf;
 
 @Service
 @Log4j2

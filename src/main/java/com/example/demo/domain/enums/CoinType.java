@@ -32,7 +32,8 @@ public enum CoinType {
     QTUM_TOKEN_COIN(29),
     NEO(30),
     GAS(31), EDR(32),
-    USDT(33);
+    USDT(33),
+    PAYEER(34);
 
     private final int i;
 

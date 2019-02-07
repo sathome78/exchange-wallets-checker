@@ -1,7 +1,6 @@
 package com.example.demo.schedulers.coinprocessor.btccoinsprocessor;
 
 import com.example.demo.domain.Coin;
-import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

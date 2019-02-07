@@ -1,5 +1,7 @@
 package com.example.demo.configuration;
 
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -10,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.cache.CacheBuilder.*;
+import static com.google.common.cache.CacheBuilder.newBuilder;
 
 @Configuration
 @EnableCaching
@@ -26,6 +28,11 @@ public class CacheConfiguration {
                                                                 .asMap(), false);
             }
         };
+    }
+
+    @Bean
+    public AWSSimpleSystemsManagement ssmClient(){
+        return AWSSimpleSystemsManagementClientBuilder.defaultClient();
     }
 
 }

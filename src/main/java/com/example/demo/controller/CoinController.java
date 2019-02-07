@@ -21,23 +21,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.demo.domain.requestbody.BalanceType.MAX;
@@ -57,13 +46,13 @@ public class CoinController {
 
     private final SchedulerService schedulerService;
 
-    @Autowired
-    private CoinProcessorServiceLocator coinProcessorServiceLocator;
+    private final CoinProcessorServiceLocator coinProcessorServiceLocator;
 
     @Autowired
-    public CoinController(CoinRepository coinRepository, SchedulerService schedulerService) {
+    public CoinController(CoinRepository coinRepository, SchedulerService schedulerService, CoinProcessorServiceLocator coinProcessorServiceLocator) {
         this.coinRepository = coinRepository;
         this.schedulerService = schedulerService;
+        this.coinProcessorServiceLocator = coinProcessorServiceLocator;
     }
 
     @GetMapping(value = "/currencies", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -142,9 +131,9 @@ public class CoinController {
         List<Coin> coin = coinRepository.findAllByName(currencyTiker);
         CoinProcessor coinProcessor = coinProcessorServiceLocator.processorMap().getOrDefault(coin.stream().findFirst().get().getCoinType(), null);
         if (coinProcessor == null) {
-            Map<String, Object> objectObjectMap = Collections.emptyMap();
+            Map<String, Object> objectObjectMap = new HashMap<>();
             objectObjectMap.put("balance", 0);
-            return new ResponseEntity(objectObjectMap, HttpStatus.OK);
+            return new ResponseEntity<>(objectObjectMap, HttpStatus.OK);
         }
         if (!Strings.isNullOrEmpty(ethContract)) wallet = wallet.trim() + "," + ethContract.trim();
         BigDecimal balance = coinProcessor.getBalance(coin.get(0), wallet);
@@ -233,13 +222,13 @@ public class CoinController {
     }
 
 
-    public String getCoinsCSV() {
+    private String getCoinsCSV() {
         List<Coin> result = coinRepository.findAll();
         return result.stream().map(CoinCsvDto::new).map(CoinCsvDto::toString)
                 .collect(Collectors.joining("", CoinCsvDto.getFullTitle(), ""));
     }
 
-    public String getCoinsCSVWithoutUSD() {
+    private String getCoinsCSVWithoutUSD() {
         List<Coin> result = coinRepository.findAll();
         return result.stream().map(CoinCsvDto::new).map(CoinCsvDto::toStringWithoutUSD)
                 .collect(Collectors.joining("", CoinCsvDto.getTitleWithoutUSD(), ""));
