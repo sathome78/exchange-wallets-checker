@@ -2,10 +2,7 @@ package com.example.demo.schedulers.fiatprocessor.payeer;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "PAYEER")
@@ -13,6 +10,7 @@ import javax.persistence.Table;
 public class PayeerAccount {
 
     @Column(name = "ID")
+    @Id
     @GeneratedValue
     private int id;
     @Column(name = "PASSWORD_PATH")

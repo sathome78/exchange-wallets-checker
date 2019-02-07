@@ -30,9 +30,6 @@ public class AdvCashProcessor implements FiatProcessor {
     @Autowired
     private AdvCashRepository advCashRepository;
 
-    @Value("${advcash.balance.url}")
-    private String advCashBaseURL;
-
     public void process() {
         advCashAccountList().forEach(this::getBalance);
     }

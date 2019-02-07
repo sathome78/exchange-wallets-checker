@@ -26,6 +26,7 @@ public class CoinDto {
     private PriceStatus priceStatus;
     private String coinImage;
     private String ethContract;
+    private String date;
 
     public CoinDto(Coin coin) {
         this.id = coin.getId();
@@ -42,5 +43,6 @@ public class CoinDto {
         this.amountInUSD = coin.getAmountInUSD();
         this.minAmountInUSD = coin.getMinAmountInUSD();
         this.maxAmountInUSD = coin.getMaxAmountInUSD();
+        this.date = coin.getDate().toString();
     }
 }
