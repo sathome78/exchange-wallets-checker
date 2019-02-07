@@ -39,14 +39,14 @@ public class SchedulerService {
     private final Client client;
     private final FiatProcessor payeerProcessor;
     private final FiatProcessor advCashProcessor;
-
+    private final FiatProcessor nixProcessor;
 
 
     @Value("${currency.usd.api}")
     private String currencyUsd;
 
     @Autowired
-    public SchedulerService(CoinRepository coinRepository, Map<String, NotificatorService> notificatorServiceMap, Map<CoinType, CoinProcessor> processorMap, Map<PriceStatus, String> templatesMap, Client client, FiatProcessor advCashProcessor, FiatProcessor payeerProcessor) {
+    public SchedulerService(CoinRepository coinRepository, Map<String, NotificatorService> notificatorServiceMap, Map<CoinType, CoinProcessor> processorMap, Map<PriceStatus, String> templatesMap, Client client, FiatProcessor advCashProcessor, FiatProcessor payeerProcessor, FiatProcessor nixProcessor) {
         this.coinRepository = coinRepository;
         this.notificatorServiceMap = notificatorServiceMap;
         this.processorMap = processorMap;
@@ -54,12 +54,13 @@ public class SchedulerService {
         this.client = client;
         this.advCashProcessor = advCashProcessor;
         this.payeerProcessor = payeerProcessor;
+        this.nixProcessor = nixProcessor;
     }
 
 
     @Scheduled(fixedDelay = 1800000, initialDelay = 0)
-    public void allCoins() throws InterruptedException {
-        coinRepository.findCoinTypes().forEach(element->{
+    public void allCoins() {
+        coinRepository.findCoinTypes().forEach(element -> {
             log.info("Send request with coinType " + element);
             client.target("http://localhost:8080/process/" + element).request(MediaType.APPLICATION_JSON_TYPE).get();
             log.info("Finish request with coinType  " + element);
@@ -71,7 +72,7 @@ public class SchedulerService {
         });
     }
 
-    @Scheduled(fixedDelay = 1800000, initialDelay = 10000)
+    @Scheduled(fixedDelay = 1800000, initialDelay = 1000)
     public void processAdvcash() {
         payeerProcessor.process();
     }
@@ -79,6 +80,11 @@ public class SchedulerService {
     @Scheduled(fixedDelay = 1800000, initialDelay = 1000)
     public void processPayeerMoney() {
         advCashProcessor.process();
+    }
+
+    @Scheduled(fixedDelay = 1800000, initialDelay = 1000)
+    public void processNixMoney() {
+        nixProcessor.process();
     }
 
     public CoinWrapper process(Coin coin) {
