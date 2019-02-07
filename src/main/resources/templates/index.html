@@ -28,6 +28,8 @@
                 data-target="#myModal3">Open Modal2
         </button>
         <button type="button" class="btn btn-info btn-lg" v-on:click="processCoins()">Обновление балансов</button>
+        <button type="button" class="btn btn-info btn-lg" v-on:click="getAdvCash()" data-toggle="modal" data-target="#myModalAdv">Балансы AdvCash</button>
+        <button type="button" class="btn btn-info btn-lg" v-on:click="getPayeer()" data-toggle="modal" data-target="#myModalPayeer">Балансы Payeer</button>
     </div>
     <div id="wrapper-div">
         <div class="card" v-for="todo in currenciesList" v-bind:style="getStyles(todo.priceStatus)">
@@ -98,6 +100,68 @@
 
         </div>
     </div>
+
+    <div class="modal fade" id="myModalAdv" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Балансы AdvCash</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Таблица</p>
+                    <table>
+                        <tr>
+                            <th>Главный</th>
+                            <th>Баланс USD</th>
+                            <th>Баланс EUR</th>
+                            <th>Баланс RUB</th>
+                        </tr>
+                        <tr v-for="currency in advcashData">
+                            <th>{{currency.main}}</th>
+                            <th>{{currency.usdBalance}}</th>
+                            <th>{{currency.eurBalance}}</th>
+                            <th>{{currency.rubBalance}}</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalPayeer" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Корректировка лимитов</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Таблица</p>
+                    <table>
+                        <tr>
+                            <th>Главный</th>
+                            <th>Баланс USD</th>
+                            <th>Баланс EUR</th>
+                            <th>Баланс RUB</th>
+                        </tr>
+                        <tr v-for="currency in payyeerData">
+                            <th>{{currency.main}}</th>
+                            <th>{{currency.usdBalance}}</th>
+                            <th>{{currency.eurBalance}}</th>
+                            <th>{{currency.rubBalance}}</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div class="modal fade" id="myModal1" role="dialog">
         <div class="modal-dialog">
 
@@ -186,13 +250,27 @@
         el: '#my_view',
         data: {
             origin: '',
-            currenciesList: ''
+            currenciesList: '',
+            advcashData:'',
+            payyeerData:''
         },
         methods: {
             getCoins: function () {
                 var host = document.location.host;
                 this.$http.get('http://' + host + '/currencies').then(function ({data}) {
                     this.currenciesList = data;
+                })
+            },
+            getAdvCash: function () {
+                var host = document.location.host;
+                this.$http.get('http://' + host + '/fiat?merchant=advcash').then(function ({data}) {
+                    this.advcashData = data['balance'];
+                })
+            },
+            getPayeer: function () {
+                var host = document.location.host;
+                this.$http.get('http://' + host + '/fiat?merchant=payeer').then(function ({data}) {
+                    this.payyeerData = data['balance'];
                 })
             },
             updateLimit: function (currencyName, limit, balanceType) {

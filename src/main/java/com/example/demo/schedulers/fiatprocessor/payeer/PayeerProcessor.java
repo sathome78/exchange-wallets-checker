@@ -49,6 +49,7 @@ public class PayeerProcessor implements FiatProcessor {
         formData.add("account", account);
         formData.add("apiId", apiID);
         formData.add("apiPass", password);
+        formData.add("action","balance");
 
         Response post = client.target(payeerBalanceURL).request(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(Entity.form(formData));
         String responseEntity = post.readEntity(String.class);
@@ -67,7 +68,7 @@ public class PayeerProcessor implements FiatProcessor {
         payeerRepository.save(payyerAccount);
     }
 
-    public List<PayeerAccount> advCashAccountList() {
+    private List<PayeerAccount> advCashAccountList() {
         return payeerRepository.findAll();
     }
 

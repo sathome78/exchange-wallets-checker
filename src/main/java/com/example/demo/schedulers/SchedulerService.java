@@ -73,12 +73,12 @@ public class SchedulerService {
 
     @Scheduled(fixedDelay = 1800000, initialDelay = 10000)
     public void processAdvcash() {
-//        payeerProcessor.process();
+        payeerProcessor.process();
     }
 
-    @Scheduled(fixedDelay = 1800000, initialDelay = 10000)
+    @Scheduled(fixedDelay = 1800000, initialDelay = 1000)
     public void processPayeerMoney() {
-//        advCashProcessor.process();
+        advCashProcessor.process();
     }
 
     public CoinWrapper process(Coin coin) {
