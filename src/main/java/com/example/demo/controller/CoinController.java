@@ -148,8 +148,8 @@ public class CoinController {
         Map<String, Object> response = new HashMap<>();
         List<Coin> byMainFalse = coinRepository.findByMainFalse();
         byMainFalse.forEach(coin -> {
-
-            String key = String.join("||", coin.getName(), coin.getCoinAddress(), coin.getEthTokenContract());
+            String date = coin.getDate() == null ? "" : String.valueOf(coin.getDate());
+            String key = String.join("||", coin.getName(), coin.getCoinAddress(), coin.getEthTokenContract(), date);
             key = key.endsWith("||") ? key.substring(0, key.length() - 2) : key;
             response.put(key, coin.getCurrentAmount());
         });
