@@ -18,7 +18,7 @@ public class AdvCashAccount {
     private String passwordPath;
     @Column(name = "ACCOUNT")
     private String account;
-    @Column(name = "API_ID")
+    @Column(name = "EMAIL")
     private String email;
     @Column(name = "USD_BALANCE")
     private String usdBalance;
