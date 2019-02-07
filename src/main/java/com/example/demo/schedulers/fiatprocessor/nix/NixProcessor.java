@@ -49,7 +49,7 @@ public class NixProcessor implements FiatProcessor {
 
         Response post = client.target(nixBalanceUrl).request(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(Entity.form(formData));
         String responseEntity = post.readEntity(String.class);
-
+        //TODO
 
         payeerRepository.save(nixAccount);
     }
