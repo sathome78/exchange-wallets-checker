@@ -9,6 +9,7 @@ import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +34,13 @@ public class CacheConfiguration {
     @Bean
     public AWSSimpleSystemsManagement ssmClient(){
         return AWSSimpleSystemsManagementClientBuilder.defaultClient();
+    }
+
+    @Bean
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(100);
+        return threadPoolTaskScheduler;
     }
 
 }
