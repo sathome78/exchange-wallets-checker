@@ -7,6 +7,7 @@ import com.example.demo.domain.enums.CoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import com.example.demo.schedulers.fiatprocessor.FiatProcessor;
+import com.example.demo.schedulers.fiatprocessor.nix.NixProcessor;
 import com.example.demo.util.NumberFormatter;
 import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
@@ -39,14 +40,15 @@ public class SchedulerService {
     private final Client client;
     private final FiatProcessor payeerProcessor;
     private final FiatProcessor advCashProcessor;
-    private final FiatProcessor nixProcessor;
+    private final NixProcessor nixProcessor;
+    private final FiatProcessor perfectmoneyProcessor;
 
 
     @Value("${currency.usd.api}")
     private String currencyUsd;
 
     @Autowired
-    public SchedulerService(CoinRepository coinRepository, Map<String, NotificatorService> notificatorServiceMap, Map<CoinType, CoinProcessor> processorMap, Map<PriceStatus, String> templatesMap, Client client, FiatProcessor advCashProcessor, FiatProcessor payeerProcessor, FiatProcessor nixProcessor) {
+    public SchedulerService(CoinRepository coinRepository, Map<String, NotificatorService> notificatorServiceMap, Map<CoinType, CoinProcessor> processorMap, Map<PriceStatus, String> templatesMap, Client client, FiatProcessor advCashProcessor, FiatProcessor payeerProcessor, NixProcessor nixProcessor, FiatProcessor perfectmoneyProcessor) {
         this.coinRepository = coinRepository;
         this.notificatorServiceMap = notificatorServiceMap;
         this.processorMap = processorMap;
@@ -55,36 +57,45 @@ public class SchedulerService {
         this.advCashProcessor = advCashProcessor;
         this.payeerProcessor = payeerProcessor;
         this.nixProcessor = nixProcessor;
+        this.perfectmoneyProcessor = perfectmoneyProcessor;
     }
 
 
-    @Scheduled(fixedDelay = 1800000, initialDelay = 0)
+//    @Scheduled(fixedDelay = 1800000, initialDelay = 0)
     public void allCoins() {
         coinRepository.findCoinTypes().forEach(element -> {
             log.info("Send request with coinType " + element);
-            client.target("http://localhost:8080/process/" + element).request(MediaType.APPLICATION_JSON_TYPE).get();
+            client.target("http://localhost:8080/process/" + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
             log.info("Finish request with coinType  " + element);
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
+
+        coinRepository.updadateAllCoins(new Date());
+        log.info("Update all coins");
     }
 
-    @Scheduled(fixedDelay = 1800000, initialDelay = 1000)
+//    @Scheduled(fixedDelay = 1800000)
     public void processAdvcash() {
         payeerProcessor.process();
     }
 
-    @Scheduled(fixedDelay = 1800000, initialDelay = 1000)
+//    @Scheduled(fixedDelay = 1800000)
     public void processPayeerMoney() {
         advCashProcessor.process();
     }
 
-    @Scheduled(fixedDelay = 1800000, initialDelay = 1000)
+//    @Scheduled(fixedDelay = 1800000)
     public void processNixMoney() {
         nixProcessor.process();
+    }
+
+    @Scheduled(fixedDelay = 1800000)
+    public void processPerfectMoney() {
+        perfectmoneyProcessor.process();
     }
 
     public CoinWrapper process(Coin coin) {
@@ -115,14 +126,14 @@ public class SchedulerService {
         }
     }
 
-    public void check(Coin btcCoin, BigDecimal newAmount) {
-        Pair<PriceStatus, Boolean> status = getStatus(btcCoin, newAmount);
+    public void check(Coin coin, BigDecimal newAmount) {
+        Pair<PriceStatus, Boolean> status = getStatus(coin, newAmount);
         if (status.getValue()) {
-            String template = renderTemplate(templatesMap.get(status.getKey()), btcCoin);
+            String template = renderTemplate(templatesMap.get(status.getKey()), coin);
             notificatorServiceMap.forEach((s, notificatorService) -> notificatorService.notificate(template));
         }
-        btcCoin.setDate(new Date());
-        coinRepository.save(btcCoin);
+        coin.setDate(new Date());
+        coinRepository.save(coin);
     }
 
     @Scheduled(fixedDelay = 30000, initialDelay = 0)

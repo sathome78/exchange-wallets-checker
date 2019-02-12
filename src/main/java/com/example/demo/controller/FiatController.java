@@ -2,7 +2,9 @@ package com.example.demo.controller;
 
 
 import com.example.demo.repository.AdvCashRepository;
+import com.example.demo.repository.NixRepository;
 import com.example.demo.repository.PayeerRepository;
+import com.example.demo.repository.PerfectmoneyRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,12 @@ public class FiatController {
     @Autowired
     private PayeerRepository payeerRepository;
 
+    @Autowired
+    private NixRepository nixRepository;
+
+    @Autowired
+    private PerfectmoneyRepository perfectmoneyRepository;
+
     @GetMapping("/fiat")
     public ResponseEntity<Map<String, Object>> fiat(@RequestParam("merchant") String merchant) {
         Map<String, Object> response = new HashMap<>();
@@ -35,7 +43,12 @@ public class FiatController {
         if (merchant.equals("payeer")) {
             response.put("balance", payeerRepository.findAll());
         }
-
+        if(merchant.equals("nix")){
+            response.put("balance", nixRepository.findAll());
+        }
+        if(merchant.equals("perfectmoney")){
+            response.put("balance", perfectmoneyRepository.findAll());
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -76,6 +76,8 @@ public class CoinController {
     public ResponseEntity<String> processAll() {
         List<CoinWrapper> collect = coinRepository.findByEnableTrue().stream().map(schedulerService::process).collect(toList());
         collect.forEach(schedulerService::process);
+        coinRepository.updadateAllCoins(new Date());
+        log.info("Update all coins");
         return new ResponseEntity<>("{\"status\":\"success\"}", HttpStatus.OK);
     }
 
@@ -187,6 +189,7 @@ public class CoinController {
         if (coin.getCurrentAmount().compareTo(coin.getMinAmount()) > 0 && coin.getCurrentAmount().compareTo(coin.getMaxAmount()) < 0) {
             coin.setPriceStatus(PriceStatus.NORMAL);
         }
+        coin.setDate(new Date());
         coinRepository.save(coin);
         schedulerService.check(coin, coin.getCurrentAmount());
 

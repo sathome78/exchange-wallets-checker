@@ -3,6 +3,9 @@ package com.example.demo.schedulers.fiatprocessor.nix;
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
 import com.example.demo.repository.NixRepository;
 import com.example.demo.schedulers.fiatprocessor.FiatProcessor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,7 @@ public class NixProcessor implements FiatProcessor {
 
     private final AWSSimpleSystemsManagement ssmClient;
 
-    private final NixRepository payeerRepository;
+    private final NixRepository nixRepository;
 
     @Value("${nix.balance.url}")
     private String nixBalanceUrl;
@@ -31,7 +34,7 @@ public class NixProcessor implements FiatProcessor {
     public NixProcessor(AWSSimpleSystemsManagement ssmClient, Client client, NixRepository payeerRepository) {
         this.ssmClient = ssmClient;
         this.client = client;
-        this.payeerRepository = payeerRepository;
+        this.nixRepository = payeerRepository;
     }
 
     public void process() {
@@ -40,21 +43,30 @@ public class NixProcessor implements FiatProcessor {
 
 
     public void getBalance(NixAccount nixAccount) {
-        String password = ssmClient.getParameter(createParameterRequest(nixAccount.getPasssword())).getParameter().getValue();
-        String email = ssmClient.getParameter(createParameterRequest(nixAccount.getEmail())).getParameter().getValue();
+        String password = ssmClient.getParameter(createParameterRequest(nixAccount.getPassword())).getParameter().getValue();
 
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
-        formData.add("ACCOUNTID", email);
+        formData.add("ACCOUNTID", nixAccount.getAccountId());
         formData.add("PASSPHRASE", password);
 
         Response post = client.target(nixBalanceUrl).request(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(Entity.form(formData));
-        String responseEntity = post.readEntity(String.class);
-        //TODO
 
-        payeerRepository.save(nixAccount);
+        String responseEntity = post.readEntity(String.class);
+        Document document = Jsoup.parse(responseEntity);
+        Elements select1 = document.select(String.format("input[name=%s]", nixAccount.getFirstWallet()));
+        Elements select2 = document.select(String.format("input[name=%s]", nixAccount.getSecondWallet()));
+        Elements select3 = document.select(String.format("input[name=%s]", nixAccount.getThirdWallet()));
+        Elements select4 = document.select(String.format("input[name=%s]", nixAccount.getFourthWallet()));
+
+        nixAccount.setFirstWalletBalance(select1.attr("value"));
+        nixAccount.setSecondWalletBalance(select2.attr("value"));
+        nixAccount.setThirdWalletBalance(select3.attr("value"));
+        nixAccount.setFourthWalletBalance(select4.attr("value"));
+
+        nixRepository.save(nixAccount);
     }
 
     private List<NixAccount> advCashAccountList() {
-        return payeerRepository.findAll();
+        return nixRepository.findAll();
     }
 }
