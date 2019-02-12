@@ -30,6 +30,8 @@
         <button type="button" class="btn btn-info btn-lg" v-on:click="processCoins()">Обновление балансов</button>
         <button type="button" class="btn btn-info btn-lg" v-on:click="getAdvCash()" data-toggle="modal" data-target="#myModalAdv">Балансы AdvCash</button>
         <button type="button" class="btn btn-info btn-lg" v-on:click="getPayeer()" data-toggle="modal" data-target="#myModalPayeer">Балансы Payeer</button>
+        <button type="button" class="btn btn-info btn-lg" v-on:click="getNix()" data-toggle="modal" data-target="#myModalNix">Балансы Nix</button>
+        <button type="button" class="btn btn-info btn-lg" v-on:click="getPerfectMoney()" data-toggle="modal" data-target="#myModalPerfectMoney">Балансы Perfectmoney</button>
     </div>
     <div id="wrapper-div">
         <div class="card" v-for="todo in currenciesList" v-bind:style="getStyles(todo.priceStatus)">
@@ -162,6 +164,70 @@
         </div>
     </div>
 
+    <div class="modal fade" id="myModalNix" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Балансы Nix</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Таблица</p>
+                    <table>
+                        <tr>
+                            <th>Главный</th>
+                            <th>Кошелек 1 | баланс 1</th>
+                            <th>Кошелек 2 | баланс 2</th>
+                            <th>Кошелек 3 | баланс 3</th>
+                            <th>Кошелек 4 | баланс 4</th>
+                        </tr>
+                        <tr v-for="currency in nixData">
+                            <th>{{currency.main}}</th>
+                            <th>{{currency.firstWallet}} | {{currency.firstWalletBalance}}</th>
+                            <th>{{currency.secondWallet}} | {{currency.secondWalletBalance}}</th>
+                            <th>{{currency.thirdWallet}} | {{currency.thirdWalletBalance}}</th>
+                            <th>{{currency.fourthWallet}} | {{currency.fourthWalletBalance}}</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalPerfectMoney" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Балансы PerfectMoney</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Таблица</p>
+                    <table>
+                        <tr>
+                            <th>Главный</th>
+                            <th>Кошелек 1 | баланс 1</th>
+                            <th>Кошелек 2 | баланс 2</th>
+                            <th>Кошелек 3 | баланс 3</th>
+                            <th>Кошелек 4 | баланс 4</th>
+                        </tr>
+                        <tr v-for="currency in perfectmoney">
+                            <th>{{currency.main}}</th>
+                            <th>{{currency.firstWallet}} | {{currency.firstWalletBalance}}</th>
+                            <th>{{currency.secondWallet}} | {{currency.secondWalletBalance}}</th>
+                            <th>{{currency.thirdWallet}} | {{currency.thirdWalletBalance}}</th>
+                            <th>{{currency.fourthWallet}} | {{currency.fourthWalletBalance}}</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+
+        </div>
+    </div>
     <div class="modal fade" id="myModal1" role="dialog">
         <div class="modal-dialog">
 
@@ -252,7 +318,9 @@
             origin: '',
             currenciesList: '',
             advcashData:'',
-            payyeerData:''
+            payyeerData:'',
+            nixData:'',
+            perfectmoney:''
         },
         methods: {
             getCoins: function () {
@@ -271,6 +339,18 @@
                 var host = document.location.host;
                 this.$http.get('http://' + host + '/fiat?merchant=payeer').then(function ({data}) {
                     this.payyeerData = data['balance'];
+                })
+            },
+            getNix: function () {
+                var host = document.location.host;
+                this.$http.get('http://' + host + '/fiat?merchant=nix').then(function ({data}) {
+                    this.nixData = data['balance'];
+                })
+            },
+            getPerfectMoney: function () {
+                var host = document.location.host;
+                this.$http.get('http://' + host + '/fiat?merchant=perfectmoney').then(function ({data}) {
+                    this.perfectmoney = data['balance'];
                 })
             },
             updateLimit: function (currencyName, limit, balanceType) {
