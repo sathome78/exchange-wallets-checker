@@ -2,7 +2,7 @@ package com.example.demo.schedulers.coinprocessor;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class StellarCoinProcessor implements CoinProcessor {
                 toList().
                 stream().
                 map(item -> (HashMap<String, Object>) item).
-                map(element -> new Pair<>(valueOf(element.getOrDefault("asset_code", "XLM")), valueOf(element.get("balance"))))
+                map(element -> Pair.of(valueOf(element.getOrDefault("asset_code", "XLM")), valueOf(element.get("balance"))))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         String coinBalance = collect2.get(coin.getName());
 
@@ -58,7 +58,7 @@ public class StellarCoinProcessor implements CoinProcessor {
                 toList().
                 stream().
                 map(item -> (HashMap<String, Object>) item).
-                map(element -> new Pair<>(valueOf(element.getOrDefault("asset_code", "XLM")), valueOf(element.get("balance"))))
+                map(element -> Pair.of(valueOf(element.getOrDefault("asset_code", "XLM")), valueOf(element.get("balance"))))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         String coinBalance = collect2.get(coin.getName());
         return new BigDecimal(coinBalance);

@@ -26,7 +26,7 @@ public class BtcProcessor implements CoinProcessor {
 
     public CoinWrapper process(Coin coin) {
         Response response = client.
-                target(String.format("https://exrates.me/getWalletBalanceByCurrencyName?currency=%s&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET", coin.getName())).
+                target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=%s&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET", coin.getName())).
                 request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String s = response.readEntity(String.class);

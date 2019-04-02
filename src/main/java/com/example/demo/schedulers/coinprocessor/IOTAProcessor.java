@@ -20,7 +20,7 @@ public class IOTAProcessor implements CoinProcessor {
 
     @Autowired
     private Client client;
-
+    //todo: does not work
     public CoinWrapper process(Coin coin) {
         Response response = client.target(iotaEndpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);

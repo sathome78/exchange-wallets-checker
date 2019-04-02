@@ -7,10 +7,9 @@ import com.example.demo.domain.enums.CoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import com.example.demo.schedulers.fiatprocessor.FiatProcessor;
-import com.example.demo.schedulers.fiatprocessor.nix.NixProcessor;
 import com.example.demo.util.NumberFormatter;
-import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +27,7 @@ import java.util.Map;
 import static com.example.demo.schedulers.NotificatorService.getCurrentDate;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Log4j2
@@ -40,7 +40,7 @@ public class SchedulerService {
     private final Client client;
     private final FiatProcessor payeerProcessor;
     private final FiatProcessor advCashProcessor;
-    private final NixProcessor nixProcessor;
+    private final FiatProcessor nixProcessor;
     private final FiatProcessor perfectmoneyProcessor;
 
 
@@ -48,7 +48,15 @@ public class SchedulerService {
     private String currencyUsd;
 
     @Autowired
-    public SchedulerService(CoinRepository coinRepository, Map<String, NotificatorService> notificatorServiceMap, Map<CoinType, CoinProcessor> processorMap, Map<PriceStatus, String> templatesMap, Client client, FiatProcessor advCashProcessor, FiatProcessor payeerProcessor, NixProcessor nixProcessor, FiatProcessor perfectmoneyProcessor) {
+    public SchedulerService(CoinRepository coinRepository,
+                            Map<String, NotificatorService> notificatorServiceMap,
+                            Map<CoinType, CoinProcessor> processorMap,
+                            Map<PriceStatus, String> templatesMap,
+                            Client client,
+                            FiatProcessor advCashProcessor,
+                            FiatProcessor payeerProcessor,
+                            FiatProcessor nixProcessor,
+                            FiatProcessor perfectmoneyProcessor) {
         this.coinRepository = coinRepository;
         this.notificatorServiceMap = notificatorServiceMap;
         this.processorMap = processorMap;
@@ -61,11 +69,16 @@ public class SchedulerService {
     }
 
 
-//    @Scheduled(fixedDelay = 1800000, initialDelay = 0)
+    @Scheduled(fixedDelay = 1800000, initialDelay = 0)
     public void allCoins() {
         coinRepository.findCoinTypes().forEach(element -> {
             log.info("Send request with coinType " + element);
-            client.target("http://localhost:8080/process/" + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
+            List<CoinWrapper> collect = coinRepository.findByEnableTrueAndCoinType(CoinType.valueOf(element))
+                    .stream()
+                    .map(this::process)
+                    .collect(toList());
+            collect.forEach(this::process);
+//            client.target("http://localhost:8080/process/" + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
             log.info("Finish request with coinType  " + element);
             try {
                 Thread.sleep(3000);
@@ -78,17 +91,17 @@ public class SchedulerService {
         log.info("Update all coins");
     }
 
-//    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     public void processAdvcash() {
         payeerProcessor.process();
     }
 
-//    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     public void processPayeerMoney() {
         advCashProcessor.process();
     }
 
-//    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     public void processNixMoney() {
         nixProcessor.process();
     }
@@ -190,8 +203,6 @@ public class SchedulerService {
 
         btcCoin.setPriceStatus(priceStatus);
 
-        return new Pair<>(priceStatus, sendNotification);
+        return Pair.of(priceStatus, sendNotification);
     }
-
-
 }

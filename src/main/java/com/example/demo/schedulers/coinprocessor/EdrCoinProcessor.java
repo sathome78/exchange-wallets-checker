@@ -20,7 +20,7 @@ public class EdrCoinProcessor implements CoinProcessor {
 
     public CoinWrapper process(Coin coin) {
         Response response = client.
-                target(String.format("https://exrates.me/getWalletBalanceByCurrencyName?currency=EDR&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET&address=" + coin.getCoinAddress())).
+                target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=EDR&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET&address=" + coin.getCoinAddress())).
                 request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String s = response.readEntity(String.class);
@@ -34,7 +34,7 @@ public class EdrCoinProcessor implements CoinProcessor {
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
         Response response = client.
-                target(String.format("https://exrates.me/getWalletBalanceByCurrencyName?currency=EDR&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET&address=" + wallet)).
+                target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=EDR&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET&address=" + wallet)).
                 request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String s = response.readEntity(String.class);

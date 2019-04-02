@@ -53,8 +53,14 @@ public class RequestUtil {
         Response response = client.target(String.format(ethTokenBasicAddress, ethAddress, tokenName)).request(MediaType.TEXT_HTML_TYPE).get();
         String jsonResponse = response.readEntity(String.class);
         String layout = new JSONObject(jsonResponse).getString("layout");
-        int i = layout.indexOf("<td style='position:relative; border-left:none;border-right:none'>");
-        String firstSubstring = layout.substring(i + "<td style='position:relative; border-left:none;border-right:none'>".length());
+        int i = layout.indexOf("</span></div></td><td>");
+        String firstSubstring;
+        if (i == -1) {
+            i = layout.indexOf("-</span></td><td>");
+            firstSubstring = layout.substring(i + "-</span></td><td>".length());
+        } else {
+            firstSubstring = layout.substring(i + "</span></div></td><td>".length());
+        }
         String ethToken = firstSubstring.substring(0, firstSubstring.indexOf(" ")).replaceAll(",","");
         return new BigDecimal(ethToken);
     }
