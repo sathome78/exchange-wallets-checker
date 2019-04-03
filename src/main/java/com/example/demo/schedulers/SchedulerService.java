@@ -75,6 +75,7 @@ public class SchedulerService {
 
     @Scheduled(fixedDelay = 1800000, initialDelay = 0)
     public void allCoins() {
+        //todo: investigate
         coinRepository.findCoinTypes().forEach(element -> {
             log.info("Send request with coinType " + element);
             client.target(endpoint + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
