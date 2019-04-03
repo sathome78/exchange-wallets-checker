@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,8 @@ import java.util.Map;
 import static com.example.demo.schedulers.NotificatorService.getCurrentDate;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static java.util.stream.Collectors.toList;
 
+@EnableScheduling
 @Service
 @Log4j2
 public class SchedulerService {
@@ -43,9 +44,8 @@ public class SchedulerService {
     private final FiatProcessor nixProcessor;
     private final FiatProcessor perfectmoneyProcessor;
 
-
-    @Value("${currency.usd.api}")
     private String currencyUsd;
+    private String endpoint;
 
     @Autowired
     public SchedulerService(CoinRepository coinRepository,
@@ -53,6 +53,8 @@ public class SchedulerService {
                             Map<CoinType, CoinProcessor> processorMap,
                             Map<PriceStatus, String> templatesMap,
                             Client client,
+                            @Value("${currency.usd.api}") String currencyUsd,
+                            @Value("${schedule.update-coins.endpoint}") String endpoint,
                             FiatProcessor advCashProcessor,
                             FiatProcessor payeerProcessor,
                             FiatProcessor nixProcessor,
@@ -62,6 +64,8 @@ public class SchedulerService {
         this.processorMap = processorMap;
         this.templatesMap = templatesMap;
         this.client = client;
+        this.currencyUsd = currencyUsd;
+        this.endpoint = endpoint;
         this.advCashProcessor = advCashProcessor;
         this.payeerProcessor = payeerProcessor;
         this.nixProcessor = nixProcessor;
@@ -73,22 +77,11 @@ public class SchedulerService {
     public void allCoins() {
         coinRepository.findCoinTypes().forEach(element -> {
             log.info("Send request with coinType " + element);
-            List<CoinWrapper> collect = coinRepository.findByEnableTrueAndCoinType(CoinType.valueOf(element))
-                    .stream()
-                    .map(this::process)
-                    .collect(toList());
-            collect.forEach(this::process);
-//            client.target("http://localhost:8080/process/" + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
+            client.target(endpoint + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
             log.info("Finish request with coinType  " + element);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         });
-
-        coinRepository.updadateAllCoins(new Date());
-        log.info("Update all coins");
+//        coinRepository.updadateAllCoins(new Date());
+        log.info("The process of update all coins is started");
     }
 
     @Scheduled(fixedDelay = 1800000)
