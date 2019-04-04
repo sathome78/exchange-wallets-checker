@@ -81,7 +81,7 @@ public class SchedulerService {
             client.target(endpoint + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
             log.info("Finish request with coinType  " + element);
         });
-//        coinRepository.updadateAllCoins(new Date());
+        coinRepository.updadateAllCoins(new Date());
         log.info("The process of update all coins is started");
     }
 

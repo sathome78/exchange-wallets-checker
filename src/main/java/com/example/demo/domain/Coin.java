@@ -1,9 +1,20 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.enums.CoinType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -67,6 +78,10 @@ public class Coin {
     @Column(name = "LAST_UPDATED_TIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    @Column(name = "LAST_UPDATED_SCHEDULE_TIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date scheduleDate;
 
     public void updateUSDData(double coinUSDRates) {
         this.rateToUSD = new BigDecimal(coinUSDRates);

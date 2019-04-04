@@ -50,6 +50,6 @@ public interface CoinRepository extends JpaRepository<Coin, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE COIN SET LAST_UPDATED_TIME =:lastDate ", nativeQuery = true)
+    @Query(value = "UPDATE COIN SET LAST_UPDATED_SCHEDULE_TIME =:lastDate ", nativeQuery = true)
     void updadateAllCoins(@Param("lastDate") Date date);
 }
