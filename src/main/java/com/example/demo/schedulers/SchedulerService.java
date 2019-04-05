@@ -6,6 +6,7 @@ import com.example.demo.domain.dto.CoinWrapper;
 import com.example.demo.domain.enums.CoinType;
 import com.example.demo.repository.CoinRepository;
 import com.example.demo.schedulers.coinprocessor.CoinProcessor;
+import com.example.demo.schedulers.fiatprocessor.FiatProcessor;
 import com.example.demo.util.NumberFormatter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Pair;
@@ -38,10 +39,10 @@ public class SchedulerService {
     private final Map<CoinType, CoinProcessor> processorMap;
     private final Map<PriceStatus, String> templatesMap;
     private final Client client;
-//    private final FiatProcessor payeerProcessor;
-//    private final FiatProcessor advCashProcessor;
-//    private final FiatProcessor nixProcessor;
-//    private final FiatProcessor perfectmoneyProcessor;
+    private final FiatProcessor payeerProcessor;
+    private final FiatProcessor advCashProcessor;
+    private final FiatProcessor nixProcessor;
+    private final FiatProcessor perfectmoneyProcessor;
 
     private String currencyUsd;
     private String endpoint;
@@ -53,11 +54,11 @@ public class SchedulerService {
                             Map<PriceStatus, String> templatesMap,
                             Client client,
                             @Value("${currency.usd.api}") String currencyUsd,
-                            @Value("${schedule.update-coins.endpoint}") String endpoint/*,
+                            @Value("${schedule.update-coins.endpoint}") String endpoint,
                             FiatProcessor advCashProcessor,
                             FiatProcessor payeerProcessor,
                             FiatProcessor nixProcessor,
-                            FiatProcessor perfectmoneyProcessor*/) {
+                            FiatProcessor perfectmoneyProcessor) {
         this.coinRepository = coinRepository;
         this.notificatorServiceMap = notificatorServiceMap;
         this.processorMap = processorMap;
@@ -65,10 +66,10 @@ public class SchedulerService {
         this.client = client;
         this.currencyUsd = currencyUsd;
         this.endpoint = endpoint;
-//        this.advCashProcessor = advCashProcessor;
-//        this.payeerProcessor = payeerProcessor;
-//        this.nixProcessor = nixProcessor;
-//        this.perfectmoneyProcessor = perfectmoneyProcessor;
+        this.advCashProcessor = advCashProcessor;
+        this.payeerProcessor = payeerProcessor;
+        this.nixProcessor = nixProcessor;
+        this.perfectmoneyProcessor = perfectmoneyProcessor;
     }
 
 
@@ -84,24 +85,24 @@ public class SchedulerService {
         log.info("The process of update all coins is started");
     }
 
-//    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     public void processAdvcash() {
-//        payeerProcessor.process();
+        payeerProcessor.process();
     }
 
-//    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     public void processPayeerMoney() {
-//        advCashProcessor.process();
+        advCashProcessor.process();
     }
 
-//    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     public void processNixMoney() {
-//        nixProcessor.process();
+        nixProcessor.process();
     }
 
-//    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 1800000)
     public void processPerfectMoney() {
-//        perfectmoneyProcessor.process();
+        perfectmoneyProcessor.process();
     }
 
     public CoinWrapper process(Coin coin) {
