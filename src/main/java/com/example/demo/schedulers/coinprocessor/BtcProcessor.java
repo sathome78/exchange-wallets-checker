@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Repository
@@ -28,11 +27,6 @@ public class BtcProcessor implements CoinProcessor {
     private Map<String, BTCGenericProcessor> btcProcessorMap;
 
     public CoinWrapper process(Coin coin) {
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException ex) {
-            log.debug("Thread was interrupted");
-        }
         Response response = client.
                 target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=%s&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET", coin.getName())).
                 request(MediaType.APPLICATION_JSON_TYPE).get();

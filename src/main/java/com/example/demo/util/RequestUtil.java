@@ -11,7 +11,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Log4j2
@@ -51,11 +50,6 @@ public class RequestUtil {
     }
 
     public BigDecimal getTokenValue(String ethAddress, String tokenName) {
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException ex) {
-            log.debug("Thread was interrupted");
-        }
         Response response = client.target(String.format(ethTokenBasicAddress, ethAddress, tokenName)).request(MediaType.TEXT_HTML_TYPE).get();
         String jsonResponse = response.readEntity(String.class);
         String layout = new JSONObject(jsonResponse).getString("layout");
@@ -67,7 +61,7 @@ public class RequestUtil {
         } else {
             firstSubstring = layout.substring(i + "</span></div></td><td>".length());
         }
-        String ethToken = firstSubstring.substring(0, firstSubstring.indexOf(" ")).replaceAll(",","");
+        String ethToken = firstSubstring.substring(0, firstSubstring.indexOf(" ")).replaceAll(",", "");
         return new BigDecimal(ethToken);
     }
 

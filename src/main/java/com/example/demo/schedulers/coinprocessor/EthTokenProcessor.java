@@ -13,12 +13,8 @@ import java.math.BigDecimal;
 @Log4j2
 public class EthTokenProcessor implements CoinProcessor {
 
-
     @Autowired
     RequestUtil requestUtil;
-
-    public static final String EMPTY_BALANCE = "0";
-
 
     public CoinWrapper process(Coin coin) {
         BigDecimal tokenValue = requestUtil.getTokenValue(coin.getCoinAddress(), coin.getName());

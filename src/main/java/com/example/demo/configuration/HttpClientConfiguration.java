@@ -26,7 +26,7 @@ public class HttpClientConfiguration {
         }}, new java.security.SecureRandom());
 
         ClientConfig configuration = new ClientConfig();
-        configuration.register(ClientProperties.CONNECT_TIMEOUT,10000);
+        configuration.register(ClientProperties.CONNECT_TIMEOUT,50000);
 
         return ClientBuilder.newBuilder()
                 .sslContext(sslcontext)
