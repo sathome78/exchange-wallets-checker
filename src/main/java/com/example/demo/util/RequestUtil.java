@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
+import static java.util.Objects.nonNull;
+
 @Service
 @Log4j2
 public class RequestUtil {
@@ -49,8 +51,9 @@ public class RequestUtil {
         return new BigDecimal(eth);
     }
 
-    public BigDecimal getTokenValue(String ethAddress, String tokenName) {
-        Response response = client.target(String.format(ethTokenBasicAddress, ethAddress, tokenName)).request(MediaType.TEXT_HTML_TYPE).get();
+    public BigDecimal getTokenValue(String ethAddress, String ethContract, String tokenName) {
+        final String query = nonNull(ethContract) && !ethContract.isEmpty() ? ethContract : tokenName;
+        Response response = client.target(String.format(ethTokenBasicAddress, ethAddress, query)).request(MediaType.TEXT_HTML_TYPE).get();
         String jsonResponse = response.readEntity(String.class);
         String layout = new JSONObject(jsonResponse).getString("layout");
         int i = layout.indexOf("</span></div></td><td>");
