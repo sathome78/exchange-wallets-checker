@@ -21,38 +21,13 @@ public class EthTokenProcessor implements CoinProcessor {
     }
 
     public CoinWrapper process(Coin coin) {
-        BigDecimal tokenValue = requestUtil.getTokenValue(coin.getCoinAddress(), coin.getEthTokenContract(), coin.getName());
+        BigDecimal tokenValue = requestUtil.getTokenValue(coin.getCoinAddress(), coin.getName());
         return CoinWrapper.builder().coin(coin).actualBalance(tokenValue).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        String[] coinData = wallet.split(",");
-
-        String contract = null;
-        if (coinData.length > 1) {
-            wallet = coinData[0];
-            contract = coinData[1];
-        }
-        return requestUtil.getTokenValue(wallet, contract, coin.getName());
-    }
-
-
-    public String calculateWithBalance(String balance, String decimal) {
-        int indexOfPlusSymbol = balance.indexOf("+");
-        String substring = balance.substring(indexOfPlusSymbol + 1);
-        int i = Integer.valueOf(substring) - Integer.valueOf(decimal);
-        double multiplyer = Math.pow(10.0, i);
-        String cleanBalance = balance.substring(0, indexOfPlusSymbol - 1);
-        BigDecimal multiply = new BigDecimal(cleanBalance).multiply(new BigDecimal(multiplyer));
-
-        return multiply.toString();
-    }
-
-    public String divide(String balance, String decimal) {
-        double pow = Math.pow(10.0, Double.valueOf(decimal));
-        BigDecimal divide = new BigDecimal(balance).divide(new BigDecimal(pow));
-        return divide.toString();
+        return requestUtil.getTokenValue(wallet, coin.getName());
     }
 }
 

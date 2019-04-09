@@ -2,37 +2,31 @@ package com.example.demo.configuration;
 
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.cache.CacheBuilder.newBuilder;
-
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
 
+    public final static String CACHE_ETHEREUM_SEARCH = "cache.ethereum.search";
 
-    @Bean
-    public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("getEthTokens") {
-            protected Cache createConcurrentMapCache(final String name) {
-                return new ConcurrentMapCache(name, newBuilder().expireAfterWrite(20, TimeUnit.MINUTES)
-                                                                .build()
-                                                                .asMap(), false);
-            }
-        };
+    @Bean(CACHE_ETHEREUM_SEARCH)
+    public Cache cacheEthereumSearch() {
+        return new CaffeineCache(CACHE_ETHEREUM_SEARCH, Caffeine.newBuilder()
+                .expireAfterWrite(2, TimeUnit.MINUTES)
+                .build());
     }
 
     @Bean
-    public AWSSimpleSystemsManagement ssmClient(){
+    public AWSSimpleSystemsManagement ssmClient() {
         return AWSSimpleSystemsManagementClientBuilder.defaultClient();
     }
 
@@ -42,5 +36,4 @@ public class CacheConfiguration {
         threadPoolTaskScheduler.setPoolSize(100);
         return threadPoolTaskScheduler;
     }
-
 }

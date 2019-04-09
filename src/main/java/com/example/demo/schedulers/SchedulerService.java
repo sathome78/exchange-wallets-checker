@@ -45,7 +45,6 @@ public class SchedulerService {
     private final FiatProcessor perfectmoneyProcessor;
 
     private String currencyUsd;
-    private String endpoint;
 
     @Autowired
     public SchedulerService(CoinRepository coinRepository,
@@ -54,7 +53,6 @@ public class SchedulerService {
                             Map<PriceStatus, String> templatesMap,
                             Client client,
                             @Value("${currency.usd.api}") String currencyUsd,
-                            @Value("${schedule.update-coins.endpoint}") String endpoint,
                             FiatProcessor advCashProcessor,
                             FiatProcessor payeerProcessor,
                             FiatProcessor nixProcessor,
@@ -65,24 +63,27 @@ public class SchedulerService {
         this.templatesMap = templatesMap;
         this.client = client;
         this.currencyUsd = currencyUsd;
-        this.endpoint = endpoint;
         this.advCashProcessor = advCashProcessor;
         this.payeerProcessor = payeerProcessor;
         this.nixProcessor = nixProcessor;
         this.perfectmoneyProcessor = perfectmoneyProcessor;
     }
 
-
     @Scheduled(fixedDelay = 1800000, initialDelay = 0)
-    public void allCoins() {
-        //todo: investigate
-        coinRepository.findCoinTypes().forEach(element -> {
-            log.info("Send request with coinType " + element);
-            client.target(endpoint + element).request(MediaType.APPLICATION_JSON_TYPE).async().get();
-            log.info("Finish request with coinType  " + element);
-        });
+    public void allWithoutEthereumTokenCoins() {
+        coinRepository.findCoinTypes()
+                .parallelStream()
+                .map(CoinType::valueOf)
+                .forEach(type -> {
+                    log.info("Send request with coinType " + type);
+                    coinRepository.findByEnableTrueAndCoinType(type)
+                            .stream()
+                            .map(this::process)
+                            .forEach(this::process);
+                    log.info("Finish request with coinType  " + type);
+                });
         coinRepository.updadateAllCoins(new Date());
-        log.info("The process of update all coins is started");
+        log.info("The process of update all coins has finished");
     }
 
     @Scheduled(fixedDelay = 1800000)
@@ -109,7 +110,7 @@ public class SchedulerService {
         try {
             return processorMap.get(coin.getCoinType()).process(coin);
         } catch (Exception e) {
-            log.warn("Unable to retrieve balance of token " + coin.getName());
+            log.warn("Unable to retrieve balance of token: {}, address: {}", coin.getName(), coin.getCoinAddress());
             return CoinWrapper.builder().coin(coin).actualBalance(coin.getCurrentAmount()).build();
         }
     }
