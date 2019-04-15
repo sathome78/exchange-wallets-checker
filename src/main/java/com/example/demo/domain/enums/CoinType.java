@@ -33,7 +33,11 @@ public enum CoinType {
     NEO(30),
     GAS(31), EDR(32),
     USDT(33),
-    PAYEER(34);
+    PAYEER(34),
+    CREA(35),
+    CASINO_COIN(36),
+    PPY(37),
+    TRON_TOKEN_COIN(38);
 
     private final int i;
 

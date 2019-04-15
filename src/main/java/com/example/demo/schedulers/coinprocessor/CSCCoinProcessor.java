@@ -2,7 +2,6 @@ package com.example.demo.schedulers.coinprocessor;
 
 import com.example.demo.domain.Coin;
 import com.example.demo.domain.dto.CoinWrapper;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,18 +11,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 
-@Service
-public class TronProcessor implements CoinProcessor {
+@Service("cscCoinProcessor")
+public class CSCCoinProcessor implements CoinProcessor {
 
-    @Value("${tron.endpoint.basic}")
-    private String tronEndpointBasic;
-
+    @Value("${csc.endpoint.basic}")
+    private String cscBasicEndpoint;
     @Autowired
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        BigDecimal actualBalance = getBalance(coin.getCoinAddress());
-        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
+        return CoinWrapper.builder().coin(coin).actualBalance(getBalance(coin.getCoinAddress())).build();
     }
 
     @Override
@@ -32,9 +29,8 @@ public class TronProcessor implements CoinProcessor {
     }
 
     private BigDecimal getBalance(String address) {
-        Response response = client.target(tronEndpointBasic + address).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        double pow = Math.pow(10, 6);
-        return new JSONObject(s).getBigDecimal("balance").divide(BigDecimal.valueOf(pow));
+        Response response = client.target(cscBasicEndpoint + address).request(MediaType.TEXT_HTML_TYPE).get();
+        String balance = response.readEntity(String.class);
+        return new BigDecimal(balance);
     }
 }

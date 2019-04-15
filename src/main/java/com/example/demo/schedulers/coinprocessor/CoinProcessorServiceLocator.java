@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.demo.schedulers.NotificatorService.*;
+import static com.example.demo.schedulers.NotificatorService.ABOVE_MAX_LIMIT;
+import static com.example.demo.schedulers.NotificatorService.LOW_THAN_MIN_AMOUNT;
+import static com.example.demo.schedulers.NotificatorService.PERMISSIBLE_RANGE;
 
 @Service
 public class CoinProcessorServiceLocator {
@@ -51,6 +53,8 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor tronProcessor;
 
+    @Autowired
+    private CoinProcessor tronTokenProcessor;
 
     @Autowired
     private CoinProcessor qtumProcessor;
@@ -117,6 +121,15 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor USDTProcessor;
 
+    @Autowired
+    private CoinProcessor creaCoinProcessor;
+
+    @Autowired
+    private CoinProcessor cscCoinProcessor;
+
+    @Autowired
+    private CoinProcessor ppyCoinProcessor;
+
     @Bean
     public Map<CoinType, CoinProcessor> processorMap() {
         Map<CoinType, CoinProcessor> processorMap = new HashMap<>();
@@ -133,6 +146,7 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.WAVES, wavesProcessor);
         processorMap.put(CoinType.WAVES_COIN, wavesTokenProcessor);
         processorMap.put(CoinType.TRON, tronProcessor);
+        processorMap.put(CoinType.TRON_TOKEN_COIN, tronTokenProcessor);
         processorMap.put(CoinType.QTUM, qtumProcessor);
         processorMap.put(CoinType.NTY, ntyProcessor);
         processorMap.put(CoinType.DCR, dcrProcessor);
@@ -153,6 +167,9 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.GAS, gasProcessor);
         processorMap.put(CoinType.EDR, edrCoinProcessor);
         processorMap.put(CoinType.USDT, USDTProcessor);
+        processorMap.put(CoinType.CREA, creaCoinProcessor);
+        processorMap.put(CoinType.CASINO_COIN, cscCoinProcessor);
+        processorMap.put(CoinType.PPY, ppyCoinProcessor);
         return processorMap;
     }
 
