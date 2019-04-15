@@ -50,8 +50,8 @@ public class RequestUtil {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject tokenObject = jsonArray.getJSONObject(i);
                 JSONObject tokenInfoObject = tokenObject.getJSONObject("tokenInfo");
-                String symbol = tokenInfoObject.getString("symbol");
-                if (symbol.equals(tokenName)) {
+                String symbol = tokenInfoObject.getString("symbol").toLowerCase();
+                if (symbol.equals(tokenName.toLowerCase())) {
                     int decimals = Integer.parseInt(tokenInfoObject.get("decimals").toString());
                     double pow = Math.pow(10, decimals);
                     return tokenObject.getBigDecimal("balance").divide(new BigDecimal(pow));
