@@ -20,26 +20,23 @@ public class BTWCoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
-    @Value("${btw.endpoint}")
-    private String btwEndpoint;
-
     @Value("${btw.endpoint.basic}")
     private String btwEndpointBasic;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(btwEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        String balance = new JSONObject(s).getString("balance");
-        BigDecimal divide = new BigDecimal(balance).divide(new BigDecimal(100000000));
-        return CoinWrapper.builder().coin(coin).actualBalance(divide).build();
+        BigDecimal balance = getBalance(coin.getCoinAddress());
+        return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(btwEndpointBasic + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        String balance = new JSONObject(s).getString("balance");
-        return new BigDecimal(balance).divide(new BigDecimal(100000000));
+        return getBalance(wallet);
     }
 
+    private BigDecimal getBalance(String address) {
+        Response response = client.target(btwEndpointBasic + address).request(MediaType.APPLICATION_JSON_TYPE).get();
+        String s = response.readEntity(String.class);
+        double pow = Math.pow(10, 8);
+        return new JSONObject(s).getBigDecimal("balance").divide(new BigDecimal(pow));
+    }
 }

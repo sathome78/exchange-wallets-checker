@@ -8,14 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Collections.singletonList;
 
 @Service("ntyProcessor")
 public class NTYCoinProcessor implements CoinProcessor {
@@ -28,21 +23,20 @@ public class NTYCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("addr", coin.getEthTokenContract());
-        requestBody.put("options", singletonList("balance"));
-        Response post = client.target(endpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
-        String balance = new JSONObject(post.readEntity(String.class)).getString("balance");
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
+        BigDecimal balance = getBalance(coin.getCoinAddress());
+        return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
     }
 
     @Override
     public BigDecimal getBalance(Coin coin, String wallet) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("addr", wallet);
-        requestBody.put("options", singletonList("balance"));
-        Response post = client.target(endpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
-        String balance = new JSONObject(post.readEntity(String.class)).getString("balance");
-        return new BigDecimal(balance);
+        return getBalance(wallet);
+    }
+
+    private BigDecimal getBalance(String address) {
+        Response response = client.target(endpoint + address).request(MediaType.APPLICATION_JSON_TYPE).get();
+        String s = response.readEntity(String.class);
+        String balance = new JSONObject(s).getString("result");
+        double pow = Math.pow(10, 18);
+        return new BigDecimal(balance).divide(BigDecimal.valueOf(pow));
     }
 }
