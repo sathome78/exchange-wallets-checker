@@ -42,7 +42,7 @@ public class RequestUtil {
         }
     }
 
-    public BigDecimal getTokenValue(String ethAddress, String tokenName) {
+    public BigDecimal getTokenValue(String ethAddress, String ethContract, String tokenName) {
         try {
             String response = getResponse(ethAddress);
             JSONObject jsonObject = new JSONObject(response);
@@ -50,8 +50,9 @@ public class RequestUtil {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject tokenObject = jsonArray.getJSONObject(i);
                 JSONObject tokenInfoObject = tokenObject.getJSONObject("tokenInfo");
-                String symbol = tokenInfoObject.getString("symbol").toLowerCase();
-                if (symbol.equals(tokenName.toLowerCase())) {
+                final String symbol = tokenInfoObject.getString("symbol").toLowerCase();
+                final String contractAddress = tokenInfoObject.getString("address").toLowerCase();
+                if (symbol.equals(tokenName.toLowerCase()) && contractAddress.equals(ethContract.toLowerCase())) {
                     int decimals = Integer.parseInt(tokenInfoObject.get("decimals").toString());
                     double pow = Math.pow(10, decimals);
                     return tokenObject.getBigDecimal("balance").divide(new BigDecimal(pow));
