@@ -67,7 +67,7 @@ public class RequestUtil {
 
     private String getResponse(String ethAddress) {
         return ethereumResponseCache.get(ethAddress, () -> {
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(6);
             return client.target(String.format(ethTokenBaseAddress, ethAddress)).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(String.class);
         });
     }
