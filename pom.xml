@@ -203,6 +203,12 @@
             <artifactId>caffeine</artifactId>
             <version>2.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.yandex.money.api</groupId>
+            <artifactId>yandex-money-sdk-java</artifactId>
+            <version>5.0.8</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

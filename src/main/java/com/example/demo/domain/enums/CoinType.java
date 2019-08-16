@@ -38,7 +38,10 @@ public enum CoinType {
     CASINO_COIN(36),
     PPY(37),
     TRON_TOKEN_COIN(38),
-    BTW(39);
+    BTW(39),
+    AISI(40),
+    CRON(41),
+    USDX(42);
 
     private final int i;
 
