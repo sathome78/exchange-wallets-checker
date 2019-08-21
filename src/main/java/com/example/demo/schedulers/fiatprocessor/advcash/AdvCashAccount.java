@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Data
 public class AdvCashAccount {
 
-
     @Column(name = "ID")
     @Id
     @GeneratedValue
@@ -30,5 +29,4 @@ public class AdvCashAccount {
     private boolean enable;
     @Column(name = "MAIN")
     private boolean main;
-
 }

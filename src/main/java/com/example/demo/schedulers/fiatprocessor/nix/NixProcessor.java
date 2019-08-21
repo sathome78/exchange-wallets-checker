@@ -41,7 +41,6 @@ public class NixProcessor implements FiatProcessor {
         advCashAccountList().forEach(this::getBalance);
     }
 
-
     public void getBalance(NixAccount nixAccount) {
         String password = ssmClient.getParameter(createParameterRequest(nixAccount.getPassword())).getParameter().getValue();
 

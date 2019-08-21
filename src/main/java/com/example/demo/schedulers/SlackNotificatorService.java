@@ -27,7 +27,6 @@ public class SlackNotificatorService implements NotificatorService {
     @Override
     public void notificate(String renderedTemplate){
         try {
-
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("channel", "alarm");
             jsonObject.put("text", renderedTemplate);
@@ -45,6 +44,4 @@ public class SlackNotificatorService implements NotificatorService {
             e.printStackTrace();
         }
     }
-
-
 }

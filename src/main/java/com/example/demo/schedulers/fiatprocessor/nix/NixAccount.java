@@ -49,6 +49,4 @@ public class NixAccount {
 
     @Column(name = "FOURTH_WALLET_BALANCE")
     private String fourthWalletBalance;
-
-
 }

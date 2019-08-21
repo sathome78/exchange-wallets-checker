@@ -23,7 +23,6 @@ public class EmailNotificator implements NotificatorService {
 
     public void notificate(String renderedTemplate) {
         try {
-
             String[] recepients = recepeints.split(",");
 
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -37,6 +36,4 @@ public class EmailNotificator implements NotificatorService {
             log.error("Some exception");
         }
     }
-
-
 }

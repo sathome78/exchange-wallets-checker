@@ -39,7 +39,6 @@ public class PayeerProcessor implements FiatProcessor {
         advCashAccountList().forEach(this::getBalance);
     }
 
-
     public void getBalance(PayeerAccount payyerAccount) {
         String password = ssmClient.getParameter(createParameterRequest(payyerAccount.getPasswordPath())).getParameter().getValue();
         String apiID = ssmClient.getParameter(createParameterRequest(payyerAccount.getApiID())).getParameter().getValue();
@@ -71,5 +70,4 @@ public class PayeerProcessor implements FiatProcessor {
     private List<PayeerAccount> advCashAccountList() {
         return payeerRepository.findAll();
     }
-
 }

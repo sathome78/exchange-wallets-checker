@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 public class PerfectmoneyProcessor implements FiatProcessor {
 
-
     private final Client client;
 
     private final AWSSimpleSystemsManagement ssmClient;
@@ -29,7 +28,9 @@ public class PerfectmoneyProcessor implements FiatProcessor {
     private String perfectMoneyURL;
 
     @Autowired
-    public PerfectmoneyProcessor(AWSSimpleSystemsManagement ssmClient, Client client, PerfectmoneyRepository payeerRepository) {
+    public PerfectmoneyProcessor(AWSSimpleSystemsManagement ssmClient,
+                                 Client client,
+                                 PerfectmoneyRepository payeerRepository) {
         this.ssmClient = ssmClient;
         this.client = client;
         this.payeerRepository = payeerRepository;
@@ -50,7 +51,7 @@ public class PerfectmoneyProcessor implements FiatProcessor {
         Elements select2 = document.select(String.format("input[name=%s]", perfectmoneyAccount.getSecondWallet()));
         Elements select3 = document.select(String.format("input[name=%s]", perfectmoneyAccount.getThirdWallet()));
         Elements select4 = document.select(String.format("input[name=%s]", perfectmoneyAccount.getFourthWallet()));
-//
+
         perfectmoneyAccount.setFirstWalletBalance(select1.attr("value"));
         perfectmoneyAccount.setSecondWalletBalance(select2.attr("value"));
         perfectmoneyAccount.setThirdWalletBalance(select3.attr("value"));
@@ -62,6 +63,4 @@ public class PerfectmoneyProcessor implements FiatProcessor {
     private List<PerfectmoneyAccount> advCashAccountList() {
         return payeerRepository.findAll();
     }
-
-
 }

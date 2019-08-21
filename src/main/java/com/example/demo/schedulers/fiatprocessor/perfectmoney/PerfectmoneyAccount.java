@@ -49,5 +49,4 @@ public class PerfectmoneyAccount {
 
     @Column(name = "FOURTH_WALLET_BALANCE")
     private String fourthWalletBalance;
-
 }

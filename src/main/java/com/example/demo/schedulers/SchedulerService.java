@@ -9,6 +9,7 @@ import com.example.demo.schedulers.coinprocessor.CoinProcessor;
 import com.example.demo.schedulers.fiatprocessor.FiatProcessor;
 import com.example.demo.util.NumberFormatter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.demo.schedulers.NotificatorService.getCurrentDate;
 import static java.lang.String.format;
@@ -69,8 +71,10 @@ public class SchedulerService {
         this.perfectmoneyProcessor = perfectmoneyProcessor;
     }
 
-    @Scheduled(fixedDelay = 1800000, initialDelay = 0)
+    @Scheduled(fixedDelay = 900000, initialDelay = 0)
     public void allWithoutEthereumTokenCoins() {
+        StopWatch stopWatch = StopWatch.createStarted();
+
         coinRepository.findCoinTypes()
                 .parallelStream()
                 .map(CoinType::valueOf)
@@ -83,25 +87,25 @@ public class SchedulerService {
                     log.info("Finish request with coinType  " + type);
                 });
         coinRepository.updadateAllCoins(new Date());
-        log.info("The process of update all coins has finished");
+        log.info("The process of update all coins has finished, Time (seconds): {}", stopWatch.getTime(TimeUnit.SECONDS));
     }
 
-    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 900000)
     public void processAdvcash() {
         payeerProcessor.process();
     }
 
-    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 900000)
     public void processPayeerMoney() {
         advCashProcessor.process();
     }
 
-    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 900000)
     public void processNixMoney() {
         nixProcessor.process();
     }
 
-    @Scheduled(fixedDelay = 1800000)
+    @Scheduled(fixedDelay = 900000)
     public void processPerfectMoney() {
         perfectmoneyProcessor.process();
     }
@@ -111,7 +115,10 @@ public class SchedulerService {
             return processorMap.get(coin.getCoinType()).process(coin);
         } catch (Exception e) {
             log.warn("Unable to retrieve balance of token: {}, address: {}", coin.getName(), coin.getCoinAddress());
-            return CoinWrapper.builder().coin(coin).actualBalance(coin.getCurrentAmount()).build();
+            return CoinWrapper.builder()
+                    .coin(coin)
+                    .actualBalance(coin.getCurrentAmount())
+                    .build();
         }
     }
 

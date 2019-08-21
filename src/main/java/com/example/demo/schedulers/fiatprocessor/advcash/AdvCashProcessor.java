@@ -21,9 +21,6 @@ import static java.lang.String.valueOf;
 public class AdvCashProcessor implements FiatProcessor {
 
     @Autowired
-    private Client client;
-
-    @Autowired
     private AWSSimpleSystemsManagement ssmClient;
 
     @Autowired
@@ -33,9 +30,7 @@ public class AdvCashProcessor implements FiatProcessor {
         advCashAccountList().forEach(this::getBalance);
     }
 
-
     public void getBalance(AdvCashAccount advCash) {
-
         String password = ssmClient.getParameter(createParameterRequest(advCash.getPasswordPath())).getParameter().getValue();
         String account = ssmClient.getParameter(createParameterRequest(advCash.getAccount())).getParameter().getValue();
         String accountEmail = ssmClient.getParameter(createParameterRequest(advCash.getEmail())).getParameter().getValue();
@@ -83,5 +78,4 @@ public class AdvCashProcessor implements FiatProcessor {
     private List<AdvCashAccount> advCashAccountList() {
         return advCashRepository.findAll();
     }
-
 }

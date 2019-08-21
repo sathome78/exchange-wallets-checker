@@ -25,7 +25,6 @@ public class TelegramNotificatorService implements NotificatorService {
 
     @Override
     public void notificate(String renderedTemplate)  {
-
         try {
             renderedTemplate = URLEncoder.encode(renderedTemplate,"UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -34,6 +33,5 @@ public class TelegramNotificatorService implements NotificatorService {
         Response response = client.target(format(botUrl, renderedTemplate)).request(MediaType.APPLICATION_JSON_TYPE).get();
 
         log.info("Send notification to telegramm {}.", renderedTemplate, response.readEntity(String.class));
-
     }
 }
