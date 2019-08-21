@@ -20,20 +20,20 @@ public class IOTAProcessor implements CoinProcessor {
 
     @Autowired
     private Client client;
+
     //todo: does not work
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(iotaEndpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        return CoinWrapper.builder().coin(coin).actualBalance(new JSONObject(s).getBigDecimal("balance")).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBigDecimal(wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(iotaEndpointBasic + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-    private BigDecimal getBigDecimal(String wallet) {
-        Response response = client.target(iotaEndpointBasic + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
+
         return new JSONObject(s).getBigDecimal("balance");
     }
 }

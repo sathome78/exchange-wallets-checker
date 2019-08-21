@@ -19,21 +19,22 @@ public class PPYCoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().coin(coin).actualBalance(getBalance(coin.getCoinAddress())).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBalance(wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(ppyBasicEndpoint + coinAddress).request(MediaType.TEXT_HTML_TYPE).get();
 
-    private BigDecimal getBalance(String address) {
-        Response response = client.target(ppyBasicEndpoint + address).request(MediaType.TEXT_HTML_TYPE).get();
         String s = response.readEntity(String.class).replaceAll("\n", "").replaceAll(" ", "");
         int i = s.indexOf("<td>PPY</td><tdclass=\"rightaligned\">");
         String firstSubstring = s.substring(i + "<td>PPY</td><tdclass=\"rightaligned\">".length());
         String balance = firstSubstring.substring(0, firstSubstring.indexOf("<")).replaceAll(",", "");
+
         return new BigDecimal(balance);
     }
 }

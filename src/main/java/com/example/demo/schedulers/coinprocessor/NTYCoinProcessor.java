@@ -23,20 +23,19 @@ public class NTYCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        BigDecimal balance = getBalance(coin.getCoinAddress());
-        return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBalance(wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(endpoint + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-    private BigDecimal getBalance(String address) {
-        Response response = client.target(endpoint + address).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         String balance = new JSONObject(s).getString("result");
         double pow = Math.pow(10, 18);
+
         return new BigDecimal(balance).divide(BigDecimal.valueOf(pow));
     }
 }

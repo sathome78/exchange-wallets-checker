@@ -28,25 +28,21 @@ public class CLOCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("addr", coin.getCoinAddress());
-        requestBody.put("options", singletonList("balance"));
-        Response post = client.target(cloEndpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
-        String s = post.readEntity(String.class);
-        String balance = new JSONObject(s).getString("balance");
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("addr", wallet);
+        requestBody.put("addr", coinAddress);
         requestBody.put("options", singletonList("balance"));
         Response post = client.target(cloEndpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
+
         String s = post.readEntity(String.class);
         String balance = new JSONObject(s).getString("balance");
+
         return new BigDecimal(balance);
     }
-
 }
-

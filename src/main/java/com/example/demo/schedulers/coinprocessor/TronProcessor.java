@@ -21,20 +21,20 @@ public class TronProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        BigDecimal actualBalance = getBalance(coin.getCoinAddress());
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBalance(wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(tronEndpointBasic + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-    private BigDecimal getBalance(String address) {
-        Response response = client.target(tronEndpointBasic + address).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         double pow = Math.pow(10, 6);
+
         return new JSONObject(s).getBigDecimal("balance").divide(BigDecimal.valueOf(pow));
     }
 }

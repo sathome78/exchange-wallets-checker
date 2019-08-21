@@ -20,14 +20,15 @@ public class EthTokenProcessor implements CoinProcessor {
         this.requestUtil = requestUtil;
     }
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        BigDecimal tokenValue = requestUtil.getTokenValue(coin.getCoinAddress(), coin.getEthTokenContract(), coin.getName());
-        return CoinWrapper.builder().coin(coin).actualBalance(tokenValue).build();
+        final BigDecimal actualBalance = requestUtil.getTokenValue(coin.getCoinAddress(), coin.getEthTokenContract(), coin.getName());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return requestUtil.getTokenValue(wallet, coin.getEthTokenContract(), coin.getName());
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        return requestUtil.getTokenValue(coinAddress, coin.getEthTokenContract(), coin.getName());
     }
 }
-

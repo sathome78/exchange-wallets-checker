@@ -22,17 +22,14 @@ public class GASProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().coin(coin).actualBalance(getAmount(coin.getCoinAddress())).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getAmount(wallet);
-    }
-
-    private BigDecimal getAmount(String address) {
-        String response = client.target(gasEndpoint + address).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(String.class);
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        String response = client.target(gasEndpoint + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(String.class);
         return new JSONObject(response).getJSONArray("balance").getJSONObject(5).getBigDecimal("amount");
     }
-
 }

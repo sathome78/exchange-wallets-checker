@@ -35,15 +35,13 @@ public class USDXCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().coin(coin).actualBalance(getAmount(coin)).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getAmount(coin);
-    }
-
-    private BigDecimal getAmount(Coin coin) {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpClientBuilder clientBuilder = HttpClientBuilder.create();

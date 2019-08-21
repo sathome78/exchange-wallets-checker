@@ -21,23 +21,18 @@ public class XRPProcessor implements CoinProcessor {
     @Autowired
     Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(String.format(xrpEndpointBasic, coin.getCoinAddress())).request(MediaType.APPLICATION_JSON_TYPE).get();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
-        String s = response.readEntity(String.class);
-
-        JSONObject jsonObject = new JSONObject(s);
-        String string = jsonObject.getJSONArray("balances").getJSONObject(0).getString("value");
-
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(string)).build();
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(String.format(xrpEndpointBasic, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(String.format(xrpEndpointBasic, coinAddress)).request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String s = response.readEntity(String.class);
-
         JSONObject jsonObject = new JSONObject(s);
         String string = jsonObject.getJSONArray("balances").getJSONObject(0).getString("value");
 

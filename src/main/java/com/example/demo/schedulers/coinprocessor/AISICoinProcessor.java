@@ -22,17 +22,15 @@ public class AISICoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().coin(coin).actualBalance(getAmount()).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getAmount();
-    }
-
-    private BigDecimal getAmount() {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         String response = client.target(aisiEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get().readEntity(String.class);
+
         return new JSONObject(response).getBigDecimal("Balance");
     }
-
 }

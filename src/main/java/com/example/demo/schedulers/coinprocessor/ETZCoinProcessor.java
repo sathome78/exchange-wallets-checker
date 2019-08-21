@@ -28,21 +28,20 @@ public class ETZCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("addr", coin.getEthTokenContract());
-        requestBody.put("options", singletonList("balance"));
-        Response post = client.target(endpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
-        String balance = new JSONObject(post.readEntity(String.class)).getString("balance");
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(balance)).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("addr", wallet);
+        requestBody.put("addr", coinAddress);
         requestBody.put("options", singletonList("balance"));
         Response post = client.target(endpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(requestBody, MediaType.APPLICATION_JSON_TYPE));
+
         String balance = new JSONObject(post.readEntity(String.class)).getString("balance");
+
         return new BigDecimal(balance);
     }
 }

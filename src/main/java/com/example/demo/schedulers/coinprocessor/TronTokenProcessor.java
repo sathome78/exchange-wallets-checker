@@ -25,18 +25,18 @@ public class TronTokenProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        BigDecimal actualBalance = getBalance(coin.getEthTokenContract(), coin.getCoinAddress());
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBalance(coin.getEthTokenContract(), wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        final String tokenId = coin.getEthTokenContract();
 
-    private BigDecimal getBalance(String tokenId, String address) {
-        Response response = client.target(tronEndpointBasic + address).request(MediaType.APPLICATION_JSON_TYPE).get();
+        Response response = client.target(tronEndpointBasic + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         JSONObject jsonObject = new JSONObject(s);
         JSONArray jsonArray = jsonObject.getJSONArray("tokenBalances");

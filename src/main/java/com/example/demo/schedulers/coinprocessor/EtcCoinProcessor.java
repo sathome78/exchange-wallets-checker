@@ -23,19 +23,16 @@ public class EtcCoinProcessor implements CoinProcessor {
     @Autowired
     Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(basicEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String stringJsonResponse = response.readEntity(String.class);
-        JSONObject jsonObject = new JSONObject(stringJsonResponse);
-        double etcBalance = jsonObject.
-                getJSONObject("balance").
-                getDouble("ether");
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(etcBalance)).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(basicEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(basicEndpoint + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String stringJsonResponse = response.readEntity(String.class);
         JSONObject jsonObject = new JSONObject(stringJsonResponse);

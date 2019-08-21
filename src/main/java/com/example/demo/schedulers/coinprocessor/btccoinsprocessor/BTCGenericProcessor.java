@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 
 public interface BTCGenericProcessor {
 
-    BigDecimal getBalance(Coin coin, String wallet);
+    BigDecimal getBalance(String coinAddress);
 }

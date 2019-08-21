@@ -19,18 +19,19 @@ public class CSCCoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().coin(coin).actualBalance(getBalance(coin.getCoinAddress())).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBalance(wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(cscBasicEndpoint + coinAddress).request(MediaType.TEXT_HTML_TYPE).get();
 
-    private BigDecimal getBalance(String address) {
-        Response response = client.target(cscBasicEndpoint + address).request(MediaType.TEXT_HTML_TYPE).get();
         String balance = response.readEntity(String.class);
+
         return new BigDecimal(balance);
     }
 }

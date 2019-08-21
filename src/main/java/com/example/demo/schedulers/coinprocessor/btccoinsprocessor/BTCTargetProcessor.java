@@ -1,6 +1,5 @@
 package com.example.demo.schedulers.coinprocessor.btccoinsprocessor;
 
-import com.example.demo.domain.Coin;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,16 +19,19 @@ public class BTCTargetProcessor implements BTCGenericProcessor {
     @Autowired
     private Client client;
 
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(String.format(coinBaseURL, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
+    @Override
+    public BigDecimal getBalance(String coinAddress) {
+        Response response = client.target(String.format(coinBaseURL, coinAddress)).request(MediaType.APPLICATION_JSON_TYPE).get();
+
         String s = response.readEntity(String.class);
         BigDecimal bigDecimal = new JSONObject(s).
                 getJSONObject("data").
                 getJSONObject("bitcoin_addresses").
                 getJSONObject("data").
-                getJSONObject(wallet).
+                getJSONObject(coinAddress).
                 getJSONObject("address").
                 getBigDecimal("balance");
+
         return bigDecimal.divide(new BigDecimal(Math.pow(10, 8)));
     }
 }

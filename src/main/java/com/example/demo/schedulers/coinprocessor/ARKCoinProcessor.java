@@ -15,27 +15,24 @@ import java.math.BigDecimal;
 @Service("arkCoinProcessor")
 public class ARKCoinProcessor implements CoinProcessor {
 
-
     @Autowired
     private Client client;
 
     @Value("${ark.endpoint.basic}")
     private String arkEndpointBasic;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(arkEndpointBasic + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        String balance = new JSONObject(s).getJSONObject("account").getString("balance");
-        BigDecimal divide = new BigDecimal(balance).divide(new BigDecimal(100000000));
-        return CoinWrapper.builder().coin(coin).actualBalance(divide).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(arkEndpointBasic + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(arkEndpointBasic + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
         String s = response.readEntity(String.class);
         String balance = new JSONObject(s).getJSONObject("account").getString("balance");
         return new BigDecimal(balance).divide(new BigDecimal(100000000));
     }
-
 }

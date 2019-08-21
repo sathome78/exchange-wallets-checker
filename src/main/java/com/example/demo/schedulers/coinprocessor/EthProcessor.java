@@ -16,6 +16,7 @@ public class EthProcessor implements CoinProcessor {
     @Autowired
     RequestUtil requestUtil;
 
+    @Override
     public CoinWrapper process(Coin coin) {
         BigDecimal ethAddressAmount = requestUtil.getEthAddressAmount(coin.getCoinAddress());
         return CoinWrapper.builder()
@@ -25,7 +26,7 @@ public class EthProcessor implements CoinProcessor {
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return requestUtil.getEthAddressAmount(wallet);
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        return requestUtil.getEthAddressAmount(coinAddress);
     }
 }

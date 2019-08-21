@@ -24,33 +24,20 @@ public class StellarCoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
-    @Value("${stellar.endpoint}")
-    private String stellarEndpoint;
-
     @Value("${stellar.endpoint.basic}")
     private String stellarBasicEndpoint;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(stellarEndpoint).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String stringResponse = response.readEntity(String.class);
-        JSONObject jsonObject = new JSONObject(stringResponse);
-        Map<String, String> collect2 = jsonObject.
-                getJSONArray("balances").
-                toList().
-                stream().
-                map(item -> (HashMap<String, Object>) item).
-                map(element -> Pair.of(valueOf(element.getOrDefault("asset_code", "XLM")), valueOf(element.get("balance"))))
-                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-        String coinBalance = collect2.get(coin.getName());
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
-        return CoinWrapper.builder().coin(coin).actualBalance(new BigDecimal(coinBalance)).build();
-
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        String url = String.format(stellarBasicEndpoint, wallet);
-        Response response = client.target(url).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(String.format(stellarBasicEndpoint, coinAddress)).request(MediaType.APPLICATION_JSON_TYPE).get();
+
         String stringResponse = response.readEntity(String.class);
         JSONObject jsonObject = new JSONObject(stringResponse);
         Map<String, String> collect2 = jsonObject.
@@ -61,6 +48,7 @@ public class StellarCoinProcessor implements CoinProcessor {
                 map(element -> Pair.of(valueOf(element.getOrDefault("asset_code", "XLM")), valueOf(element.get("balance"))))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         String coinBalance = collect2.get(coin.getName());
+
         return new BigDecimal(coinBalance);
     }
 }

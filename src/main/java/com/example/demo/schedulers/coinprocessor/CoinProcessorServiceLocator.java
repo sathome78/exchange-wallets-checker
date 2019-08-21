@@ -59,10 +59,8 @@ public class CoinProcessorServiceLocator {
     @Autowired
     private CoinProcessor qtumProcessor;
 
-
     @Autowired
     private CoinProcessor ntyProcessor;
-
 
     @Autowired
     private CoinProcessor dcrProcessor;

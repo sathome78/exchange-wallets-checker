@@ -19,21 +19,22 @@ public class CREACoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().coin(coin).actualBalance(getBalance(coin.getCoinAddress())).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBalance(wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(creaBasicEndpoint + coinAddress).request(MediaType.TEXT_HTML_TYPE).get();
 
-    private BigDecimal getBalance(String address) {
-        Response response = client.target(creaBasicEndpoint + address).request(MediaType.TEXT_HTML_TYPE).get();
         String s = response.readEntity(String.class);
         int i = s.indexOf("<table class='ui small definition table'><tr><td>Balance</td><td>");
         String firstSubstring = s.substring(i + "<table class='ui small definition table'><tr><td>Balance</td><td>".length());
         String balance = firstSubstring.substring(0, firstSubstring.indexOf("<")).replaceAll(",", "");
+
         return new BigDecimal(balance);
     }
 }

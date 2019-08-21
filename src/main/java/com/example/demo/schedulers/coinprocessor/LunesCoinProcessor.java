@@ -17,29 +17,24 @@ public class LunesCoinProcessor implements CoinProcessor {
 
     @Value("${lunes.address.endpoint}")
     private String lunesAddressEndpoint;
-    @Value("${lunes.transaction.endpoint}")
-    private String lunesTransactionEndpoint;
-
 
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(lunesAddressEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        BigDecimal available = new JSONObject(s).getBigDecimal("available");
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
-        return CoinWrapper.builder().coin(coin).actualBalance(available.divide(new BigDecimal(Math.pow(10, 8)))).build();
-
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(lunesAddressEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(lunesAddressEndpoint + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
+
         String s = response.readEntity(String.class);
         BigDecimal available = new JSONObject(s).getBigDecimal("available");
 
         return available.divide(new BigDecimal(Math.pow(10, 8)));
-
     }
 }

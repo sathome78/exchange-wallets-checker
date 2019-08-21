@@ -21,20 +21,20 @@ public class WavesProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(wavesEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String stringResponse = response.readEntity(String.class);
-        JSONObject jsonResponse = new JSONObject(stringResponse);
-        BigDecimal actualBalance = jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10, 8)));
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
         return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(wavesEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(wavesEndpoint + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
+
         String stringResponse = response.readEntity(String.class);
         JSONObject jsonResponse = new JSONObject(stringResponse);
+
         return jsonResponse.getBigDecimal("available").divide(new BigDecimal(Math.pow(10, 8)));
     }
 }

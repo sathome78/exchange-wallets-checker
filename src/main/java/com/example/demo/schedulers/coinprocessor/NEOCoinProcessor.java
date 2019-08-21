@@ -23,18 +23,17 @@ public class NEOCoinProcessor implements CoinProcessor {
 
     @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().actualBalance(getAmount(coin.getCoinAddress())).coin(coin).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().actualBalance(actualBalance).coin(coin).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getAmount(wallet);
-    }
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(endpointBasic + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
 
-    private BigDecimal getAmount(String address) {
-        Response response = client.target(endpointBasic + address).request(MediaType.APPLICATION_JSON_TYPE).get();
         JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
+
         return jsonObject.getJSONArray("balances").getJSONObject(0).getBigDecimal("total");
     }
-
 }

@@ -21,18 +21,19 @@ public class QTUMCoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(String.format(qtumBasicEndpoint, coin.getCoinAddress())).request(MediaType.TEXT_HTML).get();
-        String s = response.readEntity(String.class).trim();
-        BigDecimal balance = new JSONObject(s).getBigDecimal("balance");
-        return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
+    @Override
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(String.format(qtumBasicEndpoint, coinAddress)).request(MediaType.TEXT_HTML).get();
 
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(String.format(qtumBasicEndpoint, wallet)).request(MediaType.TEXT_HTML).get();
         String s = response.readEntity(String.class).trim();
+
         return new JSONObject(s).getBigDecimal("balance");
     }
-
 }

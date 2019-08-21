@@ -1,6 +1,5 @@
 package com.example.demo.schedulers.coinprocessor.btccoinsprocessor;
 
-import com.example.demo.domain.Coin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,17 +12,19 @@ import java.math.BigDecimal;
 @Service("ddxCoinProcessor")
 public class DDXCoinProcessor implements BTCGenericProcessor {
 
-
     @Value("${btc.ddx.coin}")
     private String ddxCoinURL;
 
     @Autowired
     private Client client;
 
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(ddxCoinURL + wallet).request(MediaType.TEXT_HTML_TYPE).get();
+    @Override
+    public BigDecimal getBalance(String coinAddress) {
+        Response response = client.target(ddxCoinURL + coinAddress).request(MediaType.TEXT_HTML_TYPE).get();
+
         String s = response.readEntity(String.class);
         s = s.substring(s.lastIndexOf("</td><td>") + "</td><td>".length(), s.indexOf("</td></tr>"));
+
         return new BigDecimal(s);
     }
 }

@@ -31,33 +31,17 @@ public class XEMMosaicProcessor implements CoinProcessor {
     @Value("${xem.mosaic.endpoint}")
     private String mosaicEndpoint;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("address", coin.getCoinAddress());
-        Response response = client.target(mosaicEndpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(jsonObject.toString()));
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
-        List<HashMap<String, Object>> collect1 = new JSONArray(response.readEntity(String.class)).
-                toList().
-                stream().
-                map(item -> (HashMap<String, Object>) item).
-                collect(Collectors.toList());
-
-        for (HashMap<String, Object> collect : collect1) {
-            String nameSpace = format("%s:%s", collect.get("namespace"), collect.get("mosaic"));
-            boolean isCoin = nameSpace.equalsIgnoreCase(coin.getDetailName());
-            if (isCoin) {
-                BigDecimal quantity = new BigDecimal(valueOf(collect.get("quantity")));
-                BigDecimal actualBalance = quantity.divide(new BigDecimal(pow(10, valueOf(valueOf(collect.get("div"))))));
-                return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
-            }
-        }
-        throw new RuntimeException("Unable to find XEM mosaic coin");
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("address", wallet);
+        jsonObject.put("address", coinAddress);
         Response response = client.target(mosaicEndpoint).request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(jsonObject.toString()));
 
         List<HashMap<String, Object>> collect1 = new JSONArray(response.readEntity(String.class)).
@@ -74,6 +58,6 @@ public class XEMMosaicProcessor implements CoinProcessor {
                 return quantity.divide(new BigDecimal(pow(10, valueOf(valueOf(collect.get("div"))))));
             }
         }
-        return null;
+        return BigDecimal.ZERO;
     }
 }

@@ -26,6 +26,7 @@ public class BtcProcessor implements CoinProcessor {
     @Qualifier("btcProcessorMap")
     private Map<String, BTCGenericProcessor> btcProcessorMap;
 
+    @Override
     public CoinWrapper process(Coin coin) {
         Response response = client.
                 target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=%s&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET", coin.getName())).
@@ -40,8 +41,8 @@ public class BtcProcessor implements CoinProcessor {
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         BTCGenericProcessor btcProcessor = btcProcessorMap.get(coin.getName());
-        return btcProcessor.getBalance(coin, wallet);
+        return btcProcessor.getBalance(coinAddress);
     }
 }

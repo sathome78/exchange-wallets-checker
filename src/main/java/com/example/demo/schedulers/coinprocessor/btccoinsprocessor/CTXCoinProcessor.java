@@ -1,6 +1,5 @@
 package com.example.demo.schedulers.coinprocessor.btccoinsprocessor;
 
-import com.example.demo.domain.Coin;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,10 +18,11 @@ public class CTXCoinProcessor implements BTCGenericProcessor {
     @Autowired
     private Client client;
 
-
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        String s = client.target(btcCtxCoinBaseaddress + wallet).request(MediaType.APPLICATION_JSON_TYPE).get()
+    @Override
+    public BigDecimal getBalance(String coinAddress) {
+        String s = client.target(btcCtxCoinBaseaddress + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get()
                 .readEntity(String.class);
+
         String balance = new JSONObject(s).getString("balance");
 
         return new BigDecimal(balance);

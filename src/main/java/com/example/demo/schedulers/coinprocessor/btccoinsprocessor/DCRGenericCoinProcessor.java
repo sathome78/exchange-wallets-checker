@@ -15,25 +15,24 @@ import java.math.BigDecimal;
 @Service("dcrCoinProcessor")
 public class DCRGenericCoinProcessor implements BTCGenericProcessor {
 
-
     @Value("${dcr.endpoint.basic}")
     private String dcrBasicEndpoint;
-
 
     @Autowired
     private Client client;
 
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(String.format(dcrBasicEndpoint, coin.getCoinAddress())).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        BigDecimal balance = new JSONObject(s).getBigDecimal("balance");
-        return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
+        final BigDecimal actualBalance = getBalance(coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(String.format(dcrBasicEndpoint, wallet)).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(String coinAddress) {
+        Response response = client.target(String.format(dcrBasicEndpoint, coinAddress)).request(MediaType.APPLICATION_JSON_TYPE).get();
+
         String s = response.readEntity(String.class);
+
         return new JSONObject(s).getBigDecimal("balance");
     }
 }

@@ -25,22 +25,24 @@ public class USDTProcessor implements CoinProcessor {
     @Value("${usdt.base.url}")
     private String usdtUrl;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        BigDecimal balance = this.getBalance(coin, coin.getCoinAddress());
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
-        return CoinWrapper.builder().coin(coin).actualBalance(balance).build();
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
-
-    public BigDecimal getBalance(Coin coin, String wallet) {
+    @Override
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         WebTarget webTarget = client.target(usdtUrl);
+
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("query", coin.getCoinAddress());
         Response response = webTarget.request().post(Entity.form(formData));
         JSONObject jsonObject = new JSONObject(response.readEntity(String.class));
         JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONObject("address").getJSONArray("balance");
         String value = jsonArray.getJSONObject(0).getString("value");
-        return new BigDecimal(value).divide(new BigDecimal(Math.pow(10,8)));
-    }
 
+        return new BigDecimal(value).divide(new BigDecimal(Math.pow(10, 8)));
+    }
 }

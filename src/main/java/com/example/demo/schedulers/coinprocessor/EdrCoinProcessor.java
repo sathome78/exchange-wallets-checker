@@ -17,30 +17,23 @@ public class EdrCoinProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
-
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.
-                target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=EDR&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET&address=" + coin.getCoinAddress())).
-                request(MediaType.APPLICATION_JSON_TYPE).get();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
-        String s = response.readEntity(String.class);
-
-        JSONObject jsonObject = new JSONObject(s);
-        String balance = jsonObject.getString("EDR");
-
-        return CoinWrapper.builder().actualBalance(new BigDecimal(balance)).coin(coin).build();
+        return CoinWrapper.builder().actualBalance(actualBalance).coin(coin).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         Response response = client.
-                target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=EDR&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET&address=" + wallet)).
+                target(String.format("http://exad.service/getWalletBalanceByCurrencyName?currency=EDR&token=ZXzG8z13nApRXDzvOv7hU41kYHAJSLET&address=%s", coinAddress)).
                 request(MediaType.APPLICATION_JSON_TYPE).get();
 
         String s = response.readEntity(String.class);
 
         JSONObject jsonObject = new JSONObject(s);
-        String balance = jsonObject.getString("EDR");
+        String balance = jsonObject.getString("EDC");
 
         return new BigDecimal(balance);
     }

@@ -13,16 +13,15 @@ public class CRONCoinProcessor implements CoinProcessor {
     @Value("${cron.endpoint.basic}")
     private String cronBasicEndpoint;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        return CoinWrapper.builder().coin(coin).actualBalance(getBalance(coin.getCoinAddress())).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
+
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        return getBalance(wallet);
-    }
-
-    private BigDecimal getBalance(String address) {
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
         return BigDecimal.ZERO;
     }
 }

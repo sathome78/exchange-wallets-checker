@@ -22,27 +22,17 @@ public class QtumTokenProcessor implements CoinProcessor {
     @Autowired
     private Client client;
 
+    @Override
     public CoinWrapper process(Coin coin) {
-        Response response = client.target(qtumTokenEndpoint + coin.getCoinAddress()).request(MediaType.APPLICATION_JSON_TYPE).get();
-        String s = response.readEntity(String.class);
-        JSONArray jsonArray = new JSONArray(s);
-        BigDecimal actualBalance = null;
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            String amount = jsonObject.getString("amount");
-            String symbol = jsonObject.getJSONObject("contract").getString("symbol");
-            if (symbol.equals(coin.getName())) {
-                String decimals = jsonObject.getJSONObject("contract").getString("decimals");
-                actualBalance = new BigDecimal(amount).divide(new BigDecimal(Math.pow(10, Double.valueOf(decimals))));
-            }
-        }
-        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
+        final BigDecimal actualBalance = getBalance(coin, coin.getCoinAddress());
 
+        return CoinWrapper.builder().coin(coin).actualBalance(actualBalance).build();
     }
 
     @Override
-    public BigDecimal getBalance(Coin coin, String wallet) {
-        Response response = client.target(qtumTokenEndpoint + wallet).request(MediaType.APPLICATION_JSON_TYPE).get();
+    public BigDecimal getBalance(Coin coin, String coinAddress) {
+        Response response = client.target(qtumTokenEndpoint + coinAddress).request(MediaType.APPLICATION_JSON_TYPE).get();
+
         String s = response.readEntity(String.class);
         JSONArray jsonArray = new JSONArray(s);
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -54,6 +44,6 @@ public class QtumTokenProcessor implements CoinProcessor {
                 return new BigDecimal(amount).divide(new BigDecimal(Math.pow(10, Double.valueOf(decimals))));
             }
         }
-        return null;
+        return BigDecimal.ZERO;
     }
 }
