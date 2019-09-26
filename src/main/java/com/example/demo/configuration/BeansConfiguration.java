@@ -13,9 +13,6 @@ import java.util.Map;
 public class BeansConfiguration {
 
     @Autowired
-    private BTCGenericProcessor lbtcCoinProcessor;
-
-    @Autowired
     private BTCGenericProcessor ftoCoinProcessor;
 
     @Autowired
@@ -58,16 +55,7 @@ public class BeansConfiguration {
     private BTCGenericProcessor btcpCoinProcessor;
 
     @Autowired
-    private BTCGenericProcessor hsrCoinProcessor;
-
-    @Autowired
     private BTCGenericProcessor lccCoinProcessor;
-
-    @Autowired
-    private BTCGenericProcessor ptcCoinProcessor;
-
-    @Autowired
-    private BTCGenericProcessor sicCoinProcessor;
 
     @Autowired
     private BTCGenericProcessor szcCoinProcessor;
@@ -80,12 +68,6 @@ public class BeansConfiguration {
 
     @Autowired
     private BTCGenericProcessor dogeCoinProcessor;
-
-    @Autowired
-    private BTCGenericProcessor ddxCoinProcessor;
-
-    @Autowired
-    private BTCGenericProcessor rizCoinProcessor;
 
     @Autowired
     private BTCGenericProcessor bclCoinProcessor;
@@ -121,7 +103,6 @@ public class BeansConfiguration {
     @Order(999)
     public Map<String, BTCGenericProcessor> btcProcessorMap() {
         Map<String, BTCGenericProcessor> btcProcessorMap = new HashMap<>();
-        btcProcessorMap.put("LBTC", lbtcCoinProcessor);
         btcProcessorMap.put("FTO", ftoCoinProcessor);
         btcProcessorMap.put("EQL", eqlCoinProcessor);
         btcProcessorMap.put("BTX", btxCoinProcessor);
@@ -136,18 +117,13 @@ public class BeansConfiguration {
         btcProcessorMap.put("BTC", btcTargetProcessor);
         btcProcessorMap.put("BCA", bcaCoinProcessor);
         btcProcessorMap.put("BTCP", btcpCoinProcessor);
-        btcProcessorMap.put("HSR", hsrCoinProcessor);
         btcProcessorMap.put("LCC", lccCoinProcessor);
-        btcProcessorMap.put("PTC", ptcCoinProcessor);
-        btcProcessorMap.put("SIC", sicCoinProcessor);
         btcProcessorMap.put("SZC", szcCoinProcessor);
         btcProcessorMap.put("TOA", toaCoinProcessor);
         btcProcessorMap.put("DOGE", dogeCoinProcessor);
         btcProcessorMap.put("FGC", fgcCoinProcessor);
         btcProcessorMap.put("BCL", bclCoinProcessor);
-        btcProcessorMap.put("RIZ", rizCoinProcessor);
         btcProcessorMap.put("LTC", ltcCoinProcessor);
-        btcProcessorMap.put("DDX", ddxCoinProcessor);
         btcProcessorMap.put("CLX", clxGenericCoinProcessor);
         btcProcessorMap.put("NYC", nycCoinProcessor);
         btcProcessorMap.put("DCR", dcrCoinProcessor);
