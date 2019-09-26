@@ -81,9 +81,6 @@ public class CoinProcessorServiceLocator {
     private CoinProcessor aplCoinProcessor;
 
     @Autowired
-    private CoinProcessor kazeCoinProcessor;
-
-    @Autowired
     private CoinProcessor streamCoinProcessor;
 
     @Autowired
@@ -99,9 +96,6 @@ public class CoinProcessorServiceLocator {
     private CoinProcessor arkCoinProcessor;
 
     @Autowired
-    private CoinProcessor riseCoinProcessor;
-
-    @Autowired
     private CoinProcessor qtumTokenProcessor;
 
     @Autowired
@@ -111,13 +105,7 @@ public class CoinProcessorServiceLocator {
     private CoinProcessor gasProcessor;
 
     @Autowired
-    private CoinProcessor wavesTokenProcessor;
-
-    @Autowired
     private CoinProcessor edrCoinProcessor;
-
-    @Autowired
-    private CoinProcessor USDTProcessor;
 
     @Autowired
     private CoinProcessor creaCoinProcessor;
@@ -154,7 +142,6 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.XEM_COIN, xemProcessor);
         processorMap.put(CoinType.XEM_MOSAIC, xemMosaicProcessor);
         processorMap.put(CoinType.WAVES, wavesProcessor);
-        processorMap.put(CoinType.WAVES_COIN, wavesTokenProcessor);
         processorMap.put(CoinType.TRON, tronProcessor);
         processorMap.put(CoinType.TRON_TOKEN_COIN, tronTokenProcessor);
         processorMap.put(CoinType.QTUM, qtumProcessor);
@@ -165,18 +152,15 @@ public class CoinProcessorServiceLocator {
         processorMap.put(CoinType.LSK, lskCoinProcessor);
         processorMap.put(CoinType.ETZ, etzCoinProcessor);
         processorMap.put(CoinType.APL, aplCoinProcessor);
-        processorMap.put(CoinType.KAZE, kazeCoinProcessor);
         processorMap.put(CoinType.STREAM, streamCoinProcessor);
         processorMap.put(CoinType.ETI, etiCoinProcessor);
         processorMap.put(CoinType.LUNES, lunesCoinProcessor);
         processorMap.put(CoinType.GOL, golCoinProcessor);
         processorMap.put(CoinType.ARK, arkCoinProcessor);
-        processorMap.put(CoinType.RISE, riseCoinProcessor);
         processorMap.put(CoinType.QTUM_TOKEN_COIN, qtumTokenProcessor);
         processorMap.put(CoinType.NEO, neoCoinProcessor);
         processorMap.put(CoinType.GAS, gasProcessor);
         processorMap.put(CoinType.EDR, edrCoinProcessor);
-        processorMap.put(CoinType.USDT, USDTProcessor);
         processorMap.put(CoinType.CREA, creaCoinProcessor);
         processorMap.put(CoinType.CASINO_COIN, cscCoinProcessor);
         processorMap.put(CoinType.PPY, ppyCoinProcessor);
