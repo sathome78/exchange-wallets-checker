@@ -38,7 +38,8 @@ public enum CoinType {
     BTW(39),
     AISI(40),
     CRON(41),
-    USDX(42);
+    USDX(42),
+    WAVES_TOKEN_COIN(43);
 
     private final int i;
 
