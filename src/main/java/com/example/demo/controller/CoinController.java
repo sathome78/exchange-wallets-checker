@@ -150,9 +150,13 @@ public class CoinController {
         Map<String, Object> response = new HashMap<>();
         List<Coin> byMainFalse = coinRepository.findByMainFalse();
         byMainFalse.forEach(coin -> {
+            String coinAddress = coin.getCoinAddress() == null ? "" : coin.getCoinAddress();
+            String ethTokenContract = coin.getEthTokenContract() == null ? "" : coin.getEthTokenContract();
             String date = coin.getDate() == null ? "" : String.valueOf(coin.getDate());
-            String key = String.join("||", coin.getName(), coin.getCoinAddress(), coin.getEthTokenContract(), date);
+
+            String key = String.join("||", coin.getName(), coinAddress, ethTokenContract, date);
             key = key.endsWith("||") ? key.substring(0, key.length() - 2) : key;
+
             response.put(key, coin.getCurrentAmount());
         });
 
